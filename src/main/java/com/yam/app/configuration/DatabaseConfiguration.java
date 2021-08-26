@@ -1,4 +1,4 @@
-package com.yam.app.account.infrastructure;
+package com.yam.app.configuration;
 
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;

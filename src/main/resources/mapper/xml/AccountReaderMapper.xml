@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yam.app.account.domain.AccountReader">
+
+  <select id="findByEmail" parameterType="String"
+    resultType="com.yam.app.account.domain.Account">
+    SELECT * FROM ACCOUNT WHERE email = #{email}
+  </select>
+
+</mapper>

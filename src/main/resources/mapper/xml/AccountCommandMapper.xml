@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yam.app.account.domain.AccountRepository">
+
+  <select id="existsByEmail" parameterType="String" resultType="int">
+    SELECT COUNT(email)
+    FROM ACCOUNT
+    WHERE email = #{email}
+  </select>
+
+  <select id="existsByNickname" parameterType="String" resultType="int">
+    SELECT COUNT(nickname)
+    FROM ACCOUNT
+    WHERE nickname = #{nickname}
+  </select>
+
+  <insert id="save" parameterType="com.yam.app.account.domain.Account">
+    INSERT INTO ACCOUNT(email, nickname, password)
+    VALUES(#{email}, #{nickname}, #{password})
+  </insert>
+
+</mapper>

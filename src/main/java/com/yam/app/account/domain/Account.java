@@ -1,10 +1,10 @@
 package com.yam.app.account.domain;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 
 @Getter
-@Setter
+@ToString(exclude = "password")
 public final class Account {
     private Long id;
     private String email;
@@ -15,5 +15,9 @@ public final class Account {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

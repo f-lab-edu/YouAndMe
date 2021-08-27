@@ -3,9 +3,12 @@ package com.yam.app.account.domain;
 public final class RegisterAccountProcessor {
 
     private final AccountRepository accountRepository;
+    private final PasswordEncrypter passwordEncrypter;
 
-    public RegisterAccountProcessor(AccountRepository accountRepository) {
+    public RegisterAccountProcessor(AccountRepository accountRepository,
+        PasswordEncrypter passwordEncrypter) {
         this.accountRepository = accountRepository;
+        this.passwordEncrypter = passwordEncrypter;
     }
 
     public Account process(String email, String nickname, String password) {
@@ -16,6 +19,8 @@ public final class RegisterAccountProcessor {
             throw new IllegalStateException();
         }
 
-        return accountRepository.save(new Account(email, nickname, password));
+        String encodedPassword = passwordEncrypter.encode(password);
+
+        return accountRepository.save(new Account(email, nickname, encodedPassword));
     }
 }

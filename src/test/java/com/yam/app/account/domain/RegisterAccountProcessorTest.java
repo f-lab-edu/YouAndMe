@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.yam.app.account.application.RegisterAccountCommand;
+import com.yam.app.account.domain.PasswordEncrypterTest.PasswordEncrypterStub;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -20,7 +21,7 @@ class RegisterAccountProcessorTest {
     @DisplayName("회원가입 시나리오")
     Collection<DynamicTest> register_account_scenarios() {
         var repository = new AccountRepositoryStub();
-        var processor = new RegisterAccountProcessor(repository);
+        var processor = new RegisterAccountProcessor(repository, new PasswordEncrypterStub());
         return Arrays.asList(
             DynamicTest.dynamicTest("회원가입에 성공한다.", () -> {
                 // Arrange

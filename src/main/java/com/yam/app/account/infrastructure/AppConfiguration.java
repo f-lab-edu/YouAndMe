@@ -2,13 +2,26 @@ package com.yam.app.account.infrastructure;
 
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
+import com.yam.app.account.domain.PasswordEncrypter;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class AppConfiguration {
+
+    @Bean
+    public PasswordEncrypter passwordEncrypter(PasswordEncoder passwordEncoder) {
+        return new DelegatePasswordEncrypter(passwordEncoder);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AccountRepository accountRepository(SqlSessionTemplate sqlSessionTemplate) {
@@ -21,7 +34,8 @@ public class AppConfiguration {
     }
 
     @Bean
-    public RegisterAccountProcessor registerAccountProcessor(AccountRepository accountRepository) {
-        return new RegisterAccountProcessor(accountRepository);
+    public RegisterAccountProcessor registerAccountProcessor(AccountRepository accountRepository,
+        PasswordEncrypter passwordEncrypter) {
+        return new RegisterAccountProcessor(accountRepository, passwordEncrypter);
     }
 }

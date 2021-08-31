@@ -22,7 +22,7 @@ public final class RegisterAccountApi {
         this.accountFacade = accountFacade;
     }
 
-    @PostMapping("/api/register")
+    @PostMapping("/api/accounts")
     public ResponseEntity<RegisterAccountResponse> register(
         @RequestBody @Valid RegisterAccountRequest request) {
         return ResponseEntity.ok(accountFacade.register(request));

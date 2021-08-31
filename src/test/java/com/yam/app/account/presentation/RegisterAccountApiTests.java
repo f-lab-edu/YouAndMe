@@ -43,7 +43,7 @@ class RegisterAccountApiTests {
         when(accountFacade.register(request)).thenReturn(
             new RegisterAccountResponse(1L, "msolo021015@gmail.com", "rebwon"));
 
-        final var actions = mockMvc.perform(post("/api/register")
+        final var actions = mockMvc.perform(post("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
@@ -58,6 +58,25 @@ class RegisterAccountApiTests {
             .andExpect(jsonPath("$.nickname").isString());
     }
 
+    @Test
+    @DisplayName("Accept 헤더와 Content-Type을 지정해주지 않았으므로, HttpMediaTypeNotSupportedException이 발생한다.")
+    void register_account_api_not_use_accept_header_and_content_type() throws Exception {
+        // Arrange
+        var request = new RegisterAccountRequest();
+        request.setEmail("msolo021015@gmail.com");
+        request.setNickname("rebwon");
+        request.setPassword("password!");
+
+        // Act
+        final var actions = mockMvc.perform(post("/api/accounts")
+            .content(objectMapper.writeValueAsString(request))
+        );
+
+        // Assert
+        actions
+            .andExpect(status().isUnsupportedMediaType());
+    }
+
     @ParameterizedTest
     @NullAndEmptySource
     @DisplayName("HTTP 입력이 Null이거나 Emtpy인 경우 검증에 실패하여 에러를 응답한다.")
@@ -69,7 +88,7 @@ class RegisterAccountApiTests {
         request.setPassword(arg);
 
         // Act
-        final var actions = mockMvc.perform(post("/api/register")
+        final var actions = mockMvc.perform(post("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))
@@ -92,7 +111,7 @@ class RegisterAccountApiTests {
         request.setPassword(arg);
 
         // Act
-        final var actions = mockMvc.perform(post("/api/register")
+        final var actions = mockMvc.perform(post("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))

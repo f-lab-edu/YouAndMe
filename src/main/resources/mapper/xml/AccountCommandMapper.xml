@@ -16,8 +16,11 @@
   </select>
 
   <insert id="save" parameterType="com.yam.app.account.domain.Account">
-    INSERT INTO ACCOUNT(email, nickname, password)
-    VALUES(#{email}, #{nickname}, #{password})
+    INSERT
+    INTO ACCOUNT(email, email_check_token, email_check_token_generated_at, email_verified,
+                 nickname, password, withdraw)
+    VALUES (#{email}, #{emailCheckToken}, #{emailCheckTokenGeneratedAt}, #{emailVerified},
+            #{nickname}, #{password}, #{withdraw})
   </insert>
 
 </mapper>

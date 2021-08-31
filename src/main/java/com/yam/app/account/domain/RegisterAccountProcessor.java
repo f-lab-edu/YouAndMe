@@ -21,6 +21,6 @@ public final class RegisterAccountProcessor {
 
         String encodedPassword = passwordEncrypter.encode(password);
 
-        return accountRepository.save(new Account(email, nickname, encodedPassword));
+        return accountRepository.save(Account.of(email, nickname, encodedPassword));
     }
 }

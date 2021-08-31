@@ -8,10 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableTransactionManagement
 public class DatabaseConfiguration {
 
     @Bean
@@ -24,8 +22,11 @@ public class DatabaseConfiguration {
 
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
-        final var factoryBean = new SqlSessionFactoryBean();
+        var factoryBean = new SqlSessionFactoryBean();
+        var configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setMapUnderscoreToCamelCase(true);
         factoryBean.setDataSource(dataSource);
+        factoryBean.setConfiguration(configuration);
         var resolver = new PathMatchingResourcePatternResolver();
         factoryBean.setMapperLocations(resolver.getResources("classpath:mapper/xml/*.xml"));
         return factoryBean.getObject();

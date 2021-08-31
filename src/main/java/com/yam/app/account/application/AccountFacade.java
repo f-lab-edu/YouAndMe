@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class AccountFacade {
 
     private final RegisterAccountProcessor processor;
@@ -19,6 +18,7 @@ public class AccountFacade {
         this.translator = translator;
     }
 
+    @Transactional
     public RegisterAccountResponse register(RegisterAccountRequest request) {
         var command = request.toCommand();
         return translator.translate(

@@ -36,7 +36,7 @@ final class AccountIntegrationTests {
         request.setPassword("password!");
 
         // Act
-        final var actions = mockMvc.perform(post("/api/register")
+        final var actions = mockMvc.perform(post("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request))

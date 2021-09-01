@@ -6,7 +6,7 @@ import com.yam.app.account.presentation.RegisterAccountRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class AccountTranslator {
+final class AccountTranslator {
 
     public RegisterAccountCommand toCommand(RegisterAccountRequest request) {
         return new RegisterAccountCommand(request.getEmail(), request.getNickname(),

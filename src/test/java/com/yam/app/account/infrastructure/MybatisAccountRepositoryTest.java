@@ -49,7 +49,7 @@ class MybatisAccountRepositoryTest {
     @DisplayName("Account 객체 저장 테스트")
     void save() {
         Account account = accountRepository.save(
-            new Account("rebwon@gmail.com", "rebwon", "password!"));
+            Account.of("rebwon@gmail.com", "rebwon", "password!"));
 
         assertThat(account.getId()).isEqualTo(2);
     }

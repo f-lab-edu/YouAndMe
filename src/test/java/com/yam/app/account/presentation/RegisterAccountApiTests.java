@@ -41,7 +41,7 @@ class RegisterAccountApiTests {
 
         // Act
         when(accountFacade.register(request)).thenReturn(
-            new RegisterAccountResponse(1L, "msolo021015@gmail.com", "rebwon"));
+            new AccountResponse(1L, "msolo021015@gmail.com", "rebwon"));
 
         final var actions = mockMvc.perform(post("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)

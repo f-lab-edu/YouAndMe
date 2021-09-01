@@ -28,8 +28,7 @@ class RegisterAccountProcessorTest {
                 var command = new RegisterAccountCommand("rebwon@gmail.com", "rebwon", "password!");
 
                 // Act
-                Account account = processor.process(command.getEmail(), command.getNickname(),
-                    command.getPassword());
+                var account = processor.process(command);
 
                 // Assert
                 assertThat(account.getId()).isEqualTo(1L);
@@ -40,8 +39,7 @@ class RegisterAccountProcessorTest {
 
                 // Act & Assert
                 assertThatExceptionOfType(IllegalStateException.class)
-                    .isThrownBy(() -> processor.process(command.getEmail(), command.getNickname(),
-                        command.getPassword()));
+                    .isThrownBy(() -> processor.process(command));
             }),
             DynamicTest.dynamicTest("닉네임 검증에 실패하여 예외를 리턴한다.", () -> {
                 // Arrange
@@ -49,8 +47,7 @@ class RegisterAccountProcessorTest {
 
                 // Act & Assert
                 assertThatExceptionOfType(IllegalStateException.class)
-                    .isThrownBy(() -> processor.process(command.getEmail(), command.getNickname(),
-                        command.getPassword()));
+                    .isThrownBy(() -> processor.process(command));
             })
         );
     }

@@ -3,12 +3,13 @@ package com.yam.app.account.infrastructure;
 import com.yam.app.account.domain.RegisterAccountEvent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Component
-final class MailManager {
+class MailManager {
 
     private final MailDispatcher mailDispatcher;
     private final TemplateEngine templateEngine;
@@ -21,6 +22,7 @@ final class MailManager {
         this.host = host;
     }
 
+    @Async
     @EventListener
     public void handle(RegisterAccountEvent event) {
         var newAccount = event.getAccount();

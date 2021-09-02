@@ -1,14 +1,11 @@
 package com.yam.app.account.presentation;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.application.AccountFacade;
 import org.javaunit.autoparams.AutoSource;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,8 +13,11 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
 
 @DisplayName("회원가입 등록 HTTP API")
 @WebMvcTest(RegisterAccountApi.class)
@@ -29,6 +29,15 @@ class RegisterAccountApiTests {
     private ObjectMapper objectMapper;
     @MockBean
     private AccountFacade accountFacade;
+
+    private WebTestClient webTestClient;
+
+    @BeforeEach
+    void setUp() {
+        this.webTestClient = MockMvcWebTestClient
+            .bindTo(mockMvc)
+            .build();
+    }
 
     @Test
     @DisplayName("회원가입에 적절한 파라미터가 입력되고 회원가입이 성공한다.")
@@ -43,19 +52,21 @@ class RegisterAccountApiTests {
         when(accountFacade.register(request)).thenReturn(
             new AccountResponse(1L, "msolo021015@gmail.com", "rebwon"));
 
-        final var actions = mockMvc.perform(post("/api/accounts")
+        var spec = webTestClient
+            .post()
+            .uri("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request))
-        );
+            .bodyValue(objectMapper.writeValueAsString(request))
+            .exchange();
 
         // Assert
-        actions
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").isNumber())
-            .andExpect(jsonPath("$.email").isString())
-            .andExpect(jsonPath("$.nickname").isString());
+        spec
+            .expectStatus().isOk()
+            .expectBody()
+            .jsonPath("$.id").isNumber()
+            .jsonPath("$.email").isNotEmpty()
+            .jsonPath("$.nickname").isNotEmpty();
     }
 
     @Test
@@ -68,13 +79,15 @@ class RegisterAccountApiTests {
         request.setPassword("password!");
 
         // Act
-        final var actions = mockMvc.perform(post("/api/accounts")
-            .content(objectMapper.writeValueAsString(request))
-        );
+        var spec = webTestClient
+            .post()
+            .uri("/api/accounts")
+            .bodyValue(objectMapper.writeValueAsString(request))
+            .exchange();
 
         // Assert
-        actions
-            .andExpect(status().isUnsupportedMediaType());
+        spec
+            .expectStatus().isEqualTo(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
     @ParameterizedTest
@@ -88,16 +101,17 @@ class RegisterAccountApiTests {
         request.setPassword(arg);
 
         // Act
-        final var actions = mockMvc.perform(post("/api/accounts")
+        var spec = webTestClient
+            .post()
+            .uri("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request))
-        );
+            .bodyValue(objectMapper.writeValueAsString(request))
+            .exchange();
 
         // Assert
-        actions
-            .andDo(print())
-            .andExpect(status().isBadRequest());
+        spec
+            .expectStatus().isBadRequest();
     }
 
     @ParameterizedTest
@@ -111,15 +125,16 @@ class RegisterAccountApiTests {
         request.setPassword(arg);
 
         // Act
-        final var actions = mockMvc.perform(post("/api/accounts")
+        var spec = webTestClient
+            .post()
+            .uri("/api/accounts")
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request))
-        );
+            .bodyValue(objectMapper.writeValueAsString(request))
+            .exchange();
 
         // Assert
-        actions
-            .andDo(print())
-            .andExpect(status().isBadRequest());
+        spec
+            .expectStatus().isBadRequest();
     }
 }

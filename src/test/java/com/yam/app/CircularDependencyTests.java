@@ -5,10 +5,8 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
-import org.junit.jupiter.api.Disabled;
 
 @AnalyzeClasses(packagesOf = YouAndMeApplication.class)
-@Disabled
 final class CircularDependencyTests {
 
     @ArchTest

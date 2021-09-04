@@ -29,4 +29,8 @@ public class AccountFacade {
         publisher.publishEvent(new RegisterAccountEvent(entity));
         return translator.toResponse(entity);
     }
+
+    public boolean verify(String token, String email) {
+        return false;
+    }
 }

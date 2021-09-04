@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.yam.app.account.domain.AccountRepository">
+  <update id="update">
+    UPDATE ACCOUNT
+    SET email = #{email},
+        email_check_token = #{emailCheckToken},
+        email_check_token_generated_at = #{emailCheckTokenGeneratedAt},
+        email_verified = #{emailVerified},
+        nickname = #{nickname},
+        password = #{password},
+        withdraw = #{withdraw}
+    WHERE id = #{id}
+    LIMIT 1
+  </update>
 
   <select id="existsByEmail" parameterType="String" resultType="int">
     SELECT COUNT(email)

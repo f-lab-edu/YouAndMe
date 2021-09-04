@@ -7,4 +7,6 @@ public interface AccountRepository {
     boolean existsByNickname(String nickname);
 
     Account save(Account entity);
+
+    Account update(Account entity);
 }

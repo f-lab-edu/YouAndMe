@@ -13,7 +13,7 @@ class TokenVerifierTest {
 
     @Test
     @DisplayName("이메일과 토큰의 값을 입력받고 검증에 성공하여 회원의 이메일 검증 상태를 갱신하고, true를 반환한다.")
-    void verify_success(){
+    void verify_success() {
         //Arrange
         var accountRepository = new FakeAccountRepository();
         var accountReader = accountRepository;

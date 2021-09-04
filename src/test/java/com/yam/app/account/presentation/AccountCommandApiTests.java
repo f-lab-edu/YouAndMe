@@ -132,7 +132,8 @@ class AccountCommandApiTests {
         }
 
         @Test
-        @DisplayName("Accept 헤더와 Content-Type을 지정해주지 않았으므로, HttpMediaTypeNotSupportedException이 발생한다.")
+        @DisplayName(
+            "Accept와 Content-Type을 지정해주지 않아, HttpMediaTypeNotSupportedException이 발생한다.")
         void register_account_api_not_use_accept_header_and_content_type() throws Exception {
             // Arrange
             var request = new RegisterAccountRequest();

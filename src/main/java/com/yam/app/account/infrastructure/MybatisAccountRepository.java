@@ -23,6 +23,16 @@ public final class MybatisAccountRepository implements AccountRepository, Accoun
     }
 
     @Override
+    public Account update(Account entity) {
+        int result = template.update(COMMAND_NAMESPACE + "update", entity);
+        if (result != 1) {
+            throw new RuntimeException(
+                String.format("There was a problem updating the object : %s", entity));
+        }
+        return findByEmail(entity.getEmail());
+    }
+
+    @Override
     public boolean existsByNickname(String nickname) {
         int result = template.selectOne(COMMAND_NAMESPACE + "existsByNickname", nickname);
         return result != 0;

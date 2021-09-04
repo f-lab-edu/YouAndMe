@@ -1,6 +1,6 @@
 package com.yam.app.account.presentation;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,21 +35,23 @@ class AccountCommandApiTests {
 
     @Nested
     @DisplayName("이메일 검증 HTTP API")
-    class EmailVerifiedApi {
+    class RegisterConfirmApi {
 
         @ParameterizedTest
         @NullAndEmptySource
-        @DisplayName("비어있거나 null인 토큰과 이메일 정보로 검증 요청을 보낸 경우 400 HTTP Code를 리턴한다.")
+        @DisplayName("HTTP 파라메타가 비었거나 null인 검증요청을 보낸 경우 400 HTTP Code 리턴한다.")
         void http_param_is_empty_or_null(String args) throws Exception {
-            // Arrange
             // Act
-            when(accountFacade.verify(args, args)).thenReturn(false);
+            var request = new ConfirmRegisterAccountRequest();
+            request.setToken(args);
+            request.setEmail(args);
+            doThrow(IllegalStateException.class).when(accountFacade).registerConfirm(request);
 
             final var actions = mockMvc.perform(get("/api/accounts/authorize")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("token", "emailTOken")
-                .param("email", "jiwonDev@gmail.com")
+                .param("token", args)
+                .param("email", args)
             );
 
             // Assert
@@ -59,17 +61,19 @@ class AccountCommandApiTests {
         }
 
         @Test
-        @DisplayName("유효하지 않은 토큰과 이메일 정보로 검증 요청을 보낸 경우 400 HTTP Code를 리턴한다.")
+        @DisplayName("HTTP 파라메타가 유효하지 않은 값으로 검증요청을 보낸 경우 400 HTTP Code 리턴한다.")
         void http_param_is_not_valid() throws Exception {
-            // Arrange
             // Act
-            when(accountFacade.verify(anyString(), anyString())).thenReturn(false);
+            var request = new ConfirmRegisterAccountRequest();
+            request.setToken("QWEIUHQWDU");
+            request.setEmail("QWEIOWQJE@naver.com");
+            doThrow(IllegalStateException.class).when(accountFacade).registerConfirm(request);
 
             final var actions = mockMvc.perform(get("/api/accounts/authorize")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("token", "emailTOken")
-                .param("email", "jiwonDev@gmail.com")
+                .param("token", "QWEIUHQWDU")
+                .param("email", "QWEIOWQJE@naver.com")
             );
 
             // Assert
@@ -79,11 +83,12 @@ class AccountCommandApiTests {
         }
 
         @Test
-        @DisplayName("토큰과 이메일 정보로 검증 요청을 보낸 경우 303 HTTP Code를 리턴한다.")
+        @DisplayName("토큰과 이메일 정보로 검증요청을 보낸 경우 303 HTTP Code 리턴한다.")
         void valid_success() throws Exception {
-            // Arrange
             // Act
-            when(accountFacade.verify(anyString(), anyString())).thenReturn(true);
+            var request = new ConfirmRegisterAccountRequest();
+            request.setToken("emailTOken");
+            request.setEmail("jiwonDev@gmail.com");
 
             final var actions = mockMvc.perform(get("/api/accounts/authorize")
                 .accept(MediaType.APPLICATION_JSON)

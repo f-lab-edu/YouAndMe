@@ -60,7 +60,7 @@ class MybatisAccountRepositoryTest {
         Account account = accountRepository.save(
             Account.of("jiwon22@gmail.com", "jiwon2", "password!"));
 
-        account.completeRegister(); // boolean emailVerified = true
+        account.completeRegister();
         Account updatedAccount = accountRepository.update(account);
 
         assertThat(updatedAccount.isEmailVerified()).isTrue();

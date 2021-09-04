@@ -3,9 +3,7 @@ package com.yam.app.account.domain;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Component;
 
-@Component
 public final class FakeAccountRepository implements AccountRepository, AccountReader {
 
     private final Map<Long, Account> data = new ConcurrentHashMap<>();

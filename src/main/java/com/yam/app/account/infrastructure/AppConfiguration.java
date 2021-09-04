@@ -2,6 +2,7 @@ package com.yam.app.account.infrastructure;
 
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
+import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
 import com.yam.app.account.domain.PasswordEncrypter;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.domain.TokenVerifier;
@@ -49,8 +50,14 @@ public class AppConfiguration {
     }
 
     @Bean
-    public TokenVerifier tokenVerifier(AccountReader accountReader,
-        AccountRepository accountRepository) {
-        return new TokenVerifier(accountReader, accountRepository);
+    public TokenVerifier tokenVerifier(AccountReader accountReader) {
+        return new TokenVerifier(accountReader);
+    }
+
+    @Bean
+    public ConfirmRegisterAccountProcessor confirmRegisterAccountProcessor(
+        AccountReader accountReader, AccountRepository accountRepository,
+        TokenVerifier tokenVerifier) {
+        return new ConfirmRegisterAccountProcessor(accountReader, accountRepository, tokenVerifier);
     }
 }

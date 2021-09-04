@@ -12,7 +12,6 @@
         password = #{password},
         withdraw = #{withdraw}
     WHERE id = #{id}
-    LIMIT 1
   </update>
 
   <select id="existsByEmail" parameterType="String" resultType="int">

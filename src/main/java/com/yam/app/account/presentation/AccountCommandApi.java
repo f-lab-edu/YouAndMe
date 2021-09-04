@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,16 +35,18 @@ public final class AccountCommandApi {
 
     /**
      * 회원가입 이메일 검증 컨트롤러
-     * 임시로 "http://localhost:3000/login"로 리다이렉트 되도록 설정.
+     * - 임시로 "http://localhost:3000/login"로 리다이렉트 되도록 설정.
+     * - 임시로 검증에 실패해서 예외가 발생하면 400 HTTP 을 반환하도록 설정.
      */
     @GetMapping("/api/accounts/authorize")
-    public ResponseEntity<Void> verify(
-        @RequestParam String token,
-        @RequestParam String email) throws Exception {
-        var result = accountFacade.verify(token, email);
-        if (!result) {
+    public ResponseEntity<Void> registerConfirm(
+        @ModelAttribute ConfirmRegisterAccountRequest request) throws Exception {
+        try {
+            accountFacade.registerConfirm(request);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+
         var uri = new URI("http://localhost:3000/login");
         var header = new HttpHeaders();
         header.setLocation(uri);

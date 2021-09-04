@@ -17,7 +17,7 @@ class RegisterAccountProcessorTest {
     @TestFactory
     @DisplayName("회원가입 시나리오")
     Collection<DynamicTest> register_account_scenarios() {
-        var repository = new TestAccountRepositoryStub();
+        var repository = new FakeAccountRepository();
         var processor = new RegisterAccountProcessor(repository, new PasswordEncrypterStub());
         return Arrays.asList(
             DynamicTest.dynamicTest("회원가입에 성공한다.", () -> {

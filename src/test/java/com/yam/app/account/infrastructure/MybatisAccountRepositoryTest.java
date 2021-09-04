@@ -63,6 +63,6 @@ class MybatisAccountRepositoryTest {
         account.completeRegister(); // boolean emailVerified = true
         Account updatedAccount = accountRepository.update(account);
 
-        assertThat(updatedAccount.isEmailVerified()).isEqualTo(true);
+        assertThat(updatedAccount.isEmailVerified()).isTrue();
     }
 }

@@ -34,7 +34,7 @@ public final class AccountQueryApi {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        SessionUtils.setLoginAccountEmail(session, request.getEmail());
+        // SessionUtils.setLoginAccountEmail(session, request.getEmail());
         return ResponseEntity.ok().build();
     }
 }

@@ -64,7 +64,9 @@ public class AppConfiguration {
     }
 
     @Bean
-    public LoginAccountProcessor loginAccountProcessor(AccountReader accountReader){
-        return new LoginAccountProcessor(accountReader);
+    public LoginAccountProcessor loginAccountProcessor(AccountReader accountReader,
+        PasswordEncrypter passwordEncrypter) {
+        return new LoginAccountProcessor(accountReader, passwordEncrypter);
     }
+
 }

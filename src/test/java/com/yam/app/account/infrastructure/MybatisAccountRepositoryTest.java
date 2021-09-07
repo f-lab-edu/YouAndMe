@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.yam.app.account.domain.Account;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Disabled
-class MybatisAccountRepositoryTest {
+final class MybatisAccountRepositoryTest {
 
     @Autowired
     private AccountRepository accountRepository;
@@ -24,7 +25,7 @@ class MybatisAccountRepositoryTest {
     @Test
     @DisplayName("이메일 중복 쿼리 학습 테스트")
     void existsByEmail() {
-        boolean result = accountRepository.existsByEmail("jiwonDev@gmail.com");
+        boolean result = accountReader.existsByEmail("jiwonDev@gmail.com");
 
         assertThat(result).isTrue();
     }
@@ -32,7 +33,7 @@ class MybatisAccountRepositoryTest {
     @Test
     @DisplayName("닉네임 중복 쿼리 학습 테스트")
     void existsByNickname() {
-        boolean result = accountRepository.existsByNickname("jiwon");
+        boolean result = accountReader.existsByNickname("jiwon");
 
         assertThat(result).isTrue();
     }
@@ -40,9 +41,10 @@ class MybatisAccountRepositoryTest {
     @Test
     @DisplayName("사용자 이메일을 사용한 조회 테스트")
     void findByEmail() {
-        Account account = accountReader.findByEmail("jiwonDev@gmail.com");
+        Optional<Account> account = accountReader.findByEmail("jiwonDev@gmail.com");
 
-        assertThat(account.getId()).isEqualTo(1);
+        assertThat(account.isPresent()).isTrue();
+        assertThat(account.get().getId()).isEqualTo(1);
     }
 
     @Test

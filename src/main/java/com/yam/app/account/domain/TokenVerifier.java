@@ -9,11 +9,8 @@ public final class TokenVerifier {
     }
 
     public void verify(String token, String email) {
-        var account = accountReader.findByEmail(email);
-
-        if (account == null) {
-            throw new IllegalStateException();
-        }
+        var account = accountReader.findByEmail(email)
+            .orElseThrow(IllegalArgumentException::new);
 
         if (!account.isValidToken(token)) {
             throw new IllegalStateException();

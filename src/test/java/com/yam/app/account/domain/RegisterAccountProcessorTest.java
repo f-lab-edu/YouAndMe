@@ -12,13 +12,16 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 @DisplayName("회원가입 도메인 서비스")
-class RegisterAccountProcessorTest {
+final class RegisterAccountProcessorTest {
 
     @TestFactory
     @DisplayName("회원가입 시나리오")
     Collection<DynamicTest> register_account_scenarios() {
-        var repository = new FakeAccountRepository();
-        var processor = new RegisterAccountProcessor(repository, new PasswordEncrypterStub());
+        var fakeObject = new FakeAccountRepository();
+        var repository = fakeObject;
+        var reader = fakeObject;
+        var processor = new RegisterAccountProcessor(repository,
+            reader, new PasswordEncrypterStub());
         return Arrays.asList(
             DynamicTest.dynamicTest("회원가입에 성공한다.", () -> {
                 // Arrange

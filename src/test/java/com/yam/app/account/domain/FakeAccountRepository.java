@@ -1,6 +1,7 @@
 package com.yam.app.account.domain;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -10,11 +11,10 @@ public final class FakeAccountRepository implements AccountRepository, AccountRe
     private final AtomicLong idGenerator = new AtomicLong();
 
     @Override
-    public Account findByEmail(String email) {
+    public Optional<Account> findByEmail(String email) {
         return data.values().stream()
             .filter(account -> email.equals(account.getEmail()))
-            .findAny()
-            .orElse(null);
+            .findAny();
     }
 
     @Override

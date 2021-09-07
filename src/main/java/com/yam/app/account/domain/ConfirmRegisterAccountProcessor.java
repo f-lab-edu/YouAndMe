@@ -17,7 +17,8 @@ public final class ConfirmRegisterAccountProcessor {
 
     public void registerConfirm(ConfirmRegisterAccountCommand command) {
         tokenVerifier.verify(command.getToken(), command.getEmail());
-        Account account = accountReader.findByEmail(command.getEmail());
+        var account = accountReader.findByEmail(command.getEmail())
+            .orElseThrow(IllegalArgumentException::new);
         account.completeRegister();
         accountRepository.update(account);
     }

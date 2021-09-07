@@ -3,6 +3,7 @@ package com.yam.app.account.infrastructure;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
 import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
+import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.PasswordEncrypter;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.domain.TokenVerifier;
@@ -60,5 +61,10 @@ public class AppConfiguration {
         AccountReader accountReader, AccountRepository accountRepository,
         TokenVerifier tokenVerifier) {
         return new ConfirmRegisterAccountProcessor(accountReader, accountRepository, tokenVerifier);
+    }
+
+    @Bean
+    public LoginAccountProcessor loginAccountProcessor(AccountReader accountReader){
+        return new LoginAccountProcessor(accountReader);
     }
 }

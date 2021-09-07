@@ -20,11 +20,13 @@ public final class Account {
     private LocalDateTime lastModifiedAt;
     private LocalDateTime withdrawalAt;
     private boolean withdraw = false;
+    private Role role;
 
     private Account(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
+        this.role = Role.DEFAULT;
     }
 
     public static Account of(String email, String nickname, String password) {

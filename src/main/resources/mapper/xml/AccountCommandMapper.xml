@@ -10,16 +10,19 @@
         email_verified = #{emailVerified},
         nickname = #{nickname},
         password = #{password},
-        withdraw = #{withdraw}
+        withdraw = #{withdraw},
+        joined_at = #{joinedAt},
+        role = #{role},
+        last_modified_at = NOW()
     WHERE id = #{id}
   </update>
 
   <insert id="save" parameterType="com.yam.app.account.domain.Account">
     INSERT
     INTO ACCOUNT(email, email_check_token, email_check_token_generated_at, email_verified,
-                 nickname, password, withdraw)
+                 nickname, password, withdraw, role)
     VALUES (#{email}, #{emailCheckToken}, #{emailCheckTokenGeneratedAt}, #{emailVerified},
-            #{nickname}, #{password}, #{withdraw})
+            #{nickname}, #{password}, #{withdraw}, #{role})
   </insert>
 
 </mapper>

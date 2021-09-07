@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.yam.app.account.domain.Account;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
+import com.yam.app.account.domain.Role;
 import java.util.Optional;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +54,7 @@ final class MybatisAccountRepositoryTest {
         Account account = accountRepository.save(
             Account.of("rebwon@gmail.com", "rebwon", "password!"));
 
-        assertThat(account.getId()).isEqualTo(2);
+        assertThat(account.getRole()).isEqualTo(Role.DEFAULT);
     }
 
     @Test

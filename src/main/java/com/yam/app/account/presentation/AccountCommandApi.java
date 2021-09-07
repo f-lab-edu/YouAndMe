@@ -40,7 +40,7 @@ public final class AccountCommandApi {
      */
     @GetMapping("/api/accounts/authorize")
     public ResponseEntity<Void> registerConfirm(
-        @ModelAttribute ConfirmRegisterAccountRequest request) throws Exception {
+        @ModelAttribute @Valid ConfirmRegisterAccountRequest request) throws Exception {
         try {
             accountFacade.registerConfirm(request);
         } catch (Exception e) {

@@ -2,8 +2,10 @@ package com.yam.app.account.infrastructure;
 
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
+import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
 import com.yam.app.account.domain.PasswordEncrypter;
 import com.yam.app.account.domain.RegisterAccountProcessor;
+import com.yam.app.account.domain.TokenVerifier;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,5 +47,17 @@ public class AppConfiguration {
     public RegisterAccountProcessor registerAccountProcessor(AccountRepository accountRepository,
         PasswordEncrypter passwordEncrypter) {
         return new RegisterAccountProcessor(accountRepository, passwordEncrypter);
+    }
+
+    @Bean
+    public TokenVerifier tokenVerifier(AccountReader accountReader) {
+        return new TokenVerifier(accountReader);
+    }
+
+    @Bean
+    public ConfirmRegisterAccountProcessor confirmRegisterAccountProcessor(
+        AccountReader accountReader, AccountRepository accountRepository,
+        TokenVerifier tokenVerifier) {
+        return new ConfirmRegisterAccountProcessor(accountReader, accountRepository, tokenVerifier);
     }
 }

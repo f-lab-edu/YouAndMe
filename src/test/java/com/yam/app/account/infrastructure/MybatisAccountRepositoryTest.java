@@ -53,4 +53,16 @@ class MybatisAccountRepositoryTest {
 
         assertThat(account.getId()).isEqualTo(2);
     }
+
+    @Test
+    @DisplayName("Account 객체 갱신 테스트")
+    void update() {
+        Account account = accountRepository.save(
+            Account.of("jiwon22@gmail.com", "jiwon2", "password!"));
+
+        account.completeRegister();
+        Account updatedAccount = accountRepository.update(account);
+
+        assertThat(updatedAccount.isEmailVerified()).isTrue();
+    }
 }

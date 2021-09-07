@@ -7,9 +7,6 @@ import com.yam.app.account.application.RegisterAccountCommand;
 import com.yam.app.account.domain.PasswordEncrypterTest.PasswordEncrypterStub;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -20,7 +17,7 @@ class RegisterAccountProcessorTest {
     @TestFactory
     @DisplayName("회원가입 시나리오")
     Collection<DynamicTest> register_account_scenarios() {
-        var repository = new AccountRepositoryStub();
+        var repository = new FakeAccountRepository();
         var processor = new RegisterAccountProcessor(repository, new PasswordEncrypterStub());
         return Arrays.asList(
             DynamicTest.dynamicTest("회원가입에 성공한다.", () -> {
@@ -50,32 +47,5 @@ class RegisterAccountProcessorTest {
                     .isThrownBy(() -> processor.process(command));
             })
         );
-    }
-
-    private static class AccountRepositoryStub implements AccountRepository {
-
-        private final Map<Long, Account> data = new ConcurrentHashMap<>();
-        private final AtomicLong idGenerator = new AtomicLong();
-
-        @Override
-        public boolean existsByEmail(String email) {
-            return data.values().stream()
-                .anyMatch(account -> account.getEmail().equals(email));
-        }
-
-        @Override
-        public boolean existsByNickname(String nickname) {
-            return data.values().stream()
-                .anyMatch(account -> account.getNickname().equals(nickname));
-        }
-
-        @Override
-        public Account save(Account entity) {
-            if (entity.getId() == null) {
-                entity.setId(idGenerator.incrementAndGet());
-                data.put(entity.getId(), entity);
-            }
-            return data.putIfAbsent(entity.getId(), entity);
-        }
     }
 }

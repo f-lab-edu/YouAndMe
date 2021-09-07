@@ -19,12 +19,12 @@ final class AccountTranslator {
         return new ConfirmRegisterAccountCommand(request.getToken(), request.getEmail());
     }
 
+    public LoginAccountCommand toCommand(LoginAccountRequest request) {
+        return new LoginAccountCommand(request.getEmail(), request.getPassword());
+    }
+
     public AccountResponse toResponse(Account entity) {
         return new AccountResponse(entity.getId(), entity.getEmail(),
             entity.getNickname());
-    }
-
-    public LoginAccountCommand toCommand(LoginAccountRequest request) {
-        return new LoginAccountCommand(request.getEmail(), request.getPassword());
     }
 }

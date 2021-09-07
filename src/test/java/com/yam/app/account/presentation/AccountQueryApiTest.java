@@ -32,10 +32,11 @@ class AccountQueryApiTest {
 
     @Nested
     @DisplayName("Login HTTP API")
-    class LoginAPI {
+    class LoginApi {
+
         @Test
         @DisplayName("정상적인 이메일과 비밀번호를 보내 로그인에 성공하고 200을 반환한다.")
-        void login_success() throws Exception{
+        void login_success() throws Exception {
             //Arrange
             LoginAccountRequest request = new LoginAccountRequest();
             request.setEmail("jiwon@gmail.com");

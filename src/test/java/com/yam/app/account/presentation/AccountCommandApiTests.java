@@ -37,21 +37,25 @@ final class AccountCommandApiTests {
     @DisplayName("이메일 검증 HTTP API")
     class RegisterConfirmApi {
 
+        private static final String EMAIL_AUTHORIZE_API = "/api/accounts/authorize";
+        private static final String TOKEN = "token";
+        private static final String EMAIL = "email";
+
         @ParameterizedTest
         @NullAndEmptySource
         @DisplayName("HTTP 파라메타가 비었거나 null인 검증요청을 보낸 경우 400 HTTP Code 리턴한다.")
         void http_param_is_empty_or_null(String args) throws Exception {
-            // Act
+            // Arrange
             var request = new ConfirmRegisterAccountRequest();
             request.setToken(args);
             request.setEmail(args);
-            doThrow(IllegalStateException.class).when(accountFacade).registerConfirm(request);
 
-            final var actions = mockMvc.perform(get("/api/accounts/authorize")
+            // Act
+            final var actions = mockMvc.perform(get(EMAIL_AUTHORIZE_API)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("token", args)
-                .param("email", args)
+                .param(TOKEN, args)
+                .param(EMAIL, args)
             );
 
             // Assert
@@ -60,20 +64,23 @@ final class AccountCommandApiTests {
                 .andExpect(status().isBadRequest());
         }
 
-        @Test
+        @ParameterizedTest
+        @AutoSource
         @DisplayName("HTTP 파라메타가 유효하지 않은 값으로 검증요청을 보낸 경우 400 HTTP Code 리턴한다.")
-        void http_param_is_not_valid() throws Exception {
-            // Act
+        void http_param_is_not_valid(String arg) throws Exception {
+            // Arrange
             var request = new ConfirmRegisterAccountRequest();
-            request.setToken("QWEIUHQWDU");
-            request.setEmail("QWEIOWQJE@naver.com");
+            request.setToken(arg);
+            request.setEmail(arg);
+
+            // Act
             doThrow(IllegalStateException.class).when(accountFacade).registerConfirm(request);
 
-            final var actions = mockMvc.perform(get("/api/accounts/authorize")
+            final var actions = mockMvc.perform(get(EMAIL_AUTHORIZE_API)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("token", "QWEIUHQWDU")
-                .param("email", "QWEIOWQJE@naver.com")
+                .param(TOKEN, arg)
+                .param(EMAIL, arg)
             );
 
             // Assert
@@ -85,16 +92,17 @@ final class AccountCommandApiTests {
         @Test
         @DisplayName("토큰과 이메일 정보로 검증요청을 보낸 경우 303 HTTP Code 리턴한다.")
         void valid_success() throws Exception {
-            // Act
+            // Arrange
             var request = new ConfirmRegisterAccountRequest();
             request.setToken("emailTOken");
             request.setEmail("jiwonDev@gmail.com");
 
-            final var actions = mockMvc.perform(get("/api/accounts/authorize")
+            // Act
+            final var actions = mockMvc.perform(get(EMAIL_AUTHORIZE_API)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("token", "emailTOken")
-                .param("email", "jiwonDev@gmail.com")
+                .param(TOKEN, "emailTOken")
+                .param(EMAIL, "jiwonDev@gmail.com")
             );
 
             // Assert
@@ -107,6 +115,8 @@ final class AccountCommandApiTests {
     @Nested
     @DisplayName("회원가입 등록 HTTP API")
     class RegisterApi {
+
+        private static final String REGISTER_API = "/api/accounts";
 
         @Test
         @DisplayName("회원가입에 적절한 파라미터가 입력되고 회원가입이 성공한다.")
@@ -121,7 +131,7 @@ final class AccountCommandApiTests {
             when(accountFacade.register(request)).thenReturn(
                 new AccountResponse(1L, "msolo021015@gmail.com", "rebwon"));
 
-            final var actions = mockMvc.perform(post("/api/accounts")
+            final var actions = mockMvc.perform(post(REGISTER_API)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -136,17 +146,19 @@ final class AccountCommandApiTests {
                 .andExpect(jsonPath("$.nickname").isString());
         }
 
-        @Test
+        @ParameterizedTest
+        @AutoSource
         @DisplayName("Accept와 Content-Type을 지정하지 않아, HttpMediaTypeNotSupportedException 발생.")
-        void register_account_api_not_use_accept_header_and_content_type() throws Exception {
+        void register_account_api_not_use_accept_header_and_content_type(String arg)
+            throws Exception {
             // Arrange
             var request = new RegisterAccountRequest();
-            request.setEmail("msolo021015@gmail.com");
-            request.setNickname("rebwon");
-            request.setPassword("password!");
+            request.setEmail(arg);
+            request.setNickname(arg);
+            request.setPassword(arg);
 
             // Act
-            final var actions = mockMvc.perform(post("/api/accounts")
+            final var actions = mockMvc.perform(post(REGISTER_API)
                 .content(objectMapper.writeValueAsString(request))
             );
 
@@ -166,7 +178,7 @@ final class AccountCommandApiTests {
             request.setPassword(arg);
 
             // Act
-            final var actions = mockMvc.perform(post("/api/accounts")
+            final var actions = mockMvc.perform(post(REGISTER_API)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -189,7 +201,7 @@ final class AccountCommandApiTests {
             request.setPassword(arg);
 
             // Act
-            final var actions = mockMvc.perform(post("/api/accounts")
+            final var actions = mockMvc.perform(post(REGISTER_API)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))

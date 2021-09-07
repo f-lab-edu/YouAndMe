@@ -3,7 +3,7 @@ package com.yam.app.account.application;
 import lombok.Getter;
 
 @Getter
-public class ConfirmRegisterAccountCommand {
+public final class ConfirmRegisterAccountCommand {
 
     private final String token;
     private final String email;

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
 @DisplayName("회원 검증 도메인 서비스")
-class ConfirmRegisterAccountProcessorTest {
+final class ConfirmRegisterAccountProcessorTest {
 
     @TestFactory
     @DisplayName("이메일 검증 시나리오")
@@ -33,7 +33,7 @@ class ConfirmRegisterAccountProcessorTest {
 
                 // Act
                 confirmRegisterAccountProcessor.registerConfirm(command);
-                Account updatedAccount = accountRepository.findByEmail(account.getEmail());
+                Account updatedAccount = accountRepository.findByEmail(account.getEmail()).get();
 
                 // Assert
                 assertThat(updatedAccount.isEmailVerified()).isTrue();
@@ -54,7 +54,7 @@ class ConfirmRegisterAccountProcessorTest {
                         "HiIamNotExistEmail@naver.com");
 
                     // Act & Assert
-                    assertThatExceptionOfType(IllegalStateException.class)
+                    assertThatExceptionOfType(IllegalArgumentException.class)
                         .isThrownBy(() -> confirmRegisterAccountProcessor.registerConfirm(command));
                 }),
             DynamicTest.dynamicTest("토큰 검증에 실패하여 예외를 리턴한다.",

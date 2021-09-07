@@ -45,8 +45,9 @@ public class AppConfiguration {
 
     @Bean
     public RegisterAccountProcessor registerAccountProcessor(AccountRepository accountRepository,
+        AccountReader accountReader,
         PasswordEncrypter passwordEncrypter) {
-        return new RegisterAccountProcessor(accountRepository, passwordEncrypter);
+        return new RegisterAccountProcessor(accountRepository, accountReader, passwordEncrypter);
     }
 
     @Bean

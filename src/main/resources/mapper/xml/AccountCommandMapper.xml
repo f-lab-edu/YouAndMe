@@ -14,18 +14,6 @@
     WHERE id = #{id}
   </update>
 
-  <select id="existsByEmail" parameterType="String" resultType="int">
-    SELECT COUNT(email)
-    FROM ACCOUNT
-    WHERE email = #{email}
-  </select>
-
-  <select id="existsByNickname" parameterType="String" resultType="int">
-    SELECT COUNT(nickname)
-    FROM ACCOUNT
-    WHERE nickname = #{nickname}
-  </select>
-
   <insert id="save" parameterType="com.yam.app.account.domain.Account">
     INSERT
     INTO ACCOUNT(email, email_check_token, email_check_token_generated_at, email_verified,

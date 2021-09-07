@@ -26,7 +26,7 @@ final class MailManager {
         var newAccount = event.getAccount();
         var context = new Context();
         context.setVariable("link",
-            "/api/check-email?token=" + newAccount.getEmailCheckToken()
+            "/api/accounts/authorize?token=" + newAccount.getEmailCheckToken()
                 + "&email=" + newAccount.getEmail());
         context.setVariable("nickname", newAccount.getNickname());
         context.setVariable("linkName", "이메일 인증하기");

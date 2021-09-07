@@ -5,19 +5,21 @@ import com.yam.app.account.application.RegisterAccountCommand;
 public final class RegisterAccountProcessor {
 
     private final AccountRepository accountRepository;
+    private final AccountReader accountReader;
     private final PasswordEncrypter passwordEncrypter;
 
     public RegisterAccountProcessor(AccountRepository accountRepository,
-        PasswordEncrypter passwordEncrypter) {
+        AccountReader accountReader, PasswordEncrypter passwordEncrypter) {
         this.accountRepository = accountRepository;
+        this.accountReader = accountReader;
         this.passwordEncrypter = passwordEncrypter;
     }
 
     public Account process(RegisterAccountCommand command) {
-        if (accountRepository.existsByEmail(command.getEmail())) {
+        if (accountReader.existsByEmail(command.getEmail())) {
             throw new IllegalStateException();
         }
-        if (accountRepository.existsByNickname(command.getNickname())) {
+        if (accountReader.existsByNickname(command.getNickname())) {
             throw new IllegalStateException();
         }
 

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("test")
-public final class TestMailDispatcher implements MailDispatcher {
+public final class DummyMailDispatcher implements MailDispatcher {
 
     @Override
     public void send(MailMessage mailMessage) {

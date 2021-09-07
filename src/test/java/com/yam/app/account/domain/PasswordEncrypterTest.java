@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class PasswordEncrypterTest {
+final class PasswordEncrypterTest {
 
     @Test
     @DisplayName("비밀번호를 인코딩하고 올바르게 일치하는지 검증한다.")

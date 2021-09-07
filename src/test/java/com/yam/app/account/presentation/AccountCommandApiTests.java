@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayName("Account Command HTTP API")
 @WebMvcTest(AccountCommandApi.class)
-class AccountCommandApiTests {
+final class AccountCommandApiTests {
 
     @Autowired
     private MockMvc mockMvc;

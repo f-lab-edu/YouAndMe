@@ -1,8 +1,10 @@
 package com.yam.app.account.integration;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,4 +54,23 @@ final class AccountIntegrationTests {
             .andExpect(jsonPath("$.email").isString())
             .andExpect(jsonPath("$.nickname").isString());
     }
+
+    @Test
+    @DisplayName("이메일과 토큰을 검증하고 회원의 상태를 업데이트하는 시나리오")
+    void register_confirm() throws Exception {
+        // Act
+        final var actions = mockMvc.perform(get("/api/accounts/authorize")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("token", "emailchecktoken")
+            .param("email", "jiwonDev@gmail.com")
+        );
+
+        // Assert
+        actions
+            .andDo(print())
+            .andExpect(status().isSeeOther())
+            .andExpect(redirectedUrl("http://localhost:3000/login"));
+    }
+
 }

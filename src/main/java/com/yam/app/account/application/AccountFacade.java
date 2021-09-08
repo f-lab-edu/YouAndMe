@@ -15,35 +15,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AccountFacade {
 
-    private final RegisterAccountProcessor processor;
+    private final RegisterAccountProcessor registerProcessor;
     private final AccountTranslator translator;
     private final ApplicationEventPublisher publisher;
     private final ConfirmRegisterAccountProcessor confirmRegisterProcessor;
-    private final LoginAccountProcessor loginAccountProcessor;
+    private final LoginAccountProcessor loginProcessor;
 
-    public AccountFacade(RegisterAccountProcessor processor,
+    public AccountFacade(RegisterAccountProcessor registerProcessor,
         AccountTranslator translator, ApplicationEventPublisher publisher,
         ConfirmRegisterAccountProcessor confirmRegisterProcessor,
-        LoginAccountProcessor loginAccountProcessor) {
-        this.processor = processor;
+        LoginAccountProcessor loginProcessor) {
+        this.registerProcessor = registerProcessor;
         this.translator = translator;
         this.publisher = publisher;
         this.confirmRegisterProcessor = confirmRegisterProcessor;
-        this.loginAccountProcessor = loginAccountProcessor;
+        this.loginProcessor = loginProcessor;
     }
 
     @Transactional
     public AccountResponse register(RegisterAccountRequest request) {
-        var entity = processor.process(translator.toCommand(request));
+        var entity = registerProcessor.process(translator.toCommand(request));
         publisher.publishEvent(new RegisterAccountEvent(entity));
         return translator.toResponse(entity);
     }
 
+    @Transactional
     public void registerConfirm(ConfirmRegisterAccountRequest request) {
         confirmRegisterProcessor.registerConfirm(translator.toCommand(request));
     }
 
     public void login(LoginAccountRequest request) {
-        loginAccountProcessor.login(translator.toCommand(request));
+        loginProcessor.login(translator.toCommand(request));
     }
 }

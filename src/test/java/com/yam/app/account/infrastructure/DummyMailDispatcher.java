@@ -1,7 +1,5 @@
-package com.yam.app.account.integration;
+package com.yam.app.account.infrastructure;
 
-import com.yam.app.account.infrastructure.MailDispatcher;
-import com.yam.app.account.infrastructure.MailMessage;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 

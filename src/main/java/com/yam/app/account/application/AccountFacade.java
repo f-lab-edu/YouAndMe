@@ -5,9 +5,9 @@ import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.RegisterAccountEvent;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.presentation.AccountResponse;
-import com.yam.app.account.presentation.ConfirmRegisterAccountRequest;
-import com.yam.app.account.presentation.LoginAccountRequest;
-import com.yam.app.account.presentation.RegisterAccountRequest;
+import com.yam.app.account.presentation.ConfirmRegisterAccountRequestCommand;
+import com.yam.app.account.presentation.LoginAccountRequestCommand;
+import com.yam.app.account.presentation.RegisterAccountRequestCommand;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,18 +33,22 @@ public class AccountFacade {
     }
 
     @Transactional
-    public AccountResponse register(RegisterAccountRequest request) {
-        var entity = registerProcessor.process(translator.toCommand(request));
+    public AccountResponse register(RegisterAccountRequestCommand request) {
+        var entity = registerProcessor.process(
+            request.getEmail(),
+            request.getNickname(),
+            request.getPassword()
+        );
         publisher.publishEvent(new RegisterAccountEvent(entity));
         return translator.toResponse(entity);
     }
 
     @Transactional
-    public void registerConfirm(ConfirmRegisterAccountRequest request) {
-        confirmRegisterProcessor.registerConfirm(translator.toCommand(request));
+    public void registerConfirm(ConfirmRegisterAccountRequestCommand request) {
+        confirmRegisterProcessor.registerConfirm(request.getToken(), request.getEmail());
     }
 
-    public void login(LoginAccountRequest request) {
-        loginProcessor.login(translator.toCommand(request));
+    public void login(LoginAccountRequestCommand request) {
+        loginProcessor.login(request.getEmail(), request.getPassword());
     }
 }

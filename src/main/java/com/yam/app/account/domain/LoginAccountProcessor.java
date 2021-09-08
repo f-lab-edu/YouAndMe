@@ -1,7 +1,5 @@
 package com.yam.app.account.domain;
 
-import com.yam.app.account.application.LoginAccountCommand;
-
 public final class LoginAccountProcessor {
 
     private final AccountReader accountReader;
@@ -13,11 +11,11 @@ public final class LoginAccountProcessor {
         this.passwordEncrypter = passwordEncrypter;
     }
 
-    public void login(LoginAccountCommand toCommand) {
-        var account = accountReader.findByEmail(toCommand.getEmail())
+    public void login(String email, String password) {
+        var account = accountReader.findByEmail(email)
             .orElseThrow(IllegalStateException::new);
 
-        if (!passwordEncrypter.matches(toCommand.getPassword(), account.getPassword())) {
+        if (!passwordEncrypter.matches(password, account.getPassword())) {
             throw new IllegalStateException();
         }
     }

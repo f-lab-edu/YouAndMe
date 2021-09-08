@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
-import com.yam.app.account.application.LoginAccountCommand;
 import com.yam.app.account.domain.PasswordEncrypterTest.PasswordEncrypterStub;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,36 +28,27 @@ class LoginAccountProcessorTest {
 
         return Arrays.asList(
             dynamicTest("회원 로그인에 성공한다.", () -> {
-                // Arrange
-                var command = new LoginAccountCommand(account.getEmail(), account.getPassword());
-
                 // Act
                 var throwable = catchThrowable(
-                    () -> loginAccountProcessor.login(command)
+                    () -> loginAccountProcessor.login(account.getEmail(), account.getPassword())
                 );
 
                 // Assert
                 assertThat(throwable).isNull();
             }),
             dynamicTest("이메일이 유효하지 않은 경우 예외를 리턴한다.", () -> {
-                // Arrange
-                var command = new LoginAccountCommand("dwqko@naver.com", account.getPassword());
-
                 // Act
                 var throwable = catchThrowable(
-                    () -> loginAccountProcessor.login(command)
+                    () -> loginAccountProcessor.login("dwqko@naver.com", account.getPassword())
                 );
 
                 // Assert
                 assertThat(throwable).isInstanceOf(IllegalStateException.class);
             }),
             dynamicTest("비밀번호가 유효하지 않은 경우 예외를 리턴한다.", () -> {
-                // Arrange
-                var command = new LoginAccountCommand(account.getEmail(), "11111111!");
-
                 // Act
                 var throwable = catchThrowable(
-                    () -> loginAccountProcessor.login(command)
+                    () -> loginAccountProcessor.login(account.getEmail(), "11111111!")
                 );
 
                 // Assert

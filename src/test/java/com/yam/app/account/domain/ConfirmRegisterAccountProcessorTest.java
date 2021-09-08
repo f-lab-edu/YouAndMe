@@ -3,7 +3,6 @@ package com.yam.app.account.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import com.yam.app.account.application.ConfirmRegisterAccountCommand;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.jupiter.api.DisplayName;
@@ -27,12 +26,9 @@ final class ConfirmRegisterAccountProcessorTest {
 
         return Arrays.asList(
             DynamicTest.dynamicTest("회원 이메일 토큰검증에 성공한다.", () -> {
-                //Arrange
-                var command = new ConfirmRegisterAccountCommand(account.getEmailCheckToken(),
-                    account.getEmail());
-
                 // Act
-                confirmRegisterAccountProcessor.registerConfirm(command);
+                confirmRegisterAccountProcessor.registerConfirm(account.getEmailCheckToken(),
+                    account.getEmail());
                 Account updatedAccount = accountRepository.findByEmail(account.getEmail()).get();
 
                 // Assert
@@ -40,32 +36,27 @@ final class ConfirmRegisterAccountProcessorTest {
             }),
             DynamicTest.dynamicTest("이메일이나 토큰의 값이 null인 경우 예외를 리턴한다.",
                 () -> {
-                    //Arrange
-                    var command = new ConfirmRegisterAccountCommand(null, null);
 
                     // Act & Assert
                     assertThatExceptionOfType(NullPointerException.class)
-                        .isThrownBy(() -> confirmRegisterAccountProcessor.registerConfirm(command));
+                        .isThrownBy(
+                            () -> confirmRegisterAccountProcessor.registerConfirm(null, null));
                 }),
             DynamicTest.dynamicTest("이메일 검증에 실패하여 예외를 리턴한다.",
                 () -> {
-                    //Arrange
-                    var command = new ConfirmRegisterAccountCommand(account.getEmailCheckToken(),
-                        "HiIamNotExistEmail@naver.com");
-
                     // Act & Assert
                     assertThatExceptionOfType(IllegalArgumentException.class)
-                        .isThrownBy(() -> confirmRegisterAccountProcessor.registerConfirm(command));
+                        .isThrownBy(() -> confirmRegisterAccountProcessor.registerConfirm(
+                            account.getEmailCheckToken(),
+                            "HiIamNotExistEmail@naver.com"));
                 }),
             DynamicTest.dynamicTest("토큰 검증에 실패하여 예외를 리턴한다.",
                 () -> {
-                    //Arrange
-                    var command = new ConfirmRegisterAccountCommand("안녕난가짜토큰이라고해",
-                        account.getEmail());
-
                     // Act & Assert
                     assertThatExceptionOfType(IllegalStateException.class)
-                        .isThrownBy(() -> confirmRegisterAccountProcessor.registerConfirm(command));
+                        .isThrownBy(
+                            () -> confirmRegisterAccountProcessor.registerConfirm("안녕난가짜토큰이라고해",
+                                account.getEmail()));
                 })
         );
     }

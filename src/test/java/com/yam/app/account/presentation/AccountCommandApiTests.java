@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -212,6 +213,30 @@ final class AccountCommandApiTests {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
         }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"1", "a", "1a234567890123456"})
+        @DisplayName("요청 Body 의 비밀번호 형식이 맞지 않은 경우 400 에러를 반환한다.")
+        void http_json_password_is_invalid(String args) throws Exception {
+            // Arrange
+            var request = new RegisterAccountRequest();
+            request.setEmail("jiwon@naver.com");
+            request.setNickname("jiwon");
+            request.setPassword(args);
+
+            // Act
+            final var actions = mockMvc.perform(post(REGISTER_API)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // Assert
+            actions
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        }
+
     }
 
 }

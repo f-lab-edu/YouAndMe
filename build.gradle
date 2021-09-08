@@ -1,6 +1,7 @@
 import com.github.spotbugs.snom.SpotBugsTask
 
 plugins {
+    id 'jacoco'
     id 'org.springframework.boot' version '2.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.asciidoctor.convert' version '1.5.8'
@@ -56,10 +57,58 @@ dependencies {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
+
+    finalizedBy('jacocoTestReport')
 }
 
 editorconfig {
     excludes = ["build"]
+}
+
+jacoco {
+    toolVersion = '0.8.7'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled true
+        csv.enabled false
+    }
+    finalizedBy 'jacocoTestCoverageVerification'
+
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS'
+            excludes = [
+                "*.YouAndMeApplication",
+                "*.*Request",
+                "*.*Response",
+                "*.*Repository",
+                "*.*Reader",
+                "*.Role",
+                "*.configuration.*", // path/configuration/...
+                "*.SmtpMail*",
+                "*.RoleTypeHandler",
+            ]
+
+            limit {
+                counter = 'BRANCH' // 모든 분기가 실행되는가?
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            limit {
+                counter = 'INSTRUCTION' // 바이트코드 라인 커버리지
+                value = 'COVEREDRATIO'
+                minimum = 0.50
+            }
+        }
+    }
 }
 
 check.dependsOn editorconfigCheck

@@ -14,17 +14,10 @@ public final class LoginAccountProcessor {
     }
 
     public void login(LoginAccountCommand toCommand) {
-        var account = accountReader.findByEmail(toCommand.getEmail());
+        var account = accountReader.findByEmail(toCommand.getEmail())
+            .orElseThrow(IllegalStateException::new);
 
-        if (account.isEmpty()) {
-            throw new IllegalStateException();
-        }
-
-        final String password = account.get().getPassword();
-        boolean matches = passwordEncrypter.matches(toCommand.getPassword(),
-            passwordEncrypter.encode(password));
-
-        if (!matches) {
+        if (!passwordEncrypter.matches(toCommand.getPassword(), account.getPassword())) {
             throw new IllegalStateException();
         }
     }

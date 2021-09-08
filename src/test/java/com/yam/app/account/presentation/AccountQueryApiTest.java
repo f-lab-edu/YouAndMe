@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -44,7 +45,7 @@ class AccountQueryApiTest {
             doNothing().when(accountFacade).login(request);
 
             //Act
-            var actions = mockMvc.perform(post("/api/login")
+            var actions = mockMvc.perform(post("/api/accounts/login")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -56,39 +57,17 @@ class AccountQueryApiTest {
                 .andExpect(status().isOk());
         }
 
-        @ParameterizedTest
-        @NullAndEmptySource
-        @DisplayName("로그인 요청 JSON 데이터가 null 이거나 비어있다면 400 에러를 반환한다.")
-        void http_json_value_is_empty_or_null(String args) throws Exception {
-            //Arrange
-            var request = new LoginAccountRequest();
-            request.setEmail(args);
-            request.setPassword(args);
-
-            //Act
-            var actions = mockMvc.perform(post("/api/login")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request))
-            );
-
-            //Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
-        }
-
         @Test
-        @DisplayName("이메일과 비밀번호가 유효하지않아 로그인에 실패한 경우 401 에러를 반환한다.")
+        @DisplayName("이메일, 비밀번호 형식은 유효하나 로그인이 실패한 경우 401 에러를 반환한다.")
         void login_fail() throws Exception {
             // Arrange
             var request = new LoginAccountRequest();
             request.setEmail("wejiwef@naver.com");
-            request.setPassword("DRFTGYHUJIKOL");
+            request.setPassword("password1!");
             doThrow(IllegalStateException.class).when(accountFacade).login(request);
 
             // Act
-            final var actions = mockMvc.perform(post("/api/login")
+            final var actions = mockMvc.perform(post("/api/accounts/login")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -99,6 +78,73 @@ class AccountQueryApiTest {
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
         }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"1", "a", "1a234567890123456"})
+        @DisplayName("요청 Body 의 비밀번호 형식이 맞지 않은 경우 400 에러를 반환한다.")
+        void http_json_password_is_invalid(String args) throws Exception {
+            // Arrange
+            var request = new LoginAccountRequest();
+            request.setEmail("jiwon22@gmail.com");
+            request.setPassword(args);
+            doThrow(IllegalStateException.class).when(accountFacade).login(request);
+
+            // Act
+            final var actions = mockMvc.perform(post("/api/accounts/login")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // Assert
+            actions
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"@@@@@@@@@", "@naver.com", "jiwon"})
+        @DisplayName("요청 Body 의 이메일 형식이 맞지 않은 경우 400 에러를 반환한다.")
+        void http_json_email_is_invalid() throws Exception {
+            // Arrange
+            var request = new LoginAccountRequest();
+            request.setEmail("DQWJIDWQ291");
+            request.setPassword("1abcabcabc");
+            doThrow(IllegalStateException.class).when(accountFacade).login(request);
+
+            // Act
+            final var actions = mockMvc.perform(post("/api/accounts/login")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            // Assert
+            actions
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @DisplayName("요청 Body 의 이메일,비밀번호가 null 이거나 비어있다면 400 에러를 반환한다.")
+        void http_json_value_is_empty_or_null(String args) throws Exception {
+            //Arrange
+            var request = new LoginAccountRequest();
+            request.setEmail(args);
+            request.setPassword(args);
+
+            //Act
+            var actions = mockMvc.perform(post("/api/accounts/login")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request))
+            );
+
+            //Assert
+            actions
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        }
     }
 }
-

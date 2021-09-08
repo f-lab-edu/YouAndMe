@@ -25,7 +25,7 @@ public final class AccountQueryApi {
 
     @PostMapping("/api/accounts/login")
     public ResponseEntity<Void> login(
-        @Valid @RequestBody LoginAccountRequest request) {
+        @Valid @RequestBody LoginAccountRequestCommand request) {
         try {
             accountFacade.login(request);
         } catch (IllegalStateException e) {

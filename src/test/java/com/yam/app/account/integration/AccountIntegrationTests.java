@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yam.app.account.presentation.RegisterAccountRequest;
+import com.yam.app.account.presentation.RegisterAccountRequestCommand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,9 @@ final class AccountIntegrationTests {
 
     @Test
     @DisplayName("새로운 계정을 등록하는 회원가입 시나리오")
-    void register_success() throws Exception {
+    void new_account_request_in_register_correctly() throws Exception {
         // Arrange
-        var request = new RegisterAccountRequest();
+        var request = new RegisterAccountRequestCommand();
         request.setEmail("msolo021015@gmail.com");
         request.setNickname("rebwon");
         request.setPassword("password!");
@@ -57,7 +57,7 @@ final class AccountIntegrationTests {
 
     @Test
     @DisplayName("이메일과 토큰을 검증하고 회원의 상태를 업데이트하는 시나리오")
-    void register_confirm() throws Exception {
+    void email_and_token_verify_request_in_correctly() throws Exception {
         // Act
         final var actions = mockMvc.perform(get("/api/accounts/authorize")
             .accept(MediaType.APPLICATION_JSON)

@@ -1,7 +1,5 @@
 package com.yam.app.account.domain;
 
-import com.yam.app.account.application.RegisterAccountCommand;
-
 public final class RegisterAccountProcessor {
 
     private final AccountRepository accountRepository;
@@ -15,17 +13,16 @@ public final class RegisterAccountProcessor {
         this.passwordEncrypter = passwordEncrypter;
     }
 
-    public Account process(RegisterAccountCommand command) {
-        if (accountReader.existsByEmail(command.getEmail())) {
+    public Account process(String email, String nickname, String password) {
+        if (accountReader.existsByEmail(email)) {
             throw new IllegalStateException();
         }
-        if (accountReader.existsByNickname(command.getNickname())) {
+        if (accountReader.existsByNickname(nickname)) {
             throw new IllegalStateException();
         }
 
-        String encodedPassword = passwordEncrypter.encode(command.getPassword());
+        String encodedPassword = passwordEncrypter.encode(password);
 
-        return accountRepository.save(
-            Account.of(command.getEmail(), command.getNickname(), encodedPassword));
+        return accountRepository.save(Account.of(email, nickname, encodedPassword));
     }
 }

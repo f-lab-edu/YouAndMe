@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public final class ConfirmRegisterAccountRequest {
+public final class ConfirmRegisterAccountRequestCommand {
 
     @NotBlank
     private String token;

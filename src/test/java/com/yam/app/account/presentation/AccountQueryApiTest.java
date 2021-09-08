@@ -39,7 +39,7 @@ class AccountQueryApiTest {
         @DisplayName("정상적인 이메일과 비밀번호를 보내 로그인에 성공하고 200을 반환한다.")
         void login_success() throws Exception {
             //Arrange
-            LoginAccountRequest request = new LoginAccountRequest();
+            LoginAccountRequestCommand request = new LoginAccountRequestCommand();
             request.setEmail("jiwon@gmail.com");
             request.setPassword("password!");
             doNothing().when(accountFacade).login(request);
@@ -61,7 +61,7 @@ class AccountQueryApiTest {
         @DisplayName("이메일, 비밀번호 형식은 유효하나 로그인이 실패한 경우 401 에러를 반환한다.")
         void login_fail() throws Exception {
             // Arrange
-            var request = new LoginAccountRequest();
+            var request = new LoginAccountRequestCommand();
             request.setEmail("wejiwef@naver.com");
             request.setPassword("password1!");
             doThrow(IllegalStateException.class).when(accountFacade).login(request);
@@ -84,7 +84,7 @@ class AccountQueryApiTest {
         @DisplayName("요청 Body 의 비밀번호 형식이 맞지 않은 경우 400 에러를 반환한다.")
         void http_json_password_is_invalid(String args) throws Exception {
             // Arrange
-            var request = new LoginAccountRequest();
+            var request = new LoginAccountRequestCommand();
             request.setEmail("jiwon22@gmail.com");
             request.setPassword(args);
             doThrow(IllegalStateException.class).when(accountFacade).login(request);
@@ -107,7 +107,7 @@ class AccountQueryApiTest {
         @DisplayName("요청 Body 의 이메일 형식이 맞지 않은 경우 400 에러를 반환한다.")
         void http_json_email_is_invalid() throws Exception {
             // Arrange
-            var request = new LoginAccountRequest();
+            var request = new LoginAccountRequestCommand();
             request.setEmail("DQWJIDWQ291");
             request.setPassword("1abcabcabc");
             doThrow(IllegalStateException.class).when(accountFacade).login(request);
@@ -130,7 +130,7 @@ class AccountQueryApiTest {
         @DisplayName("요청 Body 의 이메일,비밀번호가 null 이거나 비어있다면 400 에러를 반환한다.")
         void http_json_value_is_empty_or_null(String args) throws Exception {
             //Arrange
-            var request = new LoginAccountRequest();
+            var request = new LoginAccountRequestCommand();
             request.setEmail(args);
             request.setPassword(args);
 

@@ -91,19 +91,19 @@ jacocoTestCoverageVerification {
                 "*.*Repository",
                 "*.*Reader",
                 "*.Role",
-                "*.configuration.*", // path/configuration/...
+                "*.configuration.*",
                 "*.SmtpMail*",
                 "*.RoleTypeHandler",
             ]
 
             limit {
-                counter = 'BRANCH' // 모든 분기가 실행되는가?
+                counter = 'BRANCH'
                 value = 'COVEREDRATIO'
                 minimum = 0.80
             }
 
             limit {
-                counter = 'INSTRUCTION' // 바이트코드 라인 커버리지
+                counter = 'INSTRUCTION'
                 value = 'COVEREDRATIO'
                 minimum = 0.50
             }

@@ -24,6 +24,7 @@ class LoginAccountProcessorTest {
         var loginAccountProcessor = new LoginAccountProcessor(accountReader, passwordEncrypter);
 
         var account = Account.of("hello@naver.com", "hello", "password!");
+        account.completeRegister();
         accountRepository.save(account);
 
         return Arrays.asList(

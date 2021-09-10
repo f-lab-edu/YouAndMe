@@ -4,11 +4,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-public final class SessionUtils {
+public final class LoginSessionUtils {
 
     public static final String LOGIN_ACCOUNT_EMAIL = "LOGIN_ACCOUNT_EMAIL";
 
-    private SessionUtils() {
+    private LoginSessionUtils() {
     }
 
     public static String getLoginAccountEmail() {

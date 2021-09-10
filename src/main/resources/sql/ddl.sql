@@ -23,4 +23,7 @@ alter table account
 insert into account(email, email_check_token, email_check_token_generated_at, email_verified,
                     joined_at, last_modified_at, nickname, password, withdraw, role)
 values ('jiwonDev@gmail.com', 'emailchecktoken', now(), false, now(), now(), 'jiwon', 'password!',
+        false, 'DEFAULT'),
+       ('loginCheck@gmail.com', 'emailchecktoken1', now(), true, now(), now(), 'loginCheck',
+        '$2a$10$EqbMbYB0vcZnuA5CClqa9uiLDnjA6pCjxn208ZchzA2q3ofqnkhcq',
         false, 'DEFAULT');

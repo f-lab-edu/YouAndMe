@@ -90,6 +90,7 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
             excludes = [
+                "*.*ArgumentResolver",
                 "*.YouAndMeApplication",
                 "*.*Request",
                 "*.*Response",

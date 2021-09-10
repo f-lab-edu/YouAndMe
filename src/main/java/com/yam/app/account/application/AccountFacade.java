@@ -1,11 +1,13 @@
 package com.yam.app.account.application;
 
+import com.yam.app.account.domain.AccountPrincipal;
 import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
 import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.RegisterAccountEvent;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.presentation.AccountResponse;
 import com.yam.app.account.presentation.ConfirmRegisterAccountRequestCommand;
+import com.yam.app.account.presentation.GetSessionAccountCommand;
 import com.yam.app.account.presentation.LoginAccountRequestCommand;
 import com.yam.app.account.presentation.RegisterAccountRequestCommand;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,16 +22,19 @@ public class AccountFacade {
     private final ApplicationEventPublisher publisher;
     private final ConfirmRegisterAccountProcessor confirmRegisterProcessor;
     private final LoginAccountProcessor loginProcessor;
+    private final AccountPrincipal accountPrincipal;
 
     public AccountFacade(RegisterAccountProcessor registerProcessor,
         AccountTranslator translator, ApplicationEventPublisher publisher,
         ConfirmRegisterAccountProcessor confirmRegisterProcessor,
-        LoginAccountProcessor loginProcessor) {
+        LoginAccountProcessor loginProcessor,
+        AccountPrincipal accountPrincipal) {
         this.registerProcessor = registerProcessor;
         this.translator = translator;
         this.publisher = publisher;
         this.confirmRegisterProcessor = confirmRegisterProcessor;
         this.loginProcessor = loginProcessor;
+        this.accountPrincipal = accountPrincipal;
     }
 
     @Transactional
@@ -48,7 +53,13 @@ public class AccountFacade {
         confirmRegisterProcessor.registerConfirm(request.getToken(), request.getEmail());
     }
 
+    @Transactional(readOnly = true)
     public void login(LoginAccountRequestCommand request) {
         loginProcessor.login(request.getEmail(), request.getPassword());
+    }
+
+    @Transactional(readOnly = true)
+    public AccountResponse getSessionAccount(GetSessionAccountCommand command) {
+        return translator.toResponse(accountPrincipal.getAccount(command.getEmail()));
     }
 }

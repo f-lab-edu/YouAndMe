@@ -1,5 +1,6 @@
 package com.yam.app.account.infrastructure;
 
+import com.yam.app.account.domain.AccountPrincipal;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
 import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
@@ -67,6 +68,11 @@ public class AppConfiguration {
     public LoginAccountProcessor loginAccountProcessor(AccountReader accountReader,
         PasswordEncrypter passwordEncrypter) {
         return new LoginAccountProcessor(accountReader, passwordEncrypter);
+    }
+
+    @Bean
+    public AccountPrincipal accountPrincipal(AccountReader accountReader) {
+        return new AccountPrincipal(accountReader);
     }
 
 }

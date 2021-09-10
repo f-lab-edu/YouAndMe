@@ -13,8 +13,11 @@ public final class LoginAccountProcessor {
 
     public void login(String email, String password) {
         var account = accountReader.findByEmail(email)
-            .filter(Account::isEmailVerified)
             .orElseThrow(IllegalStateException::new);
+
+        if (!account.isEmailVerified()) {
+            throw new IllegalStateException();
+        }
 
         if (!passwordEncrypter.matches(password, account.getPassword())) {
             throw new IllegalStateException();

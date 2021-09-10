@@ -19,19 +19,23 @@ class LoginAccountProcessorTest {
     Collection<DynamicTest> login_success() throws Exception {
         //Arrange
         var accountRepository = new FakeAccountRepository();
-        var accountReader = accountRepository;
-        var passwordEncrypter = new PasswordEncrypterStub();
-        var loginAccountProcessor = new LoginAccountProcessor(accountReader, passwordEncrypter);
+        var accountNotConfirm = Account.of("hello1@naver.com", "hello1",
+            "password!");
+        var accountCompleted = Account.of("hello@naver.com", "hello",
+            "password!");
+        accountCompleted.completeRegister();
+        accountRepository.save(accountCompleted);
+        accountRepository.save(accountNotConfirm);
 
-        var account = Account.of("hello@naver.com", "hello", "password!");
-        account.completeRegister();
-        accountRepository.save(account);
+        var passwordEncryptor = new PasswordEncrypterStub();
+        var loginAccountProcessor = new LoginAccountProcessor(accountRepository, passwordEncryptor);
 
         return Arrays.asList(
             dynamicTest("회원 로그인에 성공한다.", () -> {
                 // Act
                 var throwable = catchThrowable(
-                    () -> loginAccountProcessor.login(account.getEmail(), account.getPassword())
+                    () -> loginAccountProcessor.login(accountCompleted.getEmail(),
+                        accountCompleted.getPassword())
                 );
 
                 // Assert
@@ -40,7 +44,18 @@ class LoginAccountProcessorTest {
             dynamicTest("이메일이 유효하지 않은 경우 예외를 리턴한다.", () -> {
                 // Act
                 var throwable = catchThrowable(
-                    () -> loginAccountProcessor.login("dwqko@naver.com", account.getPassword())
+                    () -> loginAccountProcessor.login("dwqko@naver.com",
+                        accountCompleted.getPassword())
+                );
+
+                // Assert
+                assertThat(throwable).isInstanceOf(IllegalStateException.class);
+            }),
+            dynamicTest("이메일은 유효하나 검증을 완료하지 않은 경우 예외를 리턴한다.", () -> {
+                // Act
+                var throwable = catchThrowable(
+                    () -> loginAccountProcessor.login(accountNotConfirm.getEmail(),
+                        accountNotConfirm.getPassword())
                 );
 
                 // Assert
@@ -49,7 +64,7 @@ class LoginAccountProcessorTest {
             dynamicTest("비밀번호가 유효하지 않은 경우 예외를 리턴한다.", () -> {
                 // Act
                 var throwable = catchThrowable(
-                    () -> loginAccountProcessor.login(account.getEmail(), "11111111!")
+                    () -> loginAccountProcessor.login(accountCompleted.getEmail(), "11111111!")
                 );
 
                 // Assert

@@ -1,13 +1,14 @@
 package com.yam.app.account.infrastructure;
 
-import com.yam.app.account.domain.AccountPrincipal;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
+import com.yam.app.account.domain.AccountService;
 import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
 import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.PasswordEncrypter;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.domain.TokenVerifier;
+import javax.servlet.http.HttpSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,13 +67,12 @@ public class AppConfiguration {
 
     @Bean
     public LoginAccountProcessor loginAccountProcessor(AccountReader accountReader,
-        PasswordEncrypter passwordEncrypter) {
-        return new LoginAccountProcessor(accountReader, passwordEncrypter);
+        PasswordEncrypter passwordEncrypter, HttpSession httpSession) {
+        return new SessionBasedLoginAccountProcessor(accountReader, passwordEncrypter, httpSession);
     }
 
     @Bean
-    public AccountPrincipal accountPrincipal(AccountReader accountReader) {
-        return new AccountPrincipal(accountReader);
+    public AccountService accountService(AccountReader accountReader) {
+        return new AccountService(accountReader);
     }
-
 }

@@ -9,17 +9,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.presentation.LoginAccountRequestCommand;
-import com.yam.app.account.presentation.LoginSessionUtils;
 import com.yam.app.account.presentation.RegisterAccountRequestCommand;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,22 +25,10 @@ import org.springframework.test.web.servlet.MockMvc;
 @ActiveProfiles("test")
 final class AccountIntegrationTests {
 
-    private MockHttpSession session;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-
-    @BeforeEach
-    public void setUp() {
-        session = new MockHttpSession();
-        session.setAttribute(LoginSessionUtils.LOGIN_ACCOUNT_EMAIL, "loginCheck@gmail.com");
-    }
-
-    @AfterEach
-    public void clean() {
-        session.clearAttributes();
-    }
 
     @Test
     @DisplayName("새로운 계정을 등록하는 회원가입 시나리오")
@@ -91,7 +75,7 @@ final class AccountIntegrationTests {
 
     @Test
     @DisplayName("로그인 요청을 성공하여 서버의 세션 등록을 완료하는 시나리오")
-    void login_success_get_session() throws Exception {
+    void login_success() throws Exception {
         //Arrange
         LoginAccountRequestCommand request = new LoginAccountRequestCommand();
         request.setEmail("loginCheck@gmail.com");
@@ -108,25 +92,6 @@ final class AccountIntegrationTests {
         actions
             .andDo(print())
             .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("로그인한 회원이 세션에서 자신의 정보를 받아오는 시나리오")
-    void login_member_get_account_session_request() throws Exception {
-        //Act
-        final var actions = mockMvc.perform(get("/api/accounts/me")
-            .session(session)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON));
-
-        //Assert
-        actions
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").isNumber())
-            .andExpect(jsonPath("$.email").isString())
-            .andExpect(jsonPath("$.nickname").isString());
-
     }
 
 }

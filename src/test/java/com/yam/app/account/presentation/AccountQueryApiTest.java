@@ -2,13 +2,17 @@ package com.yam.app.account.presentation;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.application.AccountFacade;
+import com.yam.app.account.infrastructure.AccountPrincipal;
+import com.yam.app.account.infrastructure.LoginSessionUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayName("Account Query HTTP API")
@@ -35,6 +40,35 @@ class AccountQueryApiTest {
     @Nested
     @DisplayName("Login HTTP API")
     class LoginApi {
+
+        @Test
+        @DisplayName("로그인한 회원이 요청하면 세션에서 Account 정보를 성공적으로 반환 받는다.")
+        void login_member_get_account_session_request() throws Exception {
+            //Arrange
+            var session = new MockHttpSession();
+            session.setAttribute(LoginSessionUtils.LOGIN_ACCOUNT_EMAIL,
+                new AccountPrincipal("loginCheck@gmail.com"));
+
+            when(accountFacade.getLoginAccount("loginCheck@gmail.com"))
+                .thenReturn(new AccountResponse(1L, "loginCheck@gmail.com",
+                    "loginNick"));
+
+            //Act
+            final var actions = mockMvc.perform(get("/api/accounts/me")
+                .session(session)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+            //Assert
+            actions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").isNumber())
+                .andExpect(jsonPath("$.email").isString())
+                .andExpect(jsonPath("$.nickname").isString());
+
+            session.clearAttributes();
+        }
 
         @Test
         @DisplayName("세션이 없는 상태로 Account 정보를 요청하면 401 에러를 반환한다.")

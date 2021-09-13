@@ -1,12 +1,12 @@
 package com.yam.app.account.presentation;
 
 import com.yam.app.account.application.AccountFacade;
+import com.yam.app.account.infrastructure.AccountPrincipal;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,13 +41,19 @@ public final class AccountQueryApi {
 
     @GetMapping("/api/accounts/me")
     public ResponseEntity<AccountResponse> getAccount(
-        @LoginAccount AccountResponse response) {
-        return ResponseEntity.ok(response);
+        @LoginAccount AccountPrincipal accountPrincipal) {
+        if (accountPrincipal == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        AccountResponse accountResponse;
+        try {
+            accountResponse = accountFacade.getLoginAccount(accountPrincipal.getEmail());
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok(accountResponse);
     }
 
-    // LoginAccountMethodArgumentResolver 테스트를 위해 임시로 만든 @ExceptionHandler
-    @ExceptionHandler
-    public ResponseEntity<Void> defaultException(IllegalStateException e) {
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-    }
 }

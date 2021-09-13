@@ -1,7 +1,6 @@
 package com.yam.app.account.application;
 
-import com.yam.app.account.domain.AccountPrincipal;
-import com.yam.app.account.domain.AccountService;
+import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
 import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.RegisterAccountEvent;
@@ -22,19 +21,18 @@ public class AccountFacade {
     private final ApplicationEventPublisher publisher;
     private final ConfirmRegisterAccountProcessor confirmRegisterProcessor;
     private final LoginAccountProcessor loginProcessor;
-    private final AccountService accountService;
+    private final AccountReader accountReader;
 
     public AccountFacade(RegisterAccountProcessor registerProcessor,
         AccountTranslator translator, ApplicationEventPublisher publisher,
         ConfirmRegisterAccountProcessor confirmRegisterProcessor,
-        LoginAccountProcessor loginProcessor,
-        AccountService accountService) {
+        LoginAccountProcessor loginProcessor, AccountReader accountReader) {
         this.registerProcessor = registerProcessor;
         this.translator = translator;
         this.publisher = publisher;
         this.confirmRegisterProcessor = confirmRegisterProcessor;
         this.loginProcessor = loginProcessor;
-        this.accountService = accountService;
+        this.accountReader = accountReader;
     }
 
     @Transactional
@@ -59,7 +57,9 @@ public class AccountFacade {
     }
 
     @Transactional(readOnly = true)
-    public AccountResponse getLoginAccount(AccountPrincipal accountPrincipal) {
-        return translator.toResponse(accountService.findByEmail(accountPrincipal.getEmail()));
+    public AccountResponse getLoginAccount(String email) {
+        return translator.toResponse(accountReader.findByEmail(email)
+            .orElseThrow(IllegalStateException::new));
     }
+
 }

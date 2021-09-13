@@ -3,7 +3,6 @@ package com.yam.app.account.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-import com.yam.app.account.domain.PasswordEncrypterTest.PasswordEncrypterStub;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.jupiter.api.DisplayName;

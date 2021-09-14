@@ -29,31 +29,29 @@ public final class AccountQueryApi {
 
     @PostMapping("/api/accounts/login")
     public ResponseEntity<Void> login(
-        @Valid @RequestBody LoginAccountRequestCommand request) {
+        @Valid @RequestBody LoginAccountCommand request) {
         try {
             accountFacade.login(request);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/api/accounts/me")
-    public ResponseEntity<AccountResponse> getAccount(
+    public ResponseEntity<AccountResponse> findInfo(
         @LoginAccount AccountPrincipal accountPrincipal) {
         if (accountPrincipal == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        AccountResponse accountResponse;
         try {
-            accountResponse = accountFacade.getLoginAccount(accountPrincipal.getEmail());
+            return ResponseEntity.ok(accountFacade.findInfo(
+                accountPrincipal.getEmail()));
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
-
-        return ResponseEntity.ok(accountResponse);
     }
 
 }

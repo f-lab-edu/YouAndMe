@@ -8,11 +8,14 @@ public final class SessionBasedLoginAccountProcessor implements LoginAccountProc
 
     private final AccountReader accountReader;
     private final PasswordEncrypter passwordEncrypter;
+    private final SessionManager sessionManager;
 
     public SessionBasedLoginAccountProcessor(AccountReader accountReader,
-        PasswordEncrypter passwordEncrypter) {
+        PasswordEncrypter passwordEncrypter,
+        SessionManager sessionManager) {
         this.accountReader = accountReader;
         this.passwordEncrypter = passwordEncrypter;
+        this.sessionManager = sessionManager;
     }
 
     @Override
@@ -28,6 +31,6 @@ public final class SessionBasedLoginAccountProcessor implements LoginAccountProc
             throw new IllegalStateException();
         }
 
-        LoginSessionUtils.setAccountPrincipal(new AccountPrincipal(email));
+        sessionManager.setPrincipal(new AccountPrincipal(email));
     }
 }

@@ -25,6 +25,6 @@ final class ArchUnitTests {
         .whereLayer("Presentation").mayOnlyBeAccessedByLayers("Application", "Integration")
         .whereLayer("Application").mayOnlyBeAccessedByLayers("Presentation", "Domain")
         .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
-        .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Presentation")
+        .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Presentation", "Integration")
         .whereLayer("Integration").mayNotBeAccessedByAnyLayer();
 }

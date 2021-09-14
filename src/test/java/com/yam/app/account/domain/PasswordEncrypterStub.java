@@ -1,6 +1,6 @@
 package com.yam.app.account.domain;
 
-public class PasswordEncrypterStub implements PasswordEncrypter {
+public final class PasswordEncrypterStub implements PasswordEncrypter {
 
     @Override
     public String encode(CharSequence rawPassword) {

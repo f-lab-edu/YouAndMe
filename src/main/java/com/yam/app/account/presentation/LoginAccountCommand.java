@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-public final class LoginAccountRequestCommand {
+public final class LoginAccountCommand {
 
     @NotBlank
     @Email

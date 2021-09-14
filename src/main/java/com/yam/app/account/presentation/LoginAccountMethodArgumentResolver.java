@@ -1,16 +1,14 @@
 package com.yam.app.account.presentation;
 
-import com.yam.app.account.infrastructure.LoginSessionUtils;
+import com.yam.app.account.infrastructure.SessionManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.core.MethodParameter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-@Component
 public final class LoginAccountMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
@@ -28,7 +26,7 @@ public final class LoginAccountMethodArgumentResolver implements HandlerMethodAr
             return null;
         }
 
-        return session.getAttribute(LoginSessionUtils.LOGIN_ACCOUNT_EMAIL);
-
+        var sessionManager = new SessionManager(session);
+        return sessionManager.fetchPrincipal();
     }
 }

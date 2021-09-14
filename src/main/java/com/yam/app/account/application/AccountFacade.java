@@ -6,9 +6,9 @@ import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.RegisterAccountEvent;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.presentation.AccountResponse;
-import com.yam.app.account.presentation.ConfirmRegisterAccountRequestCommand;
-import com.yam.app.account.presentation.LoginAccountRequestCommand;
-import com.yam.app.account.presentation.RegisterAccountRequestCommand;
+import com.yam.app.account.presentation.ConfirmRegisterAccountCommand;
+import com.yam.app.account.presentation.LoginAccountCommand;
+import com.yam.app.account.presentation.RegisterAccountCommand;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,30 +36,30 @@ public class AccountFacade {
     }
 
     @Transactional
-    public AccountResponse register(RegisterAccountRequestCommand request) {
+    public AccountResponse register(RegisterAccountCommand command) {
         var entity = registerProcessor.process(
-            request.getEmail(),
-            request.getNickname(),
-            request.getPassword()
+            command.getEmail(),
+            command.getNickname(),
+            command.getPassword()
         );
         publisher.publishEvent(new RegisterAccountEvent(entity));
         return translator.toResponse(entity);
     }
 
     @Transactional
-    public void registerConfirm(ConfirmRegisterAccountRequestCommand request) {
-        confirmRegisterProcessor.registerConfirm(request.getToken(), request.getEmail());
+    public void registerConfirm(ConfirmRegisterAccountCommand command) {
+        confirmRegisterProcessor.registerConfirm(command.getToken(), command.getEmail());
     }
 
     @Transactional(readOnly = true)
-    public void login(LoginAccountRequestCommand request) {
-        loginProcessor.login(request.getEmail(), request.getPassword());
+    public void login(LoginAccountCommand command) {
+        loginProcessor.login(command.getEmail(), command.getPassword());
     }
 
     @Transactional(readOnly = true)
-    public AccountResponse getLoginAccount(String email) {
+    public AccountResponse findInfo(String email) {
         return translator.toResponse(accountReader.findByEmail(email)
-            .orElseThrow(IllegalStateException::new));
+            .orElseThrow(IllegalArgumentException::new));
     }
 
 }

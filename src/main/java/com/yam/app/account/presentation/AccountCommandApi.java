@@ -29,7 +29,7 @@ public final class AccountCommandApi {
 
     @PostMapping("/api/accounts")
     public ResponseEntity<AccountResponse> register(
-        @RequestBody @Valid RegisterAccountRequestCommand command) {
+        @RequestBody @Valid RegisterAccountCommand command) {
         return ResponseEntity.ok(accountFacade.register(command));
     }
 
@@ -40,7 +40,7 @@ public final class AccountCommandApi {
      */
     @GetMapping("/api/accounts/authorize")
     public ResponseEntity<Void> registerConfirm(
-        @ModelAttribute @Valid ConfirmRegisterAccountRequestCommand command) throws Exception {
+        @ModelAttribute @Valid ConfirmRegisterAccountCommand command) throws Exception {
         try {
             accountFacade.registerConfirm(command);
         } catch (Exception e) {

@@ -29,7 +29,7 @@ final class ConfirmRegisterAccountProcessorTest {
                 // Act
                 confirmRegisterAccountProcessor.registerConfirm(account.getEmailCheckToken(),
                     account.getEmail());
-                Account updatedAccount = accountRepository.findByEmail(account.getEmail()).get();
+                var updatedAccount = accountRepository.findByEmail(account.getEmail()).get();
 
                 // Assert
                 assertThat(updatedAccount.isEmailVerified()).isTrue();

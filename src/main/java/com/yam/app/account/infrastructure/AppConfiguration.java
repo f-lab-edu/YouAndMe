@@ -7,6 +7,7 @@ import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.PasswordEncrypter;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.domain.TokenVerifier;
+import javax.servlet.http.HttpSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -65,8 +66,9 @@ public class AppConfiguration {
 
     @Bean
     public LoginAccountProcessor loginAccountProcessor(AccountReader accountReader,
-        PasswordEncrypter passwordEncrypter) {
-        return new SessionBasedLoginAccountProcessor(accountReader, passwordEncrypter);
+        PasswordEncrypter passwordEncrypter, HttpSession httpSession) {
+        return new SessionBasedLoginAccountProcessor(accountReader, passwordEncrypter,
+            new SessionManager(httpSession));
     }
 
 }

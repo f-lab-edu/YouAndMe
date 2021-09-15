@@ -26,6 +26,7 @@ public final class LoginAccountMethodArgumentResolver implements HandlerMethodAr
         }
 
         var sessionManager = new SessionManager(session);
-        return sessionManager.fetchPrincipal();
+        return sessionManager.fetchPrincipal()
+            .orElseThrow(IllegalArgumentException::new);
     }
 }

@@ -43,7 +43,7 @@ final class SessionBasedLoginAccountProcessorTest {
 
                 // Assert
                 var result = sessionManager.fetchPrincipal();
-                assertThat(result).isNotNull();
+                assertThat(result.isPresent()).isTrue();
             }),
             dynamicTest("이메일이 유효하지 않은 경우 예외를 리턴한다.", () -> {
                 // Act

@@ -1,4 +1,4 @@
-package com.yam.app.account.presentation;
+package com.yam.app.account.infrastructure;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;

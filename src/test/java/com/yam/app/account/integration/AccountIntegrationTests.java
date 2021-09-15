@@ -108,8 +108,8 @@ final class AccountIntegrationTests {
     void authentication_member_find_info_success() throws Exception {
         //Arrange
         var session = new MockHttpSession();
-        session.setAttribute(SessionManager.LOGIN_ACCOUNT,
-            new AccountPrincipal("loginCheck@gmail.com"));
+        var sessionManager = new SessionManager(session);
+        sessionManager.setPrincipal(new AccountPrincipal("loginCheck@gmail.com"));
 
         //Act
         final var actions = mockMvc.perform(get(FIND_INFO)

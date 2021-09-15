@@ -1,6 +1,5 @@
-package com.yam.app.account.presentation;
+package com.yam.app.account.infrastructure;
 
-import com.yam.app.account.infrastructure.SessionManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.core.MethodParameter;

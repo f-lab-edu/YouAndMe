@@ -36,14 +36,13 @@ public class AccountFacade {
     }
 
     @Transactional
-    public AccountResponse register(RegisterAccountCommand command) {
+    public void register(RegisterAccountCommand command) {
         var entity = registerProcessor.process(
             command.getEmail(),
             command.getNickname(),
             command.getPassword()
         );
         publisher.publishEvent(new RegisterAccountEvent(entity));
-        return translator.toResponse(entity);
     }
 
     @Transactional

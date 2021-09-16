@@ -58,10 +58,7 @@ final class AccountIntegrationTests {
         // Assert
         actions
             .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").isNumber())
-            .andExpect(jsonPath("$.email").isString())
-            .andExpect(jsonPath("$.nickname").isString());
+            .andExpect(status().isCreated());
     }
 
     @Test

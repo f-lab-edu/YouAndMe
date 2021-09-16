@@ -28,9 +28,10 @@ public final class AccountCommandApi {
     }
 
     @PostMapping("/api/accounts")
-    public ResponseEntity<AccountResponse> register(
+    public ResponseEntity<Void> register(
         @RequestBody @Valid RegisterAccountCommand command) {
-        return ResponseEntity.ok(accountFacade.register(command));
+        accountFacade.register(command);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     /**
@@ -51,5 +52,17 @@ public final class AccountCommandApi {
         var header = new HttpHeaders();
         header.setLocation(uri);
         return new ResponseEntity<>(header, HttpStatus.SEE_OTHER);
+    }
+
+    @PostMapping("/api/accounts/login")
+    public ResponseEntity<Void> login(
+        @RequestBody @Valid LoginAccountCommand request) {
+        try {
+            accountFacade.login(request);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -15,14 +15,15 @@ final class ConfirmRegisterAccountProcessorTest {
     @TestFactory
     @DisplayName("이메일 검증 시나리오")
     Collection<DynamicTest> verify_account_scenarios() {
-        var accountRepository = new FakeAccountRepository();
-        var accountReader = accountRepository;
-        var tokenVerifier = new TokenVerifier(accountReader);
-        var confirmRegisterAccountProcessor = new ConfirmRegisterAccountProcessor(accountReader,
-            accountRepository, tokenVerifier);
+        final var fakeObject = new FakeAccountRepository();
+        final var accountRepository = fakeObject;
+        final var accountReader = fakeObject;
+        final var tokenVerifier = new TokenVerifier(accountReader);
+        final var confirmRegisterAccountProcessor = new ConfirmRegisterAccountProcessor(
+            accountReader, accountRepository, tokenVerifier);
 
-        var account = accountRepository.save(
-            Account.of("jiwonDev@gmail.com", "jiwon", "password!"));
+        accountRepository.save(Account.of("jiwonDev@gmail.com", "jiwon", "password!"));
+        final var account = accountReader.findByEmail("jiwonDev@gmail.com").get();
 
         return Arrays.asList(
             DynamicTest.dynamicTest("회원 이메일 토큰검증에 성공한다.", () -> {

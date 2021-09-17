@@ -15,8 +15,8 @@ final class TokenVerifierTest {
         //Arrange
         var accountRepository = new FakeAccountRepository();
         var tokenVerifier = new TokenVerifier(accountRepository);
-        var account = accountRepository.save(
-            Account.of("jijiwon@gmail.com", "jiwon", "password!"));
+        accountRepository.save(Account.of("jiwon@gmail.com", "jiwon", "password!"));
+        var account = accountRepository.findByEmail("jiwon@gmail.com").get();
 
         //Act
         var throwable = catchThrowable(

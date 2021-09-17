@@ -23,14 +23,12 @@ public final class MybatisAccountRepository implements AccountRepository, Accoun
     }
 
     @Override
-    public Account update(Account entity) {
+    public void update(Account entity) {
         int result = template.update(UPDATE_FQCN, entity);
         if (result != 1) {
             throw new RuntimeException(
                 String.format("There was a problem updating the object : %s", entity));
         }
-        return findByEmail(entity.getEmail())
-            .orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
@@ -39,14 +37,12 @@ public final class MybatisAccountRepository implements AccountRepository, Accoun
     }
 
     @Override
-    public Account save(Account entity) {
+    public void save(Account entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
             throw new RuntimeException(
                 String.format("There was a problem saving the object : %s", entity));
         }
-        return findByEmail(entity.getEmail())
-            .orElseThrow(IllegalArgumentException::new);
     }
 
     @Override

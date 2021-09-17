@@ -23,6 +23,8 @@ public final class RegisterAccountProcessor {
 
         String encodedPassword = passwordEncrypter.encode(password);
 
-        return accountRepository.save(Account.of(email, nickname, encodedPassword));
+        accountRepository.save(Account.of(email, nickname, encodedPassword));
+        return accountReader.findByEmail(email)
+            .orElseThrow(IllegalArgumentException::new);
     }
 }

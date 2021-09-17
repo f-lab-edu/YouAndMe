@@ -24,8 +24,8 @@ public final class FakeAccountRepository implements AccountRepository, AccountRe
     }
 
     @Override
-    public Account update(Account entity) {
-        return data.putIfAbsent(entity.getId(), entity);
+    public void update(Account entity) {
+        data.putIfAbsent(entity.getId(), entity);
     }
 
     @Override
@@ -35,9 +35,8 @@ public final class FakeAccountRepository implements AccountRepository, AccountRe
     }
 
     @Override
-    public Account save(Account entity) {
+    public void save(Account entity) {
         entity.setId(idGenerator.incrementAndGet());
         data.put(entity.getId(), entity);
-        return entity;
     }
 }

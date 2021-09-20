@@ -1,5 +1,6 @@
 package com.yam.app.account.infrastructure;
 
+import com.yam.app.account.domain.AccountNotFoundException;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.PasswordEncrypter;
@@ -21,14 +22,14 @@ public final class SessionBasedLoginAccountProcessor implements LoginAccountProc
     @Override
     public void login(String email, String password) {
         var account = accountReader.findByEmail(email)
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new AccountNotFoundException(email));
 
         if (!account.isEmailVerified()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Email not verified");
         }
 
         if (!passwordEncrypter.matches(password, account.getPassword())) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Password mismatched");
         }
 
         sessionManager.setPrincipal(new AccountPrincipal(email));

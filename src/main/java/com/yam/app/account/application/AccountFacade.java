@@ -1,5 +1,6 @@
 package com.yam.app.account.application;
 
+import com.yam.app.account.domain.AccountNotFoundException;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
 import com.yam.app.account.domain.LoginAccountProcessor;
@@ -58,7 +59,7 @@ public class AccountFacade {
     @Transactional(readOnly = true)
     public AccountResponse findInfo(String email) {
         return translator.toResponse(accountReader.findByEmail(email)
-            .orElseThrow(IllegalArgumentException::new));
+            .orElseThrow(() -> new AccountNotFoundException(email)));
     }
 
 }

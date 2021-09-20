@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("Account Command HTTP API")
 @WebMvcTest(AccountCommandApi.class)
@@ -40,7 +42,7 @@ final class AccountCommandApiTests {
     class LoginApi {
 
         @Test
-        @DisplayName("이메일, 비밀번호 형식은 유효하나 로그인이 실패한 경우 401 에러를 반환한다.")
+        @DisplayName("이메일, 비밀번호 형식은 유효하나 로그인이 실패한 경우 400 에러를 반환한다.")
         void login_fail() throws Exception {
             // Arrange
             var request = new LoginAccountCommand();
@@ -59,7 +61,7 @@ final class AccountCommandApiTests {
             // Assert
             actions
                 .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isBadRequest());
         }
 
         @ParameterizedTest
@@ -79,9 +81,7 @@ final class AccountCommandApiTests {
             );
 
             // Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
 
         @ParameterizedTest
@@ -101,9 +101,7 @@ final class AccountCommandApiTests {
             );
 
             // Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
 
         @ParameterizedTest
@@ -123,9 +121,7 @@ final class AccountCommandApiTests {
             );
 
             //Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
 
     }
@@ -155,9 +151,7 @@ final class AccountCommandApiTests {
             );
 
             // Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
 
         @ParameterizedTest
@@ -170,8 +164,6 @@ final class AccountCommandApiTests {
             command.setEmail(arg);
 
             // Act
-            doThrow(IllegalStateException.class).when(accountFacade).registerConfirm(command);
-
             final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -180,9 +172,7 @@ final class AccountCommandApiTests {
             );
 
             // Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
     }
 
@@ -208,7 +198,10 @@ final class AccountCommandApiTests {
 
             // Assert
             actions
-                .andExpect(status().isUnsupportedMediaType());
+                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.message").value("Http media type not supported"));
         }
 
         @ParameterizedTest
@@ -229,9 +222,7 @@ final class AccountCommandApiTests {
             );
 
             // Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
 
         @ParameterizedTest
@@ -252,9 +243,7 @@ final class AccountCommandApiTests {
             );
 
             // Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
 
         @ParameterizedTest
@@ -275,11 +264,17 @@ final class AccountCommandApiTests {
             );
 
             // Assert
-            actions
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+            assertThatInvalidArgumentError(actions);
         }
 
+    }
+
+    private void assertThatInvalidArgumentError(ResultActions actions) throws Exception {
+        actions
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.success").value(false))
+            .andExpect(jsonPath("$.data").doesNotExist())
+            .andExpect(jsonPath("$.message").value("Invalid argument"));
     }
 
 }

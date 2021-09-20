@@ -2,7 +2,7 @@ package com.yam.app.account.presentation;
 
 import static com.yam.app.account.presentation.AccountApiUri.FIND_INFO;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yam.app.account.application.AccountFacade;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayName("Account Query HTTP API")
@@ -38,8 +39,30 @@ class AccountQueryApiTest {
 
             //Assert
             actions
-                .andDo(print())
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.message").value("Unauthorized request"));
+        }
+
+        @Test
+        @DisplayName("잘못된 인증 정보로 요청을 보낸 경우 401 응답을 반환한다.")
+        void failed_fetch_session_principal() throws Exception {
+            //Act
+            var session = new MockHttpSession();
+
+            final var actions = mockMvc.perform(get(FIND_INFO)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(session)
+            );
+
+            //Assert
+            actions
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.message").value("Failed fetch principal"));
         }
     }
 }

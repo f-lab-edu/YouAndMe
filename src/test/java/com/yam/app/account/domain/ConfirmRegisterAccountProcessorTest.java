@@ -46,7 +46,7 @@ final class ConfirmRegisterAccountProcessorTest {
             DynamicTest.dynamicTest("이메일 검증에 실패하여 예외를 리턴한다.",
                 () -> {
                     // Act & Assert
-                    assertThatExceptionOfType(IllegalArgumentException.class)
+                    assertThatExceptionOfType(AccountNotFoundException.class)
                         .isThrownBy(() -> confirmRegisterAccountProcessor.registerConfirm(
                             account.getEmailCheckToken(),
                             "HiIamNotExistEmail@naver.com"));

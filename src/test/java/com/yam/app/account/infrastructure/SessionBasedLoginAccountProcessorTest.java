@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import com.yam.app.account.domain.Account;
+import com.yam.app.account.domain.AccountNotFoundException;
 import com.yam.app.account.domain.FakeAccountRepository;
 import com.yam.app.account.domain.PasswordEncrypterStub;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ final class SessionBasedLoginAccountProcessorTest {
                 );
 
                 // Assert
-                assertThat(throwable).isInstanceOf(IllegalArgumentException.class);
+                assertThat(throwable).isInstanceOf(AccountNotFoundException.class);
             }),
             dynamicTest("이메일은 유효하나 검증을 완료하지 않은 경우 예외를 리턴한다.", () -> {
                 // Act

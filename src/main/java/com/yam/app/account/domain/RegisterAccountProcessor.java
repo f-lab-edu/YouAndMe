@@ -1,5 +1,7 @@
 package com.yam.app.account.domain;
 
+import com.yam.app.common.DuplicateValueException;
+
 public final class RegisterAccountProcessor {
 
     private final AccountRepository accountRepository;
@@ -15,16 +17,16 @@ public final class RegisterAccountProcessor {
 
     public Account process(String email, String nickname, String password) {
         if (accountReader.existsByEmail(email)) {
-            throw new IllegalStateException();
+            throw new DuplicateValueException(email);
         }
         if (accountReader.existsByNickname(nickname)) {
-            throw new IllegalStateException();
+            throw new DuplicateValueException(nickname);
         }
 
         String encodedPassword = passwordEncrypter.encode(password);
 
         accountRepository.save(Account.of(email, nickname, encodedPassword));
         return accountReader.findByEmail(email)
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new AccountNotFoundException(email));
     }
 }

@@ -42,11 +42,7 @@ public final class AccountCommandApi {
     @GetMapping("/api/accounts/authorize")
     public ResponseEntity<Void> registerConfirm(
         @ModelAttribute @Valid ConfirmRegisterAccountCommand command) throws Exception {
-        try {
-            accountFacade.registerConfirm(command);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        accountFacade.registerConfirm(command);
 
         var uri = new URI("http://localhost:3000/login");
         var header = new HttpHeaders();
@@ -57,12 +53,7 @@ public final class AccountCommandApi {
     @PostMapping("/api/accounts/login")
     public ResponseEntity<Void> login(
         @RequestBody @Valid LoginAccountCommand request) {
-        try {
-            accountFacade.login(request);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
+        accountFacade.login(request);
         return ResponseEntity.ok().build();
     }
 }

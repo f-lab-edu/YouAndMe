@@ -16,7 +16,7 @@ public final class ConfirmRegisterAccountProcessor {
     public void registerConfirm(String token, String email) {
         tokenVerifier.verify(token, email);
         var account = accountReader.findByEmail(email)
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new AccountNotFoundException(email));
         account.completeRegister();
         accountRepository.update(account);
     }

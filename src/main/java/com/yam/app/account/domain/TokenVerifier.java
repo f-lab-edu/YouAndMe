@@ -10,11 +10,10 @@ public final class TokenVerifier {
 
     public void verify(String token, String email) {
         var account = accountReader.findByEmail(email)
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new AccountNotFoundException(email));
 
         if (!account.isValidToken(token)) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Invalid token");
         }
-
     }
 }

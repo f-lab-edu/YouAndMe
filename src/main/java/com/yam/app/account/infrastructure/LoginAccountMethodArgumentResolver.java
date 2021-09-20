@@ -1,5 +1,6 @@
 package com.yam.app.account.infrastructure;
 
+import com.yam.app.common.UnauthorizedRequestException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.core.MethodParameter;
@@ -22,11 +23,11 @@ public final class LoginAccountMethodArgumentResolver implements HandlerMethodAr
             .getSession(false);
 
         if (session == null) {
-            return null;
+            throw new UnauthorizedRequestException("Unauthorized request");
         }
 
         var sessionManager = new SessionManager(session);
         return sessionManager.fetchPrincipal()
-            .orElseThrow(IllegalArgumentException::new);
+            .orElseThrow(() -> new UnauthorizedRequestException("Failed fetch principal"));
     }
 }

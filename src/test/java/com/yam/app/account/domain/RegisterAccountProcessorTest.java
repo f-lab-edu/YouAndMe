@@ -3,6 +3,7 @@ package com.yam.app.account.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+import com.yam.app.common.DuplicateValueException;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.jupiter.api.DisplayName;
@@ -30,12 +31,12 @@ final class RegisterAccountProcessorTest {
             }),
             DynamicTest.dynamicTest("이메일 검증에 실패하여 예외를 리턴한다.", () -> {
                 // Act & Assert
-                assertThatExceptionOfType(IllegalStateException.class)
+                assertThatExceptionOfType(DuplicateValueException.class)
                     .isThrownBy(() -> processor.process("rebwon@gmail.com", "rebwon", "password!"));
             }),
             DynamicTest.dynamicTest("닉네임 검증에 실패하여 예외를 리턴한다.", () -> {
                 // Act & Assert
-                assertThatExceptionOfType(IllegalStateException.class)
+                assertThatExceptionOfType(DuplicateValueException.class)
                     .isThrownBy(() -> processor.process("kitty@gmail.com", "rebwon", "password!"));
             })
         );

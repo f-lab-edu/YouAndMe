@@ -10,21 +10,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yam.app.account.infrastructure.AccountPrincipal;
-import com.yam.app.account.infrastructure.SessionManager;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,6 +39,17 @@ final class AccountIntegrationTests {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private WebApplicationContext wac;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders
+            .webAppContextSetup(wac)
+            .apply(sharedHttpSession())
+            .build();
+    }
 
     @Test
     @DisplayName("새로운 계정 등록에 적절한 파라미터가 입력되고, 계정이 성공적으로 등록된다.")
@@ -80,50 +92,35 @@ final class AccountIntegrationTests {
     }
 
     @Test
-    @DisplayName("로그인에 적절한 파라미터를 입력하고 로그인 요청이 성공적으로 완료된다.")
-    void login_success() throws Exception {
+    @DisplayName("로그인에 적절한 파라미터를 입력하여, 성공하고 "
+        + "이후 자신의 정보를 조회하는 시나리오 테스트.")
+    void login_success_and_authentication_member_find_info_success_scenarios() throws Exception {
         //Arrange
         var command = new LoginAccountCommand();
         command.setEmail("loginCheck@gmail.com");
         command.setPassword("password!");
 
-        //Act
-        final var actions = mockMvc.perform(post(LOGIN)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(command))
-        );
-
-        //Assert
-        actions
-            .andDo(print())
-            .andExpect(status().isOk());
-    }
-
-    @Test
-    @DisplayName("인증된 기본 사용자가 자신의 정보를 조회한다.")
-    void authentication_member_find_info_success() throws Exception {
-        //Arrange
-        var session = new MockHttpSession();
-        var sessionManager = new SessionManager(session);
-        sessionManager.setPrincipal(new AccountPrincipal("loginCheck@gmail.com"));
-
-        //Act
-        final var actions = mockMvc.perform(get(FIND_INFO)
-            .session(session)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-        );
-
-        //Assert
-        actions
-            .andDo(print())
+        mockMvc.perform(post(LOGIN)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(command))
+            )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.success").value(true))
-            .andExpect(jsonPath("$.message").doesNotExist())
-            .andExpect(jsonPath("$.data.id").isNumber())
-            .andExpect(jsonPath("$.data.email").isString())
-            .andExpect(jsonPath("$.data.nickname").isString());
+            .andDo(
+                result -> {
+                    final var actions = mockMvc.perform(get(FIND_INFO)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                    );
+
+                    actions
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.success").value(true))
+                        .andExpect(jsonPath("$.message").doesNotExist())
+                        .andExpect(jsonPath("$.data.id").isNumber())
+                        .andExpect(jsonPath("$.data.email").isString())
+                        .andExpect(jsonPath("$.data.nickname").isString());
+                });
     }
 
 }

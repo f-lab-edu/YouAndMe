@@ -46,11 +46,19 @@ dependencies {
 
     implementation 'com.lmax:disruptor:3.4.4'
     implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     implementation 'org.springframework.security:spring-security-crypto:5.5.2'
+
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'it.ozimov:embedded-redis:0.7.2'
+    testImplementation 'it.ozimov:embedded-redis:0.7.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis'
 
     testImplementation 'io.github.javaunit:autoparams:0.2.12'
     testImplementation 'com.tngtech.archunit:archunit-junit5:0.20.1'

@@ -119,9 +119,11 @@ final class AccountIntegrationTests {
         actions
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").isNumber())
-            .andExpect(jsonPath("$.email").isString())
-            .andExpect(jsonPath("$.nickname").isString());
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.message").doesNotExist())
+            .andExpect(jsonPath("$.data.id").isNumber())
+            .andExpect(jsonPath("$.data.email").isString())
+            .andExpect(jsonPath("$.data.nickname").isString());
     }
 
 }

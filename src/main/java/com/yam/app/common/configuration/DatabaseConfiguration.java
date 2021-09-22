@@ -1,4 +1,4 @@
-package com.yam.app.configuration;
+package com.yam.app.common.configuration;
 
 import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;

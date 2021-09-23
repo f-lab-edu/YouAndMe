@@ -188,7 +188,6 @@ final class AccountCommandApiTests {
             // Arrange
             var command = new RegisterAccountCommand();
             command.setEmail(arg);
-            command.setNickname(arg);
             command.setPassword(arg);
 
             // Act
@@ -211,7 +210,6 @@ final class AccountCommandApiTests {
             // Arrange
             var command = new RegisterAccountCommand();
             command.setEmail(arg);
-            command.setNickname(arg);
             command.setPassword(arg);
 
             // Act
@@ -232,7 +230,6 @@ final class AccountCommandApiTests {
             // Arrange
             var command = new RegisterAccountCommand();
             command.setEmail(arg);
-            command.setNickname("jiwon");
             command.setPassword("password1!");
 
             // Act
@@ -253,7 +250,6 @@ final class AccountCommandApiTests {
             // Arrange
             var command = new RegisterAccountCommand();
             command.setEmail("jiwon@naver.com");
-            command.setNickname("jiwon");
             command.setPassword(args);
 
             // Act

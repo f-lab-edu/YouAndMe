@@ -24,7 +24,7 @@ final class RegisterAccountProcessorTest {
         return Arrays.asList(
             DynamicTest.dynamicTest("회원가입에 성공한다.", () -> {
                 // Act
-                var account = processor.process("rebwon@gmail.com", "rebwon", "password!");
+                var account = processor.register("rebwon@gmail.com", "password!");
 
                 // Assert
                 assertThat(account.getId()).isEqualTo(1L);
@@ -32,12 +32,7 @@ final class RegisterAccountProcessorTest {
             DynamicTest.dynamicTest("이메일 검증에 실패하여 예외를 리턴한다.", () -> {
                 // Act & Assert
                 assertThatExceptionOfType(DuplicateValueException.class)
-                    .isThrownBy(() -> processor.process("rebwon@gmail.com", "rebwon", "password!"));
-            }),
-            DynamicTest.dynamicTest("닉네임 검증에 실패하여 예외를 리턴한다.", () -> {
-                // Act & Assert
-                assertThatExceptionOfType(DuplicateValueException.class)
-                    .isThrownBy(() -> processor.process("kitty@gmail.com", "rebwon", "password!"));
+                    .isThrownBy(() -> processor.register("rebwon@gmail.com", "password!"));
             })
         );
     }

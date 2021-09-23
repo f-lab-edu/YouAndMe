@@ -15,17 +15,14 @@ public final class RegisterAccountProcessor {
         this.passwordEncrypter = passwordEncrypter;
     }
 
-    public Account process(String email, String nickname, String password) {
+    public Account register(String email, String password) {
         if (accountReader.existsByEmail(email)) {
             throw new DuplicateValueException(email);
-        }
-        if (accountReader.existsByNickname(nickname)) {
-            throw new DuplicateValueException(nickname);
         }
 
         String encodedPassword = passwordEncrypter.encode(password);
 
-        accountRepository.save(Account.of(email, nickname, encodedPassword));
+        accountRepository.save(Account.of(email, encodedPassword));
         return accountReader.findByEmail(email)
             .orElseThrow(() -> new AccountNotFoundException(email));
     }

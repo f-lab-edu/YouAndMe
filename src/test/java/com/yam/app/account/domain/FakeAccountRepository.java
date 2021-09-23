@@ -29,12 +29,6 @@ public final class FakeAccountRepository implements AccountRepository, AccountRe
     }
 
     @Override
-    public boolean existsByNickname(String nickname) {
-        return data.values().stream()
-            .anyMatch(account -> account.getNickname().equals(nickname));
-    }
-
-    @Override
     public void save(Account entity) {
         entity.setId(idGenerator.incrementAndGet());
         data.put(entity.getId(), entity);

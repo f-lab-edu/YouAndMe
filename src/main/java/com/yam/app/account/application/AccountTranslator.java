@@ -9,6 +9,7 @@ final class AccountTranslator {
 
     public AccountResponse toResponse(Account entity) {
         return new AccountResponse(entity.getId(), entity.getEmail(),
-            entity.getNickname());
+            entity.isEmailVerified(), entity.getJoinedAt(), entity.getLastModifiedAt(),
+            entity.getWithdrawalAt(), entity.isWithdraw(), entity.getRole().name());
     }
 }

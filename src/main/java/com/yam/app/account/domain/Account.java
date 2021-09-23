@@ -11,7 +11,6 @@ public final class Account {
 
     private Long id;
     private String email;
-    private String nickname;
     private String password;
     private String emailCheckToken;
     private LocalDateTime emailCheckTokenGeneratedAt;
@@ -22,15 +21,14 @@ public final class Account {
     private boolean withdraw = false;
     private Role role;
 
-    private Account(String email, String nickname, String password) {
+    private Account(String email, String password) {
         this.email = email;
-        this.nickname = nickname;
         this.password = password;
         this.role = Role.DEFAULT;
     }
 
-    public static Account of(String email, String nickname, String password) {
-        Account account = new Account(email, nickname, password);
+    public static Account of(String email, String password) {
+        Account account = new Account(email, password);
         account.generateEmailCheckToken();
         return account;
     }

@@ -25,10 +25,8 @@ final class SessionBasedLoginAccountProcessorTest {
         var fakeObject = new FakeAccountRepository();
         final var accountRepository = fakeObject;
         final var accountReader = fakeObject;
-        var accountNotYetConfirm = Account.of("hello1@naver.com", "hello1",
-            "password!");
-        var accountCompleted = Account.of("hello@naver.com", "hello",
-            "password!");
+        var accountNotYetConfirm = Account.of("hello1@naver.com", "password!");
+        var accountCompleted = Account.of("hello@naver.com", "password!");
         accountCompleted.completeRegister();
         accountRepository.save(accountCompleted);
         accountRepository.save(accountNotYetConfirm);

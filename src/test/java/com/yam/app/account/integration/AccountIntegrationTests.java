@@ -57,7 +57,6 @@ final class AccountIntegrationTests {
         // Arrange
         var command = new RegisterAccountCommand();
         command.setEmail("msolo021015@gmail.com");
-        command.setNickname("rebwon");
         command.setPassword("password!");
 
         // Act
@@ -100,6 +99,7 @@ final class AccountIntegrationTests {
         command.setEmail("loginCheck@gmail.com");
         command.setPassword("password!");
 
+        // Act & Assert
         mockMvc.perform(post(LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -119,7 +119,9 @@ final class AccountIntegrationTests {
                         .andExpect(jsonPath("$.message").doesNotExist())
                         .andExpect(jsonPath("$.data.id").isNumber())
                         .andExpect(jsonPath("$.data.email").isString())
-                        .andExpect(jsonPath("$.data.nickname").isString());
+                        .andExpect(jsonPath("$.data.emailVerified").value(true))
+                        .andExpect(jsonPath("$.data.withdraw").value(false))
+                        .andExpect(jsonPath("$.data.role").value("DEFAULT"));
                 });
     }
 

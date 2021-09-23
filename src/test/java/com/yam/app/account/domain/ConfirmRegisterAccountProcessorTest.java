@@ -22,7 +22,7 @@ final class ConfirmRegisterAccountProcessorTest {
         final var confirmRegisterAccountProcessor = new ConfirmRegisterAccountProcessor(
             accountReader, accountRepository, tokenVerifier);
 
-        accountRepository.save(Account.of("jiwonDev@gmail.com", "jiwon", "password!"));
+        accountRepository.save(Account.of("jiwonDev@gmail.com", "password!"));
         final var account = accountReader.findByEmail("jiwonDev@gmail.com").get();
 
         return Arrays.asList(

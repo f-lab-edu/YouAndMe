@@ -8,7 +8,6 @@ create table account
     joined_at                      timestamp,
     last_modified_at               timestamp,
     role                           varchar(255) not null,
-    nickname                       varchar(255) not null,
     password                       varchar(255) not null,
     withdraw                       boolean      not null,
     withdrawal_at                  timestamp,
@@ -17,13 +16,11 @@ create table account
 
 alter table account
     add constraint UK_q0uja26qgu1atulenwup9rxyr unique (email);
-alter table account
-    add constraint UK_s2a5omeaik0sruawqpvs18qfk unique (nickname);
 
 insert into account(email, email_check_token, email_check_token_generated_at, email_verified,
-                    joined_at, last_modified_at, nickname, password, withdraw, role)
-values ('jiwonDev@gmail.com', 'emailchecktoken', now(), false, now(), now(), 'jiwon', 'password!',
+                    joined_at, last_modified_at, password, withdraw, role)
+values ('jiwonDev@gmail.com', 'emailchecktoken', now(), false, now(), now(), 'password!',
         false, 'DEFAULT'),
-       ('loginCheck@gmail.com', 'emailchecktoken1', now(), true, now(), now(), 'loginCheck',
+       ('loginCheck@gmail.com', 'emailchecktoken1', now(), true, now(), now(),
         '$2a$10$EqbMbYB0vcZnuA5CClqa9uiLDnjA6pCjxn208ZchzA2q3ofqnkhcq',
         false, 'DEFAULT');

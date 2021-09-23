@@ -28,7 +28,8 @@ final class MailManager {
         context.setVariable("link",
             "/api/accounts/authorize?token=" + newAccount.getEmailCheckToken()
                 + "&email=" + newAccount.getEmail());
-        context.setVariable("nickname", newAccount.getNickname());
+        var username = newAccount.getEmail().split("@")[0];
+        context.setVariable("username", username);
         context.setVariable("linkName", "이메일 인증하기");
         context.setVariable("message", "YouAndMe 서비스를 사용하려면 링크를 클릭하세요.");
         context.setVariable("host", host);

@@ -32,11 +32,6 @@ public final class MybatisAccountRepository implements AccountRepository, Accoun
     }
 
     @Override
-    public boolean existsByNickname(String nickname) {
-        return template.getMapper(AccountReader.class).existsByNickname(nickname);
-    }
-
-    @Override
     public void save(Account entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {

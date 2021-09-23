@@ -38,9 +38,8 @@ public class AccountFacade {
 
     @Transactional
     public void register(RegisterAccountCommand command) {
-        var entity = registerProcessor.process(
+        var entity = registerProcessor.register(
             command.getEmail(),
-            command.getNickname(),
             command.getPassword()
         );
         publisher.publishEvent(new RegisterAccountEvent(entity));

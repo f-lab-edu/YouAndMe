@@ -34,4 +34,9 @@ public final class SessionBasedLoginAccountProcessor implements LoginAccountProc
 
         sessionManager.setPrincipal(new AccountPrincipal(email));
     }
+
+    @Override
+    public void logout() {
+        sessionManager.removePrincipal();
+    }
 }

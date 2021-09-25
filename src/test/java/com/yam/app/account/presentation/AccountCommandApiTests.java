@@ -1,17 +1,16 @@
 package com.yam.app.account.presentation;
 
-import static com.yam.app.account.infrastructure.AccountApiUri.EMAIL_CONFIRM;
-import static com.yam.app.account.infrastructure.AccountApiUri.LOGIN;
-import static com.yam.app.account.infrastructure.AccountApiUri.REGISTER;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.application.AccountFacade;
+import com.yam.app.account.infrastructure.AccountApiUri;
 import org.javaunit.autoparams.AutoSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -50,6 +49,20 @@ final class AccountCommandApiTests {
     class LoginApi {
 
         @Test
+        @DisplayName("세션이 없는 상태로 로그아웃을 요청하면 UNAUTHORIZED_REQUEST 로 포워드한다.")
+        void logout() throws Exception {
+            //Act
+            final var actions = mockMvc.perform(post(AccountApiUri.LOGOUT)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON));
+
+            //Assert
+            actions
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl(AccountApiUri.UNAUTHORIZED_REQUEST));
+        }
+
+        @Test
         @DisplayName("이메일, 비밀번호 형식은 유효하나 로그인이 실패한 경우 400 에러를 반환한다.")
         void login_fail() throws Exception {
             // Arrange
@@ -60,7 +73,7 @@ final class AccountCommandApiTests {
             // Act
             doThrow(IllegalStateException.class).when(accountFacade).login(request);
 
-            final var actions = mockMvc.perform(post(LOGIN)
+            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -82,7 +95,7 @@ final class AccountCommandApiTests {
             request.setPassword(args);
 
             // Act
-            final var actions = mockMvc.perform(post(LOGIN)
+            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -102,7 +115,7 @@ final class AccountCommandApiTests {
             command.setPassword("password!1");
 
             // Act
-            final var actions = mockMvc.perform(post(LOGIN)
+            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -122,7 +135,7 @@ final class AccountCommandApiTests {
             command.setPassword(args);
 
             //Act
-            final var actions = mockMvc.perform(post(LOGIN)
+            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -151,7 +164,7 @@ final class AccountCommandApiTests {
             command.setEmail(args);
 
             // Act
-            final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
+            final var actions = mockMvc.perform(get(AccountApiUri.EMAIL_CONFIRM)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param(TOKEN, args)
@@ -172,7 +185,7 @@ final class AccountCommandApiTests {
             command.setEmail(arg);
 
             // Act
-            final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
+            final var actions = mockMvc.perform(get(AccountApiUri.EMAIL_CONFIRM)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param(TOKEN, arg)
@@ -199,7 +212,7 @@ final class AccountCommandApiTests {
             command.setPassword(arg);
 
             // Act
-            final var actions = mockMvc.perform(post(REGISTER)
+            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
                 .content(objectMapper.writeValueAsString(command))
             );
 
@@ -221,7 +234,7 @@ final class AccountCommandApiTests {
             command.setPassword(arg);
 
             // Act
-            final var actions = mockMvc.perform(post(REGISTER)
+            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -241,7 +254,7 @@ final class AccountCommandApiTests {
             command.setPassword("password1!");
 
             // Act
-            final var actions = mockMvc.perform(post(REGISTER)
+            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -261,7 +274,7 @@ final class AccountCommandApiTests {
             command.setPassword(args);
 
             // Act
-            final var actions = mockMvc.perform(post(REGISTER)
+            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))

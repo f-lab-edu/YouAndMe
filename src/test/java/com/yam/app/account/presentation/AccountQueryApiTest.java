@@ -1,7 +1,10 @@
 package com.yam.app.account.presentation;
 
 import static com.yam.app.account.infrastructure.AccountApiUri.FIND_INFO;
+import static com.yam.app.account.infrastructure.AccountApiUri.LOGOUT;
+import static com.yam.app.account.infrastructure.AccountApiUri.UNAUTHORIZED_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,28 +30,12 @@ class AccountQueryApiTest {
     @MockBean
     private AccountFacade accountFacade;
 
-    @ParameterizedTest
-    @ValueSource(strings = {FIND_INFO})
-    @DisplayName("로그인을 하지 않은 경우 인증이 필요한 다른 URI 에 접근할 수 없다.")
-    void no_current_session_account_request(String uri) throws Exception {
-        //Act
-        final var actions = mockMvc.perform(get(uri)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON));
-
-        //Assert
-        actions
-            .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.success").value(false))
-            .andExpect(jsonPath("$.data").doesNotExist());
-    }
-
     @Nested
     @DisplayName("사용자 조회 HTTP API")
     class LoginApi {
 
         @Test
-        @DisplayName("인증되지 않은 상태로 요청을 보낸 경우 401 에러를 반환한다.")
+        @DisplayName("인증되지 않은 상태로 요청을 보낸 경우 UNAUTHORIZED_REQUEST 로 포워드한다.")
         void no_current_session_account_request() throws Exception {
             //Act
             final var actions = mockMvc.perform(get(FIND_INFO)
@@ -57,14 +44,12 @@ class AccountQueryApiTest {
 
             //Assert
             actions
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.message").value("Unauthorized request"));
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl(UNAUTHORIZED_REQUEST));
         }
 
         @Test
-        @DisplayName("잘못된 인증 정보로 요청을 보낸 경우 401 응답을 반환한다.")
+        @DisplayName("잘못된 인증 정보로 요청을 보낸 경우 UNAUTHORIZED_REQUEST 로 포워드한다.")
         void failed_fetch_session_principal() throws Exception {
             //Act
             var session = new MockHttpSession();
@@ -77,10 +62,8 @@ class AccountQueryApiTest {
 
             //Assert
             actions
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.data").doesNotExist())
-                .andExpect(jsonPath("$.message").value("Failed fetch principal"));
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl(UNAUTHORIZED_REQUEST));
         }
     }
 }

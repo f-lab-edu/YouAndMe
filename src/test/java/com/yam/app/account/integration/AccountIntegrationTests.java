@@ -1,10 +1,5 @@
 package com.yam.app.account.integration;
 
-import static com.yam.app.account.presentation.AccountApiUri.EMAIL_CONFIRM;
-import static com.yam.app.account.presentation.AccountApiUri.FIND_INFO;
-import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
-import static com.yam.app.account.presentation.AccountApiUri.REGISTER;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -13,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yam.app.account.infrastructure.AccountApiUri;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +56,7 @@ final class AccountIntegrationTests {
         command.setPassword("password!");
 
         // Act
-        final var actions = mockMvc.perform(post(REGISTER)
+        final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(command))

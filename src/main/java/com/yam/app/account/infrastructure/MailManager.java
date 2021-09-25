@@ -2,8 +2,8 @@ package com.yam.app.account.infrastructure;
 
 import com.yam.app.account.domain.RegisterAccountEvent;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -21,7 +21,7 @@ final class MailManager {
         this.host = host;
     }
 
-    @EventListener
+    @TransactionalEventListener
     public void handle(RegisterAccountEvent event) {
         var newAccount = event.getAccount();
         var context = new Context();

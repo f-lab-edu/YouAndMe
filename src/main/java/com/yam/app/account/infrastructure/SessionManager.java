@@ -20,4 +20,8 @@ public final class SessionManager {
     public Optional<AccountPrincipal> fetchPrincipal() {
         return Optional.ofNullable((AccountPrincipal) httpSession.getAttribute(LOGIN_ACCOUNT));
     }
+
+    public void removePrincipal() {
+        this.httpSession.removeAttribute(LOGIN_ACCOUNT);
+    }
 }

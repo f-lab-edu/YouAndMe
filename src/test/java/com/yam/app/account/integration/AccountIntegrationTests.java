@@ -1,5 +1,7 @@
 package com.yam.app.account.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -9,6 +11,8 @@ import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfig
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.infrastructure.AccountApiUri;
+import com.yam.app.account.infrastructure.AccountPrincipal;
+import com.yam.app.account.infrastructure.SessionManager;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -72,7 +77,7 @@ final class AccountIntegrationTests {
     @DisplayName("이메일 인증에 적절한 토큰과 이메일 정보가 입력되고, 이메일 인증 상태가 성공적으로 압데이트 된다.")
     void email_and_token_verify_request_in_correctly() throws Exception {
         // Act
-        final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
+        final var actions = mockMvc.perform(get(AccountApiUri.EMAIL_CONFIRM)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .param("token", "emailchecktoken")
@@ -96,7 +101,7 @@ final class AccountIntegrationTests {
         command.setPassword("password!");
 
         // Act & Assert
-        mockMvc.perform(post(LOGIN)
+        mockMvc.perform(post(AccountApiUri.LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -104,7 +109,7 @@ final class AccountIntegrationTests {
             .andExpect(status().isOk())
             .andDo(
                 result -> {
-                    final var actions = mockMvc.perform(get(FIND_INFO)
+                    final var actions = mockMvc.perform(get(AccountApiUri.FIND_INFO)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                     );
@@ -119,6 +124,28 @@ final class AccountIntegrationTests {
                         .andExpect(jsonPath("$.data.withdraw").value(false))
                         .andExpect(jsonPath("$.data.role").value("DEFAULT"));
                 });
+    }
+
+    @Test
+    @DisplayName("로그아웃을 요청하면 200을 반환하고 인증 세션이 삭제된다.")
+    void logout() throws Exception {
+        //Arrange
+        var session = new MockHttpSession();
+        session.setAttribute(SessionManager.LOGIN_ACCOUNT,
+            new AccountPrincipal("hi@naver.com"));
+
+        //Act
+        final var actions = mockMvc.perform(post(AccountApiUri.LOGOUT)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .session(session));
+
+        //Assert
+
+        actions
+            .andExpect(status().isOk());
+        assertThat(session.getAttribute(SessionManager.LOGIN_ACCOUNT)).isNull();
+
     }
 
 }

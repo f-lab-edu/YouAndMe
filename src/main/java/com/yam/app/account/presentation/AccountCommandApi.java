@@ -1,6 +1,7 @@
 package com.yam.app.account.presentation;
 
 import com.yam.app.account.application.AccountFacade;
+import com.yam.app.account.infrastructure.AccountApiUri;
 import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +28,7 @@ public final class AccountCommandApi {
         this.accountFacade = accountFacade;
     }
 
-    @PostMapping("/api/accounts")
+    @PostMapping(AccountApiUri.REGISTER)
     public ResponseEntity<Void> register(
         @RequestBody @Valid RegisterAccountCommand command) {
         accountFacade.register(command);
@@ -35,11 +36,10 @@ public final class AccountCommandApi {
     }
 
     /**
-     * 회원가입 이메일 검증 컨트롤러
-     * - 임시로 "http://localhost:3000/login"로 리다이렉트 되도록 설정.
-     * - 임시로 검증에 실패해서 예외가 발생하면 400 HTTP 을 반환하도록 설정.
+     * 회원가입 이메일 검증 컨트롤러 - 임시로 "http://localhost:3000/login"로 리다이렉트 되도록 설정. - 임시로 검증에 실패해서 예외가 발생하면
+     * 400 HTTP 을 반환하도록 설정.
      */
-    @GetMapping("/api/accounts/authorize")
+    @GetMapping(AccountApiUri.EMAIL_CONFIRM)
     public ResponseEntity<Void> registerConfirm(
         @ModelAttribute @Valid ConfirmRegisterAccountCommand command) throws Exception {
         accountFacade.registerConfirm(command);
@@ -50,10 +50,16 @@ public final class AccountCommandApi {
         return new ResponseEntity<>(header, HttpStatus.SEE_OTHER);
     }
 
-    @PostMapping("/api/accounts/login")
+    @PostMapping(AccountApiUri.LOGIN)
     public ResponseEntity<Void> login(
         @RequestBody @Valid LoginAccountCommand request) {
         accountFacade.login(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(AccountApiUri.LOGOUT)
+    public ResponseEntity<Void> logout() {
+        accountFacade.logout();
         return ResponseEntity.ok().build();
     }
 }

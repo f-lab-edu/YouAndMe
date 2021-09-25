@@ -15,7 +15,7 @@ public final class RegisterAccountProcessor {
         this.passwordEncrypter = passwordEncrypter;
     }
 
-    public Account register(String email, String password) {
+    public void register(String email, String password) {
         if (accountReader.existsByEmail(email)) {
             throw new DuplicateValueException(email);
         }
@@ -23,7 +23,5 @@ public final class RegisterAccountProcessor {
         String encodedPassword = passwordEncrypter.encode(password);
 
         accountRepository.save(Account.of(email, encodedPassword));
-        return accountReader.findByEmail(email)
-            .orElseThrow(() -> new AccountNotFoundException(email));
     }
 }

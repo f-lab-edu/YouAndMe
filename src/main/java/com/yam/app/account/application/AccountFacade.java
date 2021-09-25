@@ -38,10 +38,9 @@ public class AccountFacade {
 
     @Transactional
     public void register(RegisterAccountCommand command) {
-        var entity = registerProcessor.register(
-            command.getEmail(),
-            command.getPassword()
-        );
+        registerProcessor.register(command.getEmail(), command.getPassword());
+        var entity = accountReader.findByEmail(command.getEmail())
+            .orElseThrow(() -> new AccountNotFoundException(command.getEmail()));
         publisher.publishEvent(new RegisterAccountEvent(entity));
     }
 

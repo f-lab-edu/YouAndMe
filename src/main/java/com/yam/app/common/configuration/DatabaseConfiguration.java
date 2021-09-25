@@ -17,6 +17,7 @@ public class DatabaseConfiguration {
         return new EmbeddedDatabaseBuilder()
             .setType(EmbeddedDatabaseType.H2)
             .addScript("classpath:sql/ddl.sql")
+            .addScript("classpath:sql/dml.sql")
             .build();
     }
 

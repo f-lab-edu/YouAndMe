@@ -9,12 +9,6 @@
     WHERE email = #{email}
   </select>
 
-  <select id="existsByNickname" parameterType="String" resultType="boolean">
-    SELECT COUNT(nickname)
-    FROM ACCOUNT
-    WHERE nickname = #{nickname}
-  </select>
-
   <select id="findByEmail" parameterType="String"
     resultType="com.yam.app.account.domain.Account">
     SELECT * FROM ACCOUNT WHERE email = #{email}

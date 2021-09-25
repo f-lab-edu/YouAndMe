@@ -24,7 +24,8 @@ final class RegisterAccountProcessorTest {
         return Arrays.asList(
             DynamicTest.dynamicTest("회원가입에 성공한다.", () -> {
                 // Act
-                var account = processor.register("rebwon@gmail.com", "password!");
+                processor.register("rebwon@gmail.com", "password!");
+                var account = reader.findByEmail("rebwon@gmail.com").get();
 
                 // Assert
                 assertThat(account.getId()).isEqualTo(1L);

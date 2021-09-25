@@ -10,6 +10,7 @@ import lombok.ToString;
 public final class Account {
 
     private Long id;
+    private Long memberId;
     private String email;
     private String password;
     private String emailCheckToken;

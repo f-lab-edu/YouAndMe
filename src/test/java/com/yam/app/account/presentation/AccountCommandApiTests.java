@@ -1,8 +1,8 @@
 package com.yam.app.account.presentation;
 
-import static com.yam.app.account.presentation.AccountApiUri.EMAIL_CONFIRM;
-import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
-import static com.yam.app.account.presentation.AccountApiUri.REGISTER;
+import static com.yam.app.account.infrastructure.AccountApiUri.EMAIL_CONFIRM;
+import static com.yam.app.account.infrastructure.AccountApiUri.LOGIN;
+import static com.yam.app.account.infrastructure.AccountApiUri.REGISTER;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,6 +36,14 @@ final class AccountCommandApiTests {
     private ObjectMapper objectMapper;
     @MockBean
     private AccountFacade accountFacade;
+
+    private void assertThatInvalidArgumentError(ResultActions actions) throws Exception {
+        actions
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.success").value(false))
+            .andExpect(jsonPath("$.data").doesNotExist())
+            .andExpect(jsonPath("$.message").value("Invalid argument"));
+    }
 
     @Nested
     @DisplayName("로그인 HTTP API")
@@ -263,14 +271,6 @@ final class AccountCommandApiTests {
             assertThatInvalidArgumentError(actions);
         }
 
-    }
-
-    private void assertThatInvalidArgumentError(ResultActions actions) throws Exception {
-        actions
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.success").value(false))
-            .andExpect(jsonPath("$.data").doesNotExist())
-            .andExpect(jsonPath("$.message").value("Invalid argument"));
     }
 
 }

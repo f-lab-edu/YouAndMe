@@ -5,7 +5,7 @@ import javax.servlet.http.HttpSession;
 
 public final class SessionManager {
 
-    private static final String LOGIN_ACCOUNT = "LOGIN_ACCOUNT_EMAIL";
+    public static final String LOGIN_ACCOUNT = "LOGIN_ACCOUNT_EMAIL";
 
     private final HttpSession httpSession;
 

@@ -1,6 +1,5 @@
 package com.yam.app.account.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -10,9 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yam.app.account.infrastructure.AccountApiUri;
-import com.yam.app.account.infrastructure.AccountPrincipal;
-import com.yam.app.account.infrastructure.SessionManager;
+import com.yam.app.account.presentation.AccountApiUri;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -127,25 +123,30 @@ final class AccountIntegrationTests {
     }
 
     @Test
-    @DisplayName("로그아웃을 요청하면 200을 반환하고 인증 세션이 삭제된다.")
+    @DisplayName("로그인 이후 성공적으로 로그아웃 하는 시나리오")
     void logout() throws Exception {
         //Arrange
-        var session = new MockHttpSession();
-        session.setAttribute(SessionManager.LOGIN_ACCOUNT,
-            new AccountPrincipal("hi@naver.com"));
+        var command = new LoginAccountCommand();
+        command.setEmail("loginCheck@gmail.com");
+        command.setPassword("password!");
 
-        //Act
-        final var actions = mockMvc.perform(post(AccountApiUri.LOGOUT)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .session(session));
+        // Act & Assert
+        mockMvc.perform(post(AccountApiUri.LOGIN)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(command))
+            )
+            .andExpect(status().isOk())
+            .andDo(
+                result -> {
+                    final var actions = mockMvc.perform(post(AccountApiUri.LOGOUT)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                    );
 
-        //Assert
-
-        actions
-            .andExpect(status().isOk());
-        assertThat(session.getAttribute(SessionManager.LOGIN_ACCOUNT)).isNull();
-
+                    actions
+                        .andExpect(status().isOk());
+                });
     }
 
 }

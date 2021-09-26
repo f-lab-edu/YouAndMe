@@ -1,5 +1,6 @@
 package com.yam.app.account.infrastructure;
 
+import com.yam.app.common.UnauthorizedRequestException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,19 +12,14 @@ public final class SessionAuthInterceptor implements HandlerInterceptor {
         HttpServletResponse response, Object handler) throws Exception {
 
         var session = request.getSession(false);
-
         if (session == null) {
-            request.setAttribute("message", "Unauthorized request");
-            request.getRequestDispatcher(AccountApiUri.UNAUTHORIZED_REQUEST)
-                .forward(request, response);
-            return false;
+            throw new UnauthorizedRequestException("Unauthorized request");
         }
 
-        if (session.getAttribute(SessionManager.LOGIN_ACCOUNT) == null) {
-            request.setAttribute("message", "Failed fetch principal");
-            request.getRequestDispatcher(AccountApiUri.UNAUTHORIZED_REQUEST)
-                .forward(request, response);
-            return false;
+        var sessionManager = new SessionManager(session);
+
+        if (!sessionManager.isExistPrincipal()) {
+            throw new UnauthorizedRequestException("Failed fetch principal");
         }
 
         return true;

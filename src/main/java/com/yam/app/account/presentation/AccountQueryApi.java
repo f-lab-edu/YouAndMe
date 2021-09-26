@@ -1,7 +1,6 @@
 package com.yam.app.account.presentation;
 
 import com.yam.app.account.application.AccountFacade;
-import com.yam.app.account.infrastructure.AccountApiUri;
 import com.yam.app.account.infrastructure.AccountPrincipal;
 import com.yam.app.account.infrastructure.LoginAccount;
 import com.yam.app.common.ApiResult;
@@ -24,7 +23,7 @@ public final class AccountQueryApi {
         this.accountFacade = accountFacade;
     }
 
-    @GetMapping(AccountApiUri.FIND_INFO)
+    @GetMapping("/api/accounts/me")
     public ResponseEntity<ApiResult<?>> findInfo(
         @LoginAccount AccountPrincipal accountPrincipal) {
         return ResponseEntity

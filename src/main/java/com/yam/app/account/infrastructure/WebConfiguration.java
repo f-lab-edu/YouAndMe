@@ -10,10 +10,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfiguration implements WebMvcConfigurer {
 
     private static final String[] EXCLUDE_PATHS = {
-        AccountApiUri.LOGIN,
-        AccountApiUri.EMAIL_CONFIRM,
-        AccountApiUri.REGISTER,
-        "/api/accounts/error/**"
+        "/api/accounts/login",
+        "/api/accounts/authorize",
+        "/api/accounts"
     };
 
     @Override

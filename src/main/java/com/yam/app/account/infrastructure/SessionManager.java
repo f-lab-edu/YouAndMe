@@ -5,7 +5,7 @@ import javax.servlet.http.HttpSession;
 
 public final class SessionManager {
 
-    public static final String LOGIN_ACCOUNT = "LOGIN_ACCOUNT_EMAIL";
+    private static final String LOGIN_ACCOUNT = "LOGIN_ACCOUNT_EMAIL";
 
     private final HttpSession httpSession;
 
@@ -19,6 +19,10 @@ public final class SessionManager {
 
     public Optional<AccountPrincipal> fetchPrincipal() {
         return Optional.ofNullable((AccountPrincipal) httpSession.getAttribute(LOGIN_ACCOUNT));
+    }
+
+    public boolean isExistPrincipal() {
+        return httpSession.getAttribute(LOGIN_ACCOUNT) != null;
     }
 
     public void removePrincipal() {

@@ -54,10 +54,6 @@ public class AccountFacade {
         loginProcessor.login(command.getEmail(), command.getPassword());
     }
 
-    public void logout() {
-        loginProcessor.logout();
-    }
-
     @Transactional(readOnly = true)
     public AccountResponse findInfo(String email) {
         return translator.toResponse(accountReader.findByEmail(email)

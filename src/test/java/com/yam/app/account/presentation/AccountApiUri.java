@@ -1,4 +1,4 @@
-package com.yam.app.account.infrastructure;
+package com.yam.app.account.presentation;
 
 public final class AccountApiUri {
 

@@ -4,13 +4,11 @@ import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.application.AccountFacade;
-import com.yam.app.account.infrastructure.AccountApiUri;
 import org.javaunit.autoparams.AutoSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +47,7 @@ final class AccountCommandApiTests {
     class LoginApi {
 
         @Test
-        @DisplayName("세션이 없는 상태로 로그아웃을 요청하면 UNAUTHORIZED_REQUEST 로 포워드한다.")
+        @DisplayName("세션이 없는 상태로 로그아웃을 요청하면 401 에러를 반환한다.")
         void logout() throws Exception {
             //Act
             final var actions = mockMvc.perform(post(AccountApiUri.LOGOUT)
@@ -58,8 +56,10 @@ final class AccountCommandApiTests {
 
             //Assert
             actions
-                .andExpect(status().isOk())
-                .andExpect(forwardedUrl(AccountApiUri.UNAUTHORIZED_REQUEST));
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.message").value("Unauthorized request"));
         }
 
         @Test

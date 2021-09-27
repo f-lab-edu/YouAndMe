@@ -12,7 +12,8 @@
         withdraw = #{withdraw},
         joined_at = #{joinedAt},
         role = #{role},
-        last_modified_at = NOW()
+        last_modified_at = NOW(),
+        member_id = #{memberId}
     WHERE id = #{id}
   </update>
 

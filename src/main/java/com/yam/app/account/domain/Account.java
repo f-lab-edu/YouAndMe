@@ -51,4 +51,8 @@ public final class Account {
     public boolean isValidToken(String token) {
         return this.emailCheckToken.equals(token);
     }
+
+    public void addMember(Long memberId) {
+        this.memberId = memberId;
+    }
 }

@@ -21,10 +21,12 @@ final class ArchUnitTests {
         .layer("Presentation").definedBy("..presentation..")
         .layer("Infrastructure").definedBy("..infrastructure..")
         .layer("Integration").definedBy("..integration..")
+        .layer("Adapter").definedBy("..adapter..")
 
         .whereLayer("Presentation").mayOnlyBeAccessedByLayers("Application", "Integration")
         .whereLayer("Application").mayOnlyBeAccessedByLayers("Presentation", "Domain")
-        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure")
+        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure", "Adapter")
         .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Presentation", "Integration")
+        .whereLayer("Adapter").mayNotBeAccessedByAnyLayer()
         .whereLayer("Integration").mayNotBeAccessedByAnyLayer();
 }

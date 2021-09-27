@@ -4,6 +4,7 @@ import com.yam.app.account.domain.AccountNotFoundException;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.ConfirmRegisterAccountProcessor;
 import com.yam.app.account.domain.LoginAccountProcessor;
+import com.yam.app.account.domain.RegisterAccountConfirmEvent;
 import com.yam.app.account.domain.RegisterAccountEvent;
 import com.yam.app.account.domain.RegisterAccountProcessor;
 import com.yam.app.account.presentation.AccountResponse;
@@ -47,6 +48,7 @@ public class AccountFacade {
     @Transactional
     public void registerConfirm(ConfirmRegisterAccountCommand command) {
         confirmRegisterProcessor.registerConfirm(command.getToken(), command.getEmail());
+        publisher.publishEvent(new RegisterAccountConfirmEvent(command.getEmail()));
     }
 
     @Transactional(readOnly = true)

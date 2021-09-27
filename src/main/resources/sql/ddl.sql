@@ -25,8 +25,5 @@ create table member(
 alter table account
     add constraint UK_q0uja26qgu1atulenwup9rxyr unique (email);
 
-alter table member
-    add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname);
-
 alter table account
     add constraint FKr5j0huynd7nsv1s7e9vb8qvwo foreign key (member_id) references member;

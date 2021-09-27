@@ -17,8 +17,8 @@ public final class SessionManager {
         this.httpSession.setAttribute(LOGIN_ACCOUNT, principal);
     }
 
-    public Optional<AccountPrincipal> fetchPrincipal() {
-        return Optional.ofNullable((AccountPrincipal) httpSession.getAttribute(LOGIN_ACCOUNT));
+    public AccountPrincipal fetchPrincipal() {
+        return (AccountPrincipal) httpSession.getAttribute(LOGIN_ACCOUNT);
     }
 
     public boolean isExistPrincipal() {
@@ -27,5 +27,6 @@ public final class SessionManager {
 
     public void removePrincipal() {
         this.httpSession.removeAttribute(LOGIN_ACCOUNT);
+        this.httpSession.invalidate();
     }
 }

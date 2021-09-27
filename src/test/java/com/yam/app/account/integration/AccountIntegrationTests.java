@@ -1,5 +1,10 @@
 package com.yam.app.account.integration;
 
+import static com.yam.app.account.presentation.AccountApiUri.EMAIL_CONFIRM;
+import static com.yam.app.account.presentation.AccountApiUri.FIND_INFO;
+import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
+import static com.yam.app.account.presentation.AccountApiUri.LOGOUT;
+import static com.yam.app.account.presentation.AccountApiUri.REGISTER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -9,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yam.app.account.presentation.AccountApiUri;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +61,7 @@ final class AccountIntegrationTests {
         command.setPassword("password!");
 
         // Act
-        final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
+        final var actions = mockMvc.perform(post(REGISTER)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(command))
@@ -73,7 +77,7 @@ final class AccountIntegrationTests {
     @DisplayName("이메일 인증에 적절한 토큰과 이메일 정보가 입력되고, 이메일 인증 상태가 성공적으로 압데이트 된다.")
     void email_and_token_verify_request_in_correctly() throws Exception {
         // Act
-        final var actions = mockMvc.perform(get(AccountApiUri.EMAIL_CONFIRM)
+        final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .param("token", "emailchecktoken")
@@ -97,7 +101,7 @@ final class AccountIntegrationTests {
         command.setPassword("password!");
 
         // Act & Assert
-        mockMvc.perform(post(AccountApiUri.LOGIN)
+        mockMvc.perform(post(LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -105,7 +109,7 @@ final class AccountIntegrationTests {
             .andExpect(status().isOk())
             .andDo(
                 result -> {
-                    final var actions = mockMvc.perform(get(AccountApiUri.FIND_INFO)
+                    final var actions = mockMvc.perform(get(FIND_INFO)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                     );
@@ -123,15 +127,16 @@ final class AccountIntegrationTests {
     }
 
     @Test
-    @DisplayName("로그인 이후 성공적으로 로그아웃 하는 시나리오")
-    void logout() throws Exception {
+    @DisplayName("로그인에 적절한 파라미터를 입력하여, 성공하고 "
+        + "로그아웃하는 시나리오 테스트.")
+    void login_success_and_authentication_member_logout_scenarios() throws Exception {
         //Arrange
         var command = new LoginAccountCommand();
         command.setEmail("loginCheck@gmail.com");
         command.setPassword("password!");
 
         // Act & Assert
-        mockMvc.perform(post(AccountApiUri.LOGIN)
+        mockMvc.perform(post(LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -139,7 +144,7 @@ final class AccountIntegrationTests {
             .andExpect(status().isOk())
             .andDo(
                 result -> {
-                    final var actions = mockMvc.perform(post(AccountApiUri.LOGOUT)
+                    final var actions = mockMvc.perform(post(LOGOUT)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                     );

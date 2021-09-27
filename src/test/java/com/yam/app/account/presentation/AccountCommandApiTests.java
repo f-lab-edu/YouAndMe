@@ -1,5 +1,9 @@
 package com.yam.app.account.presentation;
 
+import static com.yam.app.account.presentation.AccountApiUri.EMAIL_CONFIRM;
+import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
+import static com.yam.app.account.presentation.AccountApiUri.LOGOUT;
+import static com.yam.app.account.presentation.AccountApiUri.REGISTER;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,7 +54,7 @@ final class AccountCommandApiTests {
         @DisplayName("세션이 없는 상태로 로그아웃을 요청하면 401 에러를 반환한다.")
         void logout() throws Exception {
             //Act
-            final var actions = mockMvc.perform(post(AccountApiUri.LOGOUT)
+            final var actions = mockMvc.perform(post(LOGOUT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -73,7 +77,7 @@ final class AccountCommandApiTests {
             // Act
             doThrow(IllegalStateException.class).when(accountFacade).login(request);
 
-            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
+            final var actions = mockMvc.perform(post(LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -95,7 +99,7 @@ final class AccountCommandApiTests {
             request.setPassword(args);
 
             // Act
-            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
+            final var actions = mockMvc.perform(post(LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
@@ -115,7 +119,7 @@ final class AccountCommandApiTests {
             command.setPassword("password!1");
 
             // Act
-            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
+            final var actions = mockMvc.perform(post(LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -135,7 +139,7 @@ final class AccountCommandApiTests {
             command.setPassword(args);
 
             //Act
-            final var actions = mockMvc.perform(post(AccountApiUri.LOGIN)
+            final var actions = mockMvc.perform(post(LOGIN)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -164,7 +168,7 @@ final class AccountCommandApiTests {
             command.setEmail(args);
 
             // Act
-            final var actions = mockMvc.perform(get(AccountApiUri.EMAIL_CONFIRM)
+            final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param(TOKEN, args)
@@ -185,7 +189,7 @@ final class AccountCommandApiTests {
             command.setEmail(arg);
 
             // Act
-            final var actions = mockMvc.perform(get(AccountApiUri.EMAIL_CONFIRM)
+            final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .param(TOKEN, arg)
@@ -212,7 +216,7 @@ final class AccountCommandApiTests {
             command.setPassword(arg);
 
             // Act
-            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
+            final var actions = mockMvc.perform(post(REGISTER)
                 .content(objectMapper.writeValueAsString(command))
             );
 
@@ -234,7 +238,7 @@ final class AccountCommandApiTests {
             command.setPassword(arg);
 
             // Act
-            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
+            final var actions = mockMvc.perform(post(REGISTER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -254,7 +258,7 @@ final class AccountCommandApiTests {
             command.setPassword("password1!");
 
             // Act
-            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
+            final var actions = mockMvc.perform(post(REGISTER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))
@@ -274,7 +278,7 @@ final class AccountCommandApiTests {
             command.setPassword(args);
 
             // Act
-            final var actions = mockMvc.perform(post(AccountApiUri.REGISTER)
+            final var actions = mockMvc.perform(post(REGISTER)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(command))

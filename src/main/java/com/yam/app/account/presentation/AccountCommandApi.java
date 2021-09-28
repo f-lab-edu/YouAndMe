@@ -39,7 +39,9 @@ public final class AccountCommandApi {
     /**
      * 임시로 "http://localhost:3000/login"로 리다이렉트 되도록 설정.
      */
-    @GetMapping("/api/accounts/authorize")
+    @GetMapping(value = "/api/accounts/authorize",
+        produces = MediaType.ALL_VALUE,
+        consumes = MediaType.ALL_VALUE)
     public ResponseEntity<Void> registerConfirm(
         @ModelAttribute @Valid ConfirmRegisterAccountCommand command) throws Exception {
         accountFacade.registerConfirm(command);

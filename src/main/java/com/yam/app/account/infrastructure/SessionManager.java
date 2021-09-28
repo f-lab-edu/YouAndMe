@@ -1,11 +1,10 @@
 package com.yam.app.account.infrastructure;
 
-import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
 public final class SessionManager {
 
-    private static final String LOGIN_ACCOUNT = "LOGIN_ACCOUNT_EMAIL";
+    private static final String LOGIN_ACCOUNT = "LOGIN_ACCOUNT";
 
     private final HttpSession httpSession;
 

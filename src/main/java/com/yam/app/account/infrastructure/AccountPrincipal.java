@@ -1,16 +1,28 @@
 package com.yam.app.account.infrastructure;
 
-import java.io.Serializable;
-import lombok.Getter;
-import lombok.ToString;
+import com.yam.app.account.domain.Account;
+import com.yam.app.common.Authentication;
 
-@Getter
-@ToString
-public final class AccountPrincipal implements Serializable {
+public final class AccountPrincipal implements Authentication {
 
-    private final String email;
+    private final Account account;
 
-    public AccountPrincipal(String email) {
-        this.email = email;
+    public AccountPrincipal(Account account) {
+        this.account = account;
+    }
+
+    @Override
+    public String getCredentials() {
+        return account.getEmail();
+    }
+
+    @Override
+    public String getRole() {
+        return account.getRole().name();
+    }
+
+    @Override
+    public Long getMemberId() {
+        return account.getMemberId();
     }
 }

@@ -32,6 +32,6 @@ public final class SessionBasedLoginAccountProcessor implements LoginAccountProc
             throw new IllegalStateException("Password mismatched");
         }
 
-        sessionManager.setPrincipal(new AccountPrincipal(email));
+        sessionManager.setPrincipal(new AccountPrincipal(account));
     }
 }

@@ -18,14 +18,14 @@ class DomainEventTranslator {
 
     @Async
     @TransactionalEventListener
-    public void handle(RegisterAccountConfirmEvent event) {
+    public void translate(RegisterAccountConfirmEvent event) {
         publisher.publishEvent(
             new com.yam.app.member.domain.RegisterAccountConfirmEvent(event.getEmail()));
     }
 
     @Async
     @TransactionalEventListener
-    public void handle(GenerateMemberEvent event) {
+    public void translate(GenerateMemberEvent event) {
         publisher.publishEvent(
             new com.yam.app.account.domain.GenerateMemberEvent(event.getMemberId(),
                 event.getEmail()));

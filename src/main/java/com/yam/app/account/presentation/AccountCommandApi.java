@@ -2,6 +2,8 @@ package com.yam.app.account.presentation;
 
 import com.yam.app.account.application.AccountFacade;
 import com.yam.app.account.infrastructure.SessionManager;
+import com.yam.app.common.Authentication;
+import com.yam.app.common.AuthenticationPrincipal;
 import java.net.URI;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +66,14 @@ public final class AccountCommandApi {
     public ResponseEntity<Void> logout(HttpSession httpSession) {
         var session = new SessionManager(httpSession);
         session.removePrincipal();
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/api/accounts/update")
+    public ResponseEntity<Void> update(
+        @RequestBody @Valid UpdateAccountCommand command,
+        @AuthenticationPrincipal Authentication authentication) {
+        accountFacade.update(command, authentication);
         return ResponseEntity.ok().build();
     }
 }

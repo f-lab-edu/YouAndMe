@@ -11,6 +11,8 @@ import com.yam.app.account.presentation.AccountResponse;
 import com.yam.app.account.presentation.ConfirmRegisterAccountCommand;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
+import com.yam.app.account.presentation.UpdateAccountCommand;
+import com.yam.app.common.Authentication;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,5 +62,10 @@ public class AccountFacade {
     public AccountResponse findInfo(String email) {
         return translator.toResponse(accountReader.findByEmail(email)
             .orElseThrow(() -> new AccountNotFoundException(email)));
+    }
+
+    @Transactional
+    public void update(UpdateAccountCommand command, Authentication authentication) {
+
     }
 }

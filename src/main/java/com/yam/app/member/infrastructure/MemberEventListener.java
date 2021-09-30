@@ -8,7 +8,6 @@ import com.yam.app.member.domain.RegisterAccountConfirmEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class MemberEventListener {
@@ -26,7 +25,6 @@ public class MemberEventListener {
     }
 
     @EventListener
-    @Transactional
     public void handle(RegisterAccountConfirmEvent event) {
         var nickname = event.getEmail().split("@")[0];
         memberRepository.save(new Member(nickname, "temp.png"));

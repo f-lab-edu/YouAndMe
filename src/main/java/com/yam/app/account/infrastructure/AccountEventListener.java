@@ -6,7 +6,6 @@ import com.yam.app.account.domain.AccountRepository;
 import com.yam.app.account.domain.GenerateMemberEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class AccountEventListener {
@@ -21,7 +20,6 @@ public class AccountEventListener {
     }
 
     @EventListener
-    @Transactional
     public void handle(GenerateMemberEvent event) {
         var account = accountReader.findByEmail(event.getEmail())
             .orElseThrow(() -> new AccountNotFoundException(event.getEmail()));

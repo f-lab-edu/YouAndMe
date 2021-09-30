@@ -55,4 +55,8 @@ public final class Account {
     public void addMember(Long memberId) {
         this.memberId = memberId;
     }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

@@ -11,6 +11,7 @@ public final class MybatisMemberRepository implements MemberRepository, MemberRe
     private final SqlSessionTemplate template;
 
     private static final String SAVE_FQCN = "com.yam.app.member.domain.MemberRepository.save";
+    private static final String UPDATE_FQCN = "com.yam.app.member.domain.MemberRepository.update";
 
     public MybatisMemberRepository(SqlSessionTemplate template) {
         this.template = template;
@@ -22,11 +23,25 @@ public final class MybatisMemberRepository implements MemberRepository, MemberRe
     }
 
     @Override
+    public Optional<Member> findById(Long memberId) {
+        return template.getMapper(MemberReader.class).findById(memberId);
+    }
+
+    @Override
     public void save(Member entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
             throw new RuntimeException(
                 String.format("There was a problem saving the object : %s", entity));
+        }
+    }
+
+    @Override
+    public void update(Member entity) {
+        int result = template.update(UPDATE_FQCN, entity);
+        if (result != 1) {
+            throw new RuntimeException(
+                String.format("There was a problem updating the object : %s", entity));
         }
     }
 }

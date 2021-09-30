@@ -5,6 +5,7 @@ import com.yam.app.member.domain.Member;
 import com.yam.app.member.domain.MemberReader;
 import com.yam.app.member.domain.MemberRepository;
 import com.yam.app.member.domain.RegisterAccountConfirmEvent;
+import com.yam.app.member.domain.UpdateAccountEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -31,5 +32,13 @@ public class MemberEventListener {
         var member = memberReader.findByNickname(nickname)
             .orElseThrow(IllegalArgumentException::new);
         publisher.publishEvent(new GenerateMemberEvent(member.getId(), event.getEmail()));
+    }
+
+    @EventListener
+    public void handle(UpdateAccountEvent event) {
+        var member = memberReader.findById(event.getMemberId())
+            .orElseThrow(IllegalArgumentException::new);
+        member.changeProfile(event.getNickname(), event.getImage());
+        memberRepository.update(member);
     }
 }

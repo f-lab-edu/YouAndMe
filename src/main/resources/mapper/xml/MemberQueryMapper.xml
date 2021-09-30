@@ -8,4 +8,9 @@
     SELECT * FROM member WHERE nickname = #{nickname}
   </select>
 
+  <select id="findById" parameterType="Long"
+    resultType="com.yam.app.member.domain.Member">
+    SELECT * FROM member WHERE id = #{memberId}
+  </select>
+
 </mapper>

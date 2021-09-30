@@ -7,6 +7,8 @@ import com.yam.app.account.domain.LoginAccountProcessor;
 import com.yam.app.account.domain.RegisterAccountConfirmEvent;
 import com.yam.app.account.domain.RegisterAccountEvent;
 import com.yam.app.account.domain.RegisterAccountProcessor;
+import com.yam.app.account.domain.UpdateAccountEvent;
+import com.yam.app.account.domain.UpdateAccountProcessor;
 import com.yam.app.account.presentation.AccountResponse;
 import com.yam.app.account.presentation.ConfirmRegisterAccountCommand;
 import com.yam.app.account.presentation.LoginAccountCommand;
@@ -26,17 +28,20 @@ public class AccountFacade {
     private final ConfirmRegisterAccountProcessor confirmRegisterProcessor;
     private final LoginAccountProcessor loginProcessor;
     private final AccountReader accountReader;
+    private final UpdateAccountProcessor updateProcessor;
 
     public AccountFacade(RegisterAccountProcessor registerProcessor,
         AccountTranslator translator, ApplicationEventPublisher publisher,
         ConfirmRegisterAccountProcessor confirmRegisterProcessor,
-        LoginAccountProcessor loginProcessor, AccountReader accountReader) {
+        LoginAccountProcessor loginProcessor, AccountReader accountReader,
+        UpdateAccountProcessor updateProcessor) {
         this.registerProcessor = registerProcessor;
         this.translator = translator;
         this.publisher = publisher;
         this.confirmRegisterProcessor = confirmRegisterProcessor;
         this.loginProcessor = loginProcessor;
         this.accountReader = accountReader;
+        this.updateProcessor = updateProcessor;
     }
 
     @Transactional
@@ -65,7 +70,11 @@ public class AccountFacade {
     }
 
     @Transactional
-    public void update(UpdateAccountCommand command, Authentication authentication) {
-
+    public void update(Authentication authentication, UpdateAccountCommand command) {
+        updateProcessor.update(authentication.getCredentials(), command.getPassword());
+        publisher.publishEvent(new UpdateAccountEvent(
+            authentication.getMemberId(),
+            command.getNickname(),
+            command.getImage()));
     }
 }

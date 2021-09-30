@@ -9,4 +9,11 @@
     VALUES (#{nickname}, #{image})
   </insert>
 
+  <update id="update" parameterType="com.yam.app.member.domain.Member">
+    UPDATE MEMBER
+    SET nickname = #{nickname},
+        image = #{image}
+    WHERE id = #{id}
+  </update>
+
 </mapper>

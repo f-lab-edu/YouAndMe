@@ -1,6 +1,7 @@
 package com.yam.app.adapter;
 
 import com.yam.app.account.domain.RegisterAccountConfirmEvent;
+import com.yam.app.account.domain.UpdateAccountEvent;
 import com.yam.app.member.domain.GenerateMemberEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -28,4 +29,10 @@ class DomainEventTranslator {
                 event.getEmail()));
     }
 
+    @EventListener
+    public void translate(UpdateAccountEvent event) {
+        publisher.publishEvent(
+            new com.yam.app.member.domain.UpdateAccountEvent(
+                event.getMemberId(), event.getNickname(), event.getImage()));
+    }
 }

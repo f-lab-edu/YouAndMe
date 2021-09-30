@@ -5,7 +5,9 @@ import static com.yam.app.account.presentation.AccountApiUri.FIND_INFO;
 import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
 import static com.yam.app.account.presentation.AccountApiUri.LOGOUT;
 import static com.yam.app.account.presentation.AccountApiUri.REGISTER;
+import static com.yam.app.account.presentation.AccountApiUri.UPDATE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -16,6 +18,7 @@ import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfig
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
+import com.yam.app.account.presentation.UpdateAccountCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -74,7 +77,8 @@ final class AccountIntegrationTests {
     }
 
     @Test
-    @DisplayName("이메일 인증에 적절한 토큰과 이메일 정보가 입력되고, 이메일 인증 상태가 성공적으로 압데이트 된다.")
+    @DisplayName("유효한 토큰과 이메일 정보를 통해 이메일 인증을 처리하고,"
+        + "사용자의 기본 회원 정보를 기입하는 시나리오 테스트.")
     void email_and_token_verify_request_in_correctly() throws Exception {
         // Act
         final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
@@ -154,4 +158,36 @@ final class AccountIntegrationTests {
                 });
     }
 
+    @Test
+    @DisplayName("인증된 사용자가 자신의 정보를 수정하는 시나리오 테스트.")
+    void should_authentication_user_info_update_success_scenarios() throws Exception {
+        // Arrange
+        var loginCommand = new LoginAccountCommand();
+        loginCommand.setEmail("rebwon@gmail.com");
+        loginCommand.setPassword("password!");
+        var updateCommand = new UpdateAccountCommand();
+        updateCommand.setNickname("jiwonKim");
+        updateCommand.setPassword("password!2");
+        updateCommand.setImage("jiwon.png");
+
+        // Act & Assert
+        mockMvc.perform(post(LOGIN)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginCommand))
+            )
+            .andExpect(status().isOk())
+            .andDo(
+                result -> {
+                    final var actions = mockMvc.perform(patch(UPDATE)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateCommand))
+                    );
+
+                    actions
+                        .andExpect(status().isOk());
+                }
+            );
+    }
 }

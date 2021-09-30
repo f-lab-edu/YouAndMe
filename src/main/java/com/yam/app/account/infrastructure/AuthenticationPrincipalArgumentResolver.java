@@ -1,6 +1,7 @@
 package com.yam.app.account.infrastructure;
 
 import com.yam.app.common.AuthenticationPrincipal;
+import com.yam.app.common.UnauthorizedRequestException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.core.MethodParameter;
@@ -24,6 +25,7 @@ public final class AuthenticationPrincipalArgumentResolver
             .getSession(false);
 
         var sessionManager = new SessionManager(session);
-        return sessionManager.fetchPrincipal();
+        return sessionManager.fetchPrincipal()
+            .orElseThrow(() -> new UnauthorizedRequestException("Failed fetch principal"));
     }
 }

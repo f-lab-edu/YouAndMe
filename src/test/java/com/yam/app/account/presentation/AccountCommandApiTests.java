@@ -4,8 +4,10 @@ import static com.yam.app.account.presentation.AccountApiUri.EMAIL_CONFIRM;
 import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
 import static com.yam.app.account.presentation.AccountApiUri.LOGOUT;
 import static com.yam.app.account.presentation.AccountApiUri.REGISTER;
+import static com.yam.app.account.presentation.AccountApiUri.UPDATE;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -44,6 +47,81 @@ final class AccountCommandApiTests {
             .andExpect(jsonPath("$.success").value(false))
             .andExpect(jsonPath("$.data").doesNotExist())
             .andExpect(jsonPath("$.message").value("Invalid argument"));
+    }
+
+    @Nested
+    @DisplayName("회원 정보 수정 HTTP API")
+    class UpdateAccountApi {
+
+        @Test
+        @DisplayName("인증되지 않은 사용자가 정보 변경을 요청하면 401 에러를 반환한다.")
+        void not_authentication_update_command() throws Exception {
+            var command = new UpdateAccountCommand();
+            command.setImage("temp.png");
+            command.setNickname("jiwon");
+            command.setPassword("password!2");
+
+            //Act
+            final var actions = mockMvc.perform(patch(UPDATE)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(command))
+            );
+
+            //Assert
+            actions
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.message").value("Unauthorized request"));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"1", "a", "1a234567890123456"})
+        @DisplayName("인증된 사용자의 요청 Body 비밀번호 형식이 맞지 않은 경우 400 에러를 반환한다.")
+        void http_json_password_is_invalid(String args) throws Exception {
+            // Arrange
+            var session = new MockHttpSession();
+            var command = new UpdateAccountCommand();
+            command.setImage("temp.png");
+            command.setNickname("jiwon");
+            command.setPassword(args);
+
+            // Act
+            final var actions = mockMvc.perform(patch(UPDATE)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(command))
+                .session(session)
+            );
+
+            // Assert
+            assertThatInvalidArgumentError(actions);
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @DisplayName("인증된 사용자의 요청 Body 정보가 null 혹은 empty인 경우 400 에러를 반환한다.")
+        void http_json_value_is_empty_or_null(String args) throws Exception {
+            //Arrange
+            var session = new MockHttpSession();
+            var command = new UpdateAccountCommand();
+            command.setNickname(args);
+            command.setPassword(args);
+            command.setImage(args);
+
+            //Act
+            final var actions = mockMvc.perform(patch(UPDATE)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(command))
+                .session(session)
+            );
+
+            //Assert
+            assertThatInvalidArgumentError(actions);
+        }
+
     }
 
     @Nested

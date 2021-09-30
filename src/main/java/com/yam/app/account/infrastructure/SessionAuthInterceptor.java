@@ -16,12 +16,6 @@ public final class SessionAuthInterceptor implements HandlerInterceptor {
             throw new UnauthorizedRequestException("Unauthorized request");
         }
 
-        var sessionManager = new SessionManager(session);
-
-        if (!sessionManager.isExistPrincipal()) {
-            throw new UnauthorizedRequestException("Failed fetch principal");
-        }
-
         return true;
     }
 }

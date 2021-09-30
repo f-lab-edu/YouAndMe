@@ -15,4 +15,9 @@ public final class Member {
         this.nickname = nickname;
         this.image = image;
     }
+
+    public void changeProfile(String nickname, String image) {
+        this.nickname = nickname;
+        this.image = image;
+    }
 }

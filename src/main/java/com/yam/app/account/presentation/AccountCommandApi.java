@@ -73,7 +73,7 @@ public final class AccountCommandApi {
     public ResponseEntity<Void> update(
         @RequestBody @Valid UpdateAccountCommand command,
         @AuthenticationPrincipal Authentication authentication) {
-        accountFacade.update(command, authentication);
+        accountFacade.update(authentication, command);
         return ResponseEntity.ok().build();
     }
 }

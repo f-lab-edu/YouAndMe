@@ -1,5 +1,6 @@
 package com.yam.app.account.domain;
 
+import com.yam.app.common.EntityStatus;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public final class Account {
     private LocalDateTime withdrawalAt;
     private boolean withdraw = false;
     private Role role;
+    private EntityStatus status = EntityStatus.ALIVE;
 
     private Account(String email, String password) {
         this.email = email;

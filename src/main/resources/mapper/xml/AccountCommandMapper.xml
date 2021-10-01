@@ -13,16 +13,17 @@
         joined_at = #{joinedAt},
         role = #{role},
         last_modified_at = NOW(),
-        member_id = #{memberId}
+        member_id = #{memberId},
+        status = #{status}
     WHERE id = #{id}
   </update>
 
   <insert id="save" parameterType="com.yam.app.account.domain.Account">
     INSERT
     INTO ACCOUNT(email, email_check_token, email_check_token_generated_at, email_verified,
-                 password, withdraw, role)
+                 password, withdraw, role, status)
     VALUES (#{email}, #{emailCheckToken}, #{emailCheckTokenGeneratedAt}, #{emailVerified},
-            #{password}, #{withdraw}, #{role})
+            #{password}, #{withdraw}, #{role}, #{status})
   </insert>
 
 </mapper>

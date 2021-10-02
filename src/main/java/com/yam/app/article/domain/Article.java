@@ -6,11 +6,15 @@ import com.yam.app.common.EntityStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@NoArgsConstructor
+@EqualsAndHashCode(of = "id")
 public final class Article {
 
     private Long id;

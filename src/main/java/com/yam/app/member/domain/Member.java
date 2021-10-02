@@ -2,10 +2,12 @@ package com.yam.app.member.domain;
 
 import com.yam.app.common.EntityStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public final class Member {
 
     private Long id;

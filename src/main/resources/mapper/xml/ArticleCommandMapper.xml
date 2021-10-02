@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yam.app.article.domain.ArticleRepository">
+
+  <insert id="save" parameterType="com.yam.app.article.domain.Article">
+    INSERT INTO ARTICLE(title, content, image, status, created_at, modified_at, member_id)
+    VALUES (#{title}, #{content}, #{image}, #{status}, #{createdAt}, #{modifiedAt}, #{authorId})
+  </insert>
+
+</mapper>

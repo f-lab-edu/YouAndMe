@@ -6,8 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
+@MappedTypes(EntityStatusTypeHandler.class)
 public final class EntityStatusTypeHandler implements TypeHandler<EntityStatus> {
 
     @Override

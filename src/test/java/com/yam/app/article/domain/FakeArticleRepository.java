@@ -1,6 +1,7 @@
 package com.yam.app.article.domain;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -15,6 +16,13 @@ public final class FakeArticleRepository implements ArticleRepository, ArticleRe
             .filter(a -> a.getTitle().equals(title))
             .findFirst()
             .get();
+    }
+
+    @Override
+    public Optional<Article> findById(Long articleId) {
+        return data.values().stream()
+            .filter(a -> a.getId().equals(articleId))
+            .findFirst();
     }
 
     @Override

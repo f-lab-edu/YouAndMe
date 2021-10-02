@@ -4,10 +4,12 @@ import com.yam.app.common.EntityStatus;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString(exclude = "password")
+@NoArgsConstructor
 public final class Account {
 
     private Long id;

@@ -14,3 +14,16 @@ insert into account(email, email_check_token, email_check_token_generated_at, em
 values ('rebwon@gmail.com', 'emailchecktoken1', now(), true, now(), now(),
         '$2a$10$EqbMbYB0vcZnuA5CClqa9uiLDnjA6pCjxn208ZchzA2q3ofqnkhcq',
         false, 'DEFAULT', 1, 'ALIVE');
+
+insert into article(title, content, image, status, created_at, modified_at, member_id)
+values ('sample-title', 'sample-content', 'sample.png', 'ALIVE', now(), now(), 1);
+
+insert into tag(name)
+values ('hibernate'),
+       ('spring'),
+       ('jpa');
+
+insert into article_tag(article_id, tag_id)
+values (1, 1),
+       (1, 2),
+       (1, 3);

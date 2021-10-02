@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yam.app.article.domain.ArticleReader">
+
+  <select id="findByTitle" parameterType="String" resultMap="onlyArticle">
+    SELECT a.id AS article_id,
+           a.title AS article_title,
+           a.content AS article_content,
+           a.image AS article_image,
+           a.status AS article_status,
+           a.member_id AS article_author_id,
+           a.created_at AS article_created_at,
+           a.modified_at AS article_modified_at
+    FROM article a WHERE a.title = #{title};
+  </select>
+
+  <select id="findById" parameterType="Long" resultMap="articleAndTag">
+    SELECT a.id AS article_id, a.title AS article_title, a.content AS article_content,
+           a.image AS article_image, a.status AS article_status, a.member_id AS article_author_id,
+           a.created_at AS article_created_at, a.modified_at AS article_modified_at,
+           atg.id AS article_tag_id, atg.article_id AS article_tag_article_id,
+           t.id AS tag_id, t.name AS tag_name
+    FROM article a
+        LEFT OUTER JOIN article_tag atg ON atg.article_id = a.id
+        LEFT OUTER JOIN tag t ON t.id = atg.tag_id
+    WHERE a.id = #{articleId};
+  </select>
+
+  <resultMap id="onlyArticle" type="com.yam.app.article.domain.Article">
+    <id property="id" column = "article_id"/>
+    <result property="title" column="article_title"/>
+    <result property="content" column="article_content"/>
+    <result property="image" column="article_image"/>
+    <result property="status" column="article_status"/>
+    <result property="authorId" column = "article_author_id"/>
+    <result property="createdAt" column="article_created_at"/>
+    <result property="modifiedAt" column="article_modified_at"/>
+  </resultMap>
+
+  <resultMap id="articleAndTag" type="com.yam.app.article.domain.Article">
+    <id property="id" column = "article_id"/>
+    <result property="title" column="article_title"/>
+    <result property="content" column="article_content"/>
+    <result property="image" column="article_image"/>
+    <result property="status" column="article_status"/>
+    <result property="authorId" column = "article_author_id"/>
+    <result property="createdAt" column="article_created_at"/>
+    <result property="modifiedAt" column="article_modified_at"/>
+    <collection property="tags" resultMap="articleTagEntity"/>
+  </resultMap>
+
+  <resultMap id="articleTagEntity" type="com.yam.app.article.domain.ArticleTag">
+    <id property="id" column="article_tag_id"/>
+    <result property="articleId" column="article_tag_article_id"/>
+    <association property="tag" javaType="com.yam.app.article.domain.Tag">
+      <id property="id" column="tag_id"/>
+      <result property="name" column="tag_name"/>
+    </association>
+  </resultMap>
+
+</mapper>

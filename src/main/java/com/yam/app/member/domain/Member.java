@@ -1,13 +1,14 @@
 package com.yam.app.member.domain;
 
 import com.yam.app.common.EntityStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public final class Member {
 
     private Long id;

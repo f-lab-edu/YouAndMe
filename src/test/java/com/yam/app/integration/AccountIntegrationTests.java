@@ -1,4 +1,4 @@
-package com.yam.app.account.integration;
+package com.yam.app.integration;
 
 import static com.yam.app.account.presentation.AccountApiUri.EMAIL_CONFIRM;
 import static com.yam.app.account.presentation.AccountApiUri.FIND_INFO;
@@ -13,47 +13,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.SharedHttpSessionConfigurer.sharedHttpSession;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.account.presentation.LoginAccountCommand;
 import com.yam.app.account.presentation.RegisterAccountCommand;
 import com.yam.app.account.presentation.UpdateAccountCommand;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@DisplayName("회원가입 통합 인수 테스트")
-@ActiveProfiles("test")
-final class AccountIntegrationTests {
+@DisplayName("회원 모듈 통합 인수 테스트")
+final class AccountIntegrationTests extends AbstractIntegrationTests {
 
     private static final String EMAIL_CONFIRM_SUCCESS_REDIRECT_URI = "http://localhost:3000/login";
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private WebApplicationContext wac;
-
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders
-            .webAppContextSetup(wac)
-            .apply(sharedHttpSession())
-            .build();
-    }
 
     @Test
     @DisplayName("새로운 계정 등록에 적절한 파라미터가 입력되고, 계정이 성공적으로 등록된다.")

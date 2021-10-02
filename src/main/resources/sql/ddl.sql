@@ -71,6 +71,7 @@ primary key (id));
 alter table account add constraint UK_q0uja26qgu1atulenwup9rxyr unique (email);
 alter table account add constraint FKr5j0huynd7nsv1s7e9vb8qvwo foreign key (member_id) references member;
 alter table tag add constraint UK_1wdpsed5kna2y38hnbgrnhi5b unique (name);
+alter table article add constraint UK_571gx7oqo5xpmgocegaidlcu9 unique (title);
 alter table article add constraint FK6l9vkfd5ixw8o8kph5rj1k7gu foreign key (member_id) references member;
 alter table article_likes add constraint FK1wt0ww82gfxkuxw3ghxmp55xy foreign key (article_id) references article;
 alter table article_likes add constraint FKkipxs7p8nrjd4537f3k8rexh5 foreign key (member_id) references member;

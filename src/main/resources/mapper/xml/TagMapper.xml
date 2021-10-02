@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yam.app.article.domain.TagRepository">
+
+  <insert id="save" parameterType="com.yam.app.article.domain.Tag">
+    INSERT
+    INTO TAG(name)
+    VALUES (#{name})
+  </insert>
+
+  <select id="findByName" parameterType="String"
+    resultType="com.yam.app.article.domain.Tag">
+    SELECT * FROM TAG WHERE name = #{name}
+  </select>
+
+</mapper>

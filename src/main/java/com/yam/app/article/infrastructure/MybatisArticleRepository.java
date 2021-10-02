@@ -1,0 +1,31 @@
+package com.yam.app.article.infrastructure;
+
+import com.yam.app.article.domain.Article;
+import com.yam.app.article.domain.ArticleReader;
+import com.yam.app.article.domain.ArticleRepository;
+import org.mybatis.spring.SqlSessionTemplate;
+
+public final class MybatisArticleRepository implements ArticleReader, ArticleRepository {
+
+    private final SqlSessionTemplate template;
+
+    private static final String SAVE_FQCN = "com.yam.app.article.domain.ArticleRepository.save";
+
+    public MybatisArticleRepository(SqlSessionTemplate template) {
+        this.template = template;
+    }
+
+    @Override
+    public void save(Article entity) {
+        int result = template.insert(SAVE_FQCN, entity);
+        if (result != 1) {
+            throw new RuntimeException(
+                String.format("There was a problem saving the object : %s", entity));
+        }
+    }
+
+    @Override
+    public Article findByTitle(String title) {
+        return template.getMapper(ArticleReader.class).findByTitle(title);
+    }
+}

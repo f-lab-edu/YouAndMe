@@ -22,8 +22,8 @@
            atg.id AS article_tag_id, atg.article_id AS article_tag_article_id,
            t.id AS tag_id, t.name AS tag_name
     FROM article a
-        LEFT OUTER JOIN article_tag atg ON atg.article_id = a.id
-        LEFT OUTER JOIN tag t ON t.id = atg.tag_id
+        INNER JOIN article_tag atg ON atg.article_id = a.id
+        INNER JOIN tag t ON t.id = atg.tag_id
     WHERE a.id = #{articleId};
   </select>
 

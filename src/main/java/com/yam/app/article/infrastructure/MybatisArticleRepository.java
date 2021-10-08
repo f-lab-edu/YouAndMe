@@ -8,9 +8,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 public final class MybatisArticleRepository implements ArticleReader, ArticleRepository {
 
-    private final SqlSessionTemplate template;
-
     private static final String SAVE_FQCN = "com.yam.app.article.domain.ArticleRepository.save";
+    private final SqlSessionTemplate template;
 
     public MybatisArticleRepository(SqlSessionTemplate template) {
         this.template = template;
@@ -34,4 +33,10 @@ public final class MybatisArticleRepository implements ArticleReader, ArticleRep
     public Optional<Article> findById(Long articleId) {
         return template.getMapper(ArticleReader.class).findById(articleId);
     }
+
+    @Override
+    public boolean existsById(Long articleId) {
+        return template.getMapper(ArticleReader.class).existsById(articleId);
+    }
+
 }

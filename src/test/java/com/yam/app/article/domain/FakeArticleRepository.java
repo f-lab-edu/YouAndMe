@@ -30,4 +30,9 @@ public final class FakeArticleRepository implements ArticleRepository, ArticleRe
         entity.setId(idGenerator.incrementAndGet());
         data.put(entity.getId(), entity);
     }
+
+    @Override
+    public boolean existsById(Long articleId) {
+        return data.containsKey(articleId);
+    }
 }

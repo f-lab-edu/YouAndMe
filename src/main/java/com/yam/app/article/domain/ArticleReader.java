@@ -7,4 +7,6 @@ public interface ArticleReader {
     Article findByTitle(String title);
 
     Optional<Article> findById(Long articleId);
+
+    boolean existsById(Long articleId);
 }

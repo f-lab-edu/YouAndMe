@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yam.app.comment.domain.CommentReader">
+
+  <select id="findById" parameterType="Long" resultType="com.yam.app.comment.domain.Comment">
+    SELECT *
+    FROM COMMENT
+    WHERE id = #{id}
+  </select>
+
+  <select id="findByArticleId" parameterType="Long" resultType="com.yam.app.comment.domain.Comment">
+    SELECT *
+    FROM COMMENT
+    WHERE article_id = #{articleId}
+  </select>
+
+  <select id="existsById" parameterType="Long" resultType="boolean">
+    SELECT COUNT(*)
+    FROM COMMENT
+    WHERE id = #{id}
+  </select>
+
+</mapper>

@@ -3,6 +3,12 @@
 
 <mapper namespace="com.yam.app.article.domain.ArticleReader">
 
+  <select id="existsById" parameterType="Long" resultType="boolean">
+    SELECT COUNT(*)
+    FROM ARTICLE
+    WHERE id = #{id}
+  </select>
+
   <select id="findByTitle" parameterType="String" resultMap="onlyArticle">
     SELECT a.id AS article_id,
            a.title AS article_title,

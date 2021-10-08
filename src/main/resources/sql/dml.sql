@@ -27,3 +27,6 @@ insert into article_tag(article_id, tag_id)
 values (1, 1),
        (1, 2),
        (1, 3);
+
+INSERT INTO comment(content, created_at, modified_at, status, article_id, member_id)
+VALUES ('sample content1', now(), now(), 'ALIVE', 1, 1);

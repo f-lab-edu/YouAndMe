@@ -24,7 +24,7 @@ public final class Comment {
     private Long articleId;
     private Long memberId;
 
-    public Comment(String content, LocalDateTime createdAt, LocalDateTime modifiedAt,
+    private Comment(String content, LocalDateTime createdAt, LocalDateTime modifiedAt,
         Long articleId, Long memberId) {
         this.content = content;
         this.createdAt = createdAt;
@@ -48,6 +48,10 @@ public final class Comment {
 
     public boolean isAlive() {
         return this.status == EntityStatus.ALIVE;
+    }
+
+    public boolean isAuthor(Long memberId) {
+        return this.memberId.equals(memberId);
     }
 
     void setId(Long id) {

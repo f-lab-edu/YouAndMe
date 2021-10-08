@@ -1,12 +1,13 @@
 package com.yam.app.comment.domain;
 
 import com.yam.app.article.domain.ArticleReader;
+import com.yam.app.common.UnauthorizedRequestException;
 
 public final class CommentProcessor {
 
-    CommentReader commentReader;
-    CommentRepository commentRepository;
-    ArticleReader articleReader;
+    private final CommentReader commentReader;
+    private final CommentRepository commentRepository;
+    private final ArticleReader articleReader;
 
     public CommentProcessor(CommentReader commentReader,
         CommentRepository commentRepository, ArticleReader articleReader) {
@@ -23,13 +24,8 @@ public final class CommentProcessor {
         commentRepository.save(Comment.of(content, articleId, memberId));
     }
 
-    public void update(String content, Long commentId) {
-        Comment comment = commentReader.findById(commentId)
-            .orElseThrow(() -> new CommentNotFoundException(commentId));
-
-        if (!articleReader.existsById(comment.getArticleId())) {
-            throw new ArticleNotFoundException(comment.getArticleId());
-        }
+    public void update(String content, Long commentId, Long memberId) {
+        var comment = this.getComment(commentId, memberId);
 
         if (!comment.isAlive()) {
             throw new CommentNotFoundException(commentId);
@@ -39,16 +35,27 @@ public final class CommentProcessor {
         commentRepository.update(comment);
     }
 
-    public void delete(Long commentId) {
-        Comment comment = commentReader.findById(commentId)
+    public void delete(Long commentId, Long memberId) {
+        var comment = this.getComment(commentId, memberId);
+
+        comment.delete();
+        commentRepository.delete(comment);
+    }
+
+    private Comment getComment(Long commentId, Long memberId) {
+        var comment = commentReader.findById(commentId)
             .orElseThrow(() -> new CommentNotFoundException(commentId));
 
         if (!articleReader.existsById(comment.getArticleId())) {
             throw new ArticleNotFoundException(comment.getArticleId());
         }
 
-        comment.delete();
-        commentRepository.delete(comment);
+        if (!comment.isAuthor(memberId)) {
+            throw new UnauthorizedRequestException(
+                "Member is not the author of this comment, id: " + memberId);
+        }
+
+        return comment;
     }
 
 }

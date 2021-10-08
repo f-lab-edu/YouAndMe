@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.yam.app.article.domain.Article;
 import com.yam.app.article.domain.FakeArticleRepository;
+import com.yam.app.common.UnauthorizedRequestException;
 import java.util.Arrays;
 import java.util.Collection;
 import org.junit.jupiter.api.DisplayName;
@@ -24,12 +25,11 @@ final class CommentProcessorTest {
 
         final var memberId = 1L;
         final var articleId = 1L;
+        fakeArticleRepository.save(Article.write(articleId, "title", "content", "image.png"));
+
         final var commentId = 1L;
         final var deletedCommentId = 2L;
-        final var wrongCommentId = 3L;
-
-        fakeArticleRepository.save(Article.write(1L, "title", "content", "image.png"));
-        fakeArticleRepository.save(Article.write(2L, "title", "content", "image.png"));
+        final var wrongArticleCommentId = 3L;
         fakeCommentRepository.save(Comment.of("sample content", articleId, memberId));
         fakeCommentRepository.save(Comment.of("deleted content", articleId, memberId));
         fakeCommentRepository.save(Comment.of("article not found", 4321L, memberId));
@@ -38,11 +38,11 @@ final class CommentProcessorTest {
             DynamicTest.dynamicTest("댓글 작성에 성공한다.",
                 () -> {
                     // Act
-                    processor.create("hello", 2L, memberId);
-                    var comments = fakeCommentRepository.findByArticleId(2L);
+                    processor.create("hello", articleId, memberId);
+                    var comments = fakeCommentRepository.findByArticleId(articleId);
 
                     // Assert
-                    assertThat(comments.get(0).getId()).isEqualTo(4L);
+                    assertThat(comments.get(comments.size() - 1).getId()).isEqualTo(4L);
                 }),
             DynamicTest.dynamicTest("댓글 수정에 성공한다.",
                 () -> {
@@ -50,7 +50,7 @@ final class CommentProcessorTest {
                     var modifiedAt = fakeCommentRepository.findById(commentId).get()
                         .getModifiedAt();
 
-                    processor.update("new content", commentId);
+                    processor.update("new content", commentId, memberId);
                     var comment = fakeCommentRepository.findById(commentId).get();
 
                     // Assert
@@ -63,33 +63,46 @@ final class CommentProcessorTest {
                     assertThatExceptionOfType(ArticleNotFoundException.class)
                         .isThrownBy(() -> processor.create("sample content", 1234L, memberId));
                 }),
-            DynamicTest.dynamicTest("댓글 수정시 유효한 게시글이 존재하지 않는 경우 예외를 반환한다.",
+            DynamicTest.dynamicTest("댓글 수정시 해당 댓글이 있는 게시글이 유효하지 않은 경우 예외를 반환한다.",
                 () -> {
                     // Act & Assert
                     assertThatExceptionOfType(ArticleNotFoundException.class)
-                        .isThrownBy(() -> processor.update("new content", wrongCommentId));
+                        .isThrownBy(
+                            () -> processor.update("new content", wrongArticleCommentId, memberId));
                 }),
-            DynamicTest.dynamicTest("댓글 삭제시 유효한 게시글이 존재하지 않는 경우 예외를 반환한다.",
-                () -> {
-                    // Act & Assert
-                    assertThatExceptionOfType(ArticleNotFoundException.class)
-                        .isThrownBy(() -> processor.delete(wrongCommentId));
-                }),
-
-            DynamicTest.dynamicTest("댓글 수정시 유효한 댓글이 존재하지 않는 경우 예외를 반환한다.",
+            DynamicTest.dynamicTest("댓글 수정시 해당 댓글이 존재하지 않는 경우 예외를 반환한다.",
                 () -> {
                     // Act & Assert
                     assertThatExceptionOfType(CommentNotFoundException.class)
-                        .isThrownBy(() -> processor.update("new content", 1234L));
+                        .isThrownBy(() -> processor.update("new content", 1234L, memberId));
+                }),
+            DynamicTest.dynamicTest("댓글 수정하는 회원이 작성자가 아닌 경우 예외를 반환한다.",
+                () -> {
+                    // Act & Assert
+                    assertThatExceptionOfType(UnauthorizedRequestException.class)
+                        .isThrownBy(() -> processor.update("new content", commentId, 1234L));
+                }),
+            DynamicTest.dynamicTest("댓글 삭제시 해당 댓글이 있는 게시글이 유효하지 않은 경우 예외를 반환한다.",
+                () -> {
+                    // Act & Assert
+                    assertThatExceptionOfType(ArticleNotFoundException.class)
+                        .isThrownBy(() -> processor.delete(wrongArticleCommentId, memberId));
+                }),
+            DynamicTest.dynamicTest("댓글 삭제하는 회원이 작성자가 아닌 경우 예외를 반환한다.",
+                () -> {
+                    // Act & Assert
+                    assertThatExceptionOfType(UnauthorizedRequestException.class)
+                        .isThrownBy(() -> processor.delete(commentId, 1234L));
                 }),
             DynamicTest.dynamicTest("삭제된 댓글을 수정하려고 하는 경우 예외를 반환한다.",
                 () -> {
                     // Act & Assert
-                    processor.delete(deletedCommentId);
+                    processor.delete(deletedCommentId, memberId);
                     assertThatExceptionOfType(CommentNotFoundException.class)
                         .isThrownBy(
-                            () -> processor.update("sample content", deletedCommentId));
+                            () -> processor.update("sample content", deletedCommentId, memberId));
                 })
         );
     }
+
 }

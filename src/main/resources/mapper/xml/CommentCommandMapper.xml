@@ -21,7 +21,7 @@
     </update>
 
     <update id="delete" parameterType="com.yam.app.comment.domain.Comment">
-        UPDATE COMMNET
+        UPDATE COMMENT
         SET status = #{status}
         WHERE id = #{id}
     </update>

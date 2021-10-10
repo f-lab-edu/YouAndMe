@@ -21,4 +21,8 @@ public class CommentFacade {
     public void update(UpdateCommentCommand request, Long commentId, Long memberId) {
         commentProcessor.update(request.getContent(), commentId, memberId);
     }
+
+    public void delete(Long commentId, Long memberId) {
+        commentProcessor.delete(commentId, memberId);
+    }
 }

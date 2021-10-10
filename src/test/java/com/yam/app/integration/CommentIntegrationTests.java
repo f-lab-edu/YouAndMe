@@ -2,7 +2,9 @@ package com.yam.app.integration;
 
 import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
 import static com.yam.app.comment.presentation.CommentApiUri.CREATE_COMMENT;
+import static com.yam.app.comment.presentation.CommentApiUri.DELETE_COMMENT;
 import static com.yam.app.comment.presentation.CommentApiUri.UPDATE_COMMENT;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -13,6 +15,7 @@ import com.yam.app.comment.presentation.CreateCommentCommand;
 import com.yam.app.comment.presentation.UpdateCommentCommand;
 import org.javaunit.autoparams.AutoSource;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.http.MediaType;
 
@@ -21,7 +24,8 @@ final class CommentIntegrationTests extends AbstractIntegrationTests {
 
     @ParameterizedTest
     @AutoSource
-    @DisplayName("로그인에 적절한 파라미터를 입력하여 성공하고 인증된 사용자가 댓글을 작성하는 시나리오 테스트")
+    @DisplayName("로그인에 적절한 파라미터를 입력하여 성공하고"
+        + " 인증된 사용자가 댓글을 작성하는 시나리오 테스트")
     void login_success_and_create_comment_scenarios(String args) throws Exception {
         //Arrange
         var loginCommand = new LoginAccountCommand();
@@ -56,9 +60,9 @@ final class CommentIntegrationTests extends AbstractIntegrationTests {
 
     @ParameterizedTest
     @AutoSource
-    @DisplayName("로그인에 적절한 파라미터를 입력하여 성공하고 인증된 사용자가 댓글을 수정하는 시나리오 테스트")
-    void login_success_and_update_comment_and_then_delete_it_scenarios(String args)
-        throws Exception {
+    @DisplayName("로그인에 적절한 파라미터를 입력하여 성공하고"
+        + " 인증된 사용자가 댓글을 수정하는 시나리오 테스트")
+    void login_success_and_update_comment_scenarios(String args) throws Exception {
         //Arrange
         var loginCommand = new LoginAccountCommand();
         loginCommand.setEmail("comment@gmail.com");
@@ -82,6 +86,37 @@ final class CommentIntegrationTests extends AbstractIntegrationTests {
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateCommand))
+                    );
+
+                    actions
+                        .andDo(print())
+                        .andExpect(status().isOk());
+                });
+    }
+
+    @Test
+    @DisplayName("로그인에 적절한 파라미터를 입력하여 성공하고"
+        + " 인증된 사용자가 댓글을 삭제하는 시나리오 테스트")
+    void login_success_and_delete_comment_scenarios() throws Exception {
+        //Arrange
+        var loginCommand = new LoginAccountCommand();
+        loginCommand.setEmail("comment@gmail.com");
+        loginCommand.setPassword("password!");
+
+        var deleteCommentId = 1L;
+
+        //Act & Assert
+        mockMvc.perform(post(LOGIN)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginCommand))
+            )
+            .andExpect(status().isOk())
+            .andDo(
+                result -> {
+                    final var actions = mockMvc.perform(delete(DELETE_COMMENT + deleteCommentId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                     );
 
                     actions

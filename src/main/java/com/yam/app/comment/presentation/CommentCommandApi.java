@@ -7,6 +7,7 @@ import java.net.URI;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,16 @@ public final class CommentCommandApi {
         @AuthenticationPrincipal Authentication authentication) {
 
         commentFacade.update(request, commentId, authentication.getMemberId());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("api/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(
+        @PathVariable Long commentId,
+        @AuthenticationPrincipal Authentication authentication) {
+
+        commentFacade.delete(commentId, authentication.getMemberId());
 
         return ResponseEntity.ok().build();
     }

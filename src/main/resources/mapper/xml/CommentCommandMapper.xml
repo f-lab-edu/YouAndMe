@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.yam.app.comment.domain.CommentRepository">
 
-  <insert id="save" parameterType="com.yam.app.comment.domain.Comment">
-    INSERT INTO COMMENT(content, created_at, modified_at, status, article_id, member_id)
-    VALUES (#{content}, #{createAt}, #{modifiedAt}, #{status}, #{articleId}, #{memberId})
-  </insert>
+    <insert id="save" parameterType="com.yam.app.comment.domain.Comment">
+        INSERT INTO COMMENT(content, created_at, modified_at, status, article_id, member_id)
+        VALUES (#{content}, #{createdAt}, #{modifiedAt}, #{status}, #{articleId}, #{memberId})
 
-  <update id="update" parameterType="com.yam.app.comment.domain.Comment">
-    UPDATE COMMENT
-    SET content     = #{content},
-        modified_at = #{modifiedAt}
-    WHERE id = #{id}
-  </update>
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
 
-  <update id="delete" parameterType="com.yam.app.comment.domain.Comment">
-    UPDATE COMMNET
-    SET status = #{status}
-    WHERE id = #{id}
-  </update>
+    <update id="update" parameterType="com.yam.app.comment.domain.Comment">
+        UPDATE COMMENT
+        SET content     = #{content},
+            modified_at = #{modifiedAt}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete" parameterType="com.yam.app.comment.domain.Comment">
+        UPDATE COMMNET
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
 
 </mapper>

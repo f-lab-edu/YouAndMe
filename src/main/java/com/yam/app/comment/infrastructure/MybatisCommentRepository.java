@@ -19,12 +19,14 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     }
 
     @Override
-    public void save(Comment entity) {
+    public Long save(Comment entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
             throw new RuntimeException(
                 String.format("There was a problem saving the object : %s", entity));
         }
+
+        return entity.getId();
     }
 
     @Override

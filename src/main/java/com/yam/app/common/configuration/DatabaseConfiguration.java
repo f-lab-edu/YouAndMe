@@ -16,6 +16,7 @@ public class DatabaseConfiguration {
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
             .setType(EmbeddedDatabaseType.H2)
+            .setName("testdb;mode=MySQL")
             .addScript("classpath:sql/ddl.sql")
             .addScript("classpath:sql/dml.sql")
             .build();

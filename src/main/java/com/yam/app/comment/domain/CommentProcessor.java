@@ -16,12 +16,12 @@ public final class CommentProcessor {
         this.articleReader = articleReader;
     }
 
-    public void create(String content, Long articleId, Long memberId) {
+    public Long create(String content, Long articleId, Long memberId) {
         if (!articleReader.existsById(articleId)) {
             throw new ArticleNotFoundException(articleId);
         }
 
-        commentRepository.save(Comment.of(content, articleId, memberId));
+        return commentRepository.save(Comment.of(content, articleId, memberId));
     }
 
     public void update(String content, Long commentId, Long memberId) {

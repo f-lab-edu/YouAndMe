@@ -1,7 +1,9 @@
 package com.yam.app.comment.presentation;
 
 import static com.yam.app.comment.presentation.CommentApiUri.CREATE_COMMENT;
+import static com.yam.app.comment.presentation.CommentApiUri.DELETE_COMMENT;
 import static com.yam.app.comment.presentation.CommentApiUri.UPDATE_COMMENT;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -15,6 +17,7 @@ import org.javaunit.autoparams.customization.Customization;
 import org.javaunit.autoparams.customization.SettablePropertyWriter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +158,7 @@ final class CommentCommandApiTest {
 
     @Nested
     @DisplayName("댓글 수정 HTTP API")
-    class UpdateComment {
+    class UpdateCommentApi {
 
         @ParameterizedTest
         @AutoSource
@@ -207,7 +210,7 @@ final class CommentCommandApiTest {
 
         @ParameterizedTest
         @AutoSource
-        @DisplayName("인증된 사용자의 요청 바디의 articleId 가 null 이라면 400에러를 반환한다.")
+        @DisplayName("인증된 사용자의 요청 바디의 commentId 가 null 이라면 400에러를 반환한다.")
         void authenticated_user_request_body_articleId_is_null(String args) throws Exception {
             //Arrange
             var session = new MockHttpSession();
@@ -257,6 +260,29 @@ final class CommentCommandApiTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.data").doesNotExist())
                 .andExpect(jsonPath("$.message").value("Invalid argument"));
+
+        }
+    }
+
+    @Nested
+    @DisplayName("댓글 삭제 HTTP API")
+    class DeleteCommentApi {
+
+        @Test
+        @DisplayName("인증되지 않은 사용자가 요청을 보냈다면 401에러를 반환한다.")
+        void unauthenticated_user_request() throws Exception {
+            //Act
+            final var actions = mockMvc.perform(delete(DELETE_COMMENT + "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+            );
+
+            //Assert
+            actions
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.data").doesNotExist())
+                .andExpect(jsonPath("$.message").value("Unauthorized request"));
 
         }
     }

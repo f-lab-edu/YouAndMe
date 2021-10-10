@@ -32,9 +32,11 @@ public final class FakeCommentRepository implements CommentRepository, CommentRe
     }
 
     @Override
-    public void save(Comment entity) {
-        entity.setId(idGenerator.incrementAndGet());
+    public Long save(Comment entity) {
+        final Long commentId = idGenerator.incrementAndGet();
+        entity.setId(commentId);
         data.put(entity.getId(), entity);
+        return commentId;
     }
 
     @Override

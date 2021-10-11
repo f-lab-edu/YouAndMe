@@ -47,15 +47,11 @@ final class CommentProcessorTest {
             DynamicTest.dynamicTest("댓글 수정에 성공한다.",
                 () -> {
                     // Act
-                    var modifiedAt = fakeCommentRepository.findById(commentId).get()
-                        .getModifiedAt();
-
                     processor.update("new content", commentId, memberId);
-                    var comment = fakeCommentRepository.findById(commentId).get();
+                    var updateComment = fakeCommentRepository.findById(commentId).get();
 
                     // Assert
-                    assertThat(comment.getContent()).isEqualTo("new content");
-                    assertThat(comment.getModifiedAt().isAfter(modifiedAt)).isTrue();
+                    assertThat(updateComment.getContent()).isEqualTo("new content");
                 }),
             DynamicTest.dynamicTest("댓글 작성시 유효한 게시글이 존재하지 않는 경우 예외를 반환한다.",
                 () -> {

@@ -28,7 +28,7 @@ public final class CommentCommandApi {
         this.commentFacade = commentFacade;
     }
 
-    @PostMapping("/api/comments/create")
+    @PostMapping("/api/comments/")
     public ResponseEntity<Void> createComment(
         @RequestBody @Valid CreateCommentCommand request,
         @AuthenticationPrincipal Authentication authentication) {

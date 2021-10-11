@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yam.app.comment.application.CommentFacade;
-import java.util.Random;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.javaunit.autoparams.AutoSource;
 import org.javaunit.autoparams.customization.Customization;
 import org.javaunit.autoparams.customization.SettablePropertyWriter;
@@ -37,16 +37,6 @@ final class CommentCommandApiTest {
     private ObjectMapper objectMapper;
     @MockBean
     private CommentFacade commentFacade;
-
-    private String generatedRandomString(int length) {
-        Random random = new Random();
-
-        return random.ints(48, 123)
-            .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-            .limit(length)
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
-    }
 
     @Nested
     @DisplayName("댓글 작성 HTTP API")
@@ -135,7 +125,7 @@ final class CommentCommandApiTest {
             var maxContentLength = 120;
             var session = new MockHttpSession();
             var exceededLengthCommand = new CreateCommentCommand();
-            exceededLengthCommand.setContent(generatedRandomString(maxContentLength + 1));
+            exceededLengthCommand.setContent(RandomStringUtils.random(maxContentLength + 1));
             exceededLengthCommand.setArticleId(args);
 
             //Act
@@ -243,7 +233,7 @@ final class CommentCommandApiTest {
             var maxContentLength = 120;
             var session = new MockHttpSession();
             var exceededLengthCommand = new UpdateCommentCommand();
-            exceededLengthCommand.setContent(generatedRandomString(maxContentLength + 1));
+            exceededLengthCommand.setContent(RandomStringUtils.random(maxContentLength + 1));
             exceededLengthCommand.setCommentId(args);
 
             //Act

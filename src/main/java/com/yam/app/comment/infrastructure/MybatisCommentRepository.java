@@ -22,8 +22,9 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     public Long save(Comment entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
-            throw new RuntimeException(
-                String.format("There was a problem saving the object : %s", entity));
+            throw new IllegalStateException(
+                String.format("Unintentionally, more records were saved than expected. : %s",
+                    entity));
         }
 
         return entity.getId();
@@ -33,8 +34,9 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     public void update(Comment entity) {
         int result = template.update(UPDATE_FQCN, entity);
         if (result != 1) {
-            throw new RuntimeException(
-                String.format("There was a problem updating the object : %s", entity));
+            throw new IllegalStateException(
+                String.format("Unintentionally, more records were updated than expected. : %s",
+                    entity));
         }
     }
 
@@ -42,8 +44,9 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     public void delete(Comment entity) {
         int result = template.update(DELETE_FQCN, entity);
         if (result != 1) {
-            throw new RuntimeException(
-                String.format("There was a problem soft deleting the object : %s", entity));
+            throw new IllegalStateException(
+                String.format("Unintentionally, more records were soft-deleted than expected. : %s",
+                    entity));
         }
     }
 

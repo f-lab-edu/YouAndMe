@@ -8,10 +8,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 public final class MybatisAccountRepository implements AccountRepository, AccountReader {
 
-    private final SqlSessionTemplate template;
-
     private static final String SAVE_FQCN = "com.yam.app.account.domain.AccountRepository.save";
     private static final String UPDATE_FQCN = "com.yam.app.account.domain.AccountRepository.update";
+
+    private final SqlSessionTemplate template;
 
     public MybatisAccountRepository(SqlSessionTemplate template) {
         this.template = template;
@@ -26,8 +26,8 @@ public final class MybatisAccountRepository implements AccountRepository, Accoun
     public void update(Account entity) {
         int result = template.update(UPDATE_FQCN, entity);
         if (result != 1) {
-            throw new RuntimeException(
-                String.format("There was a problem updating the object : %s", entity));
+            throw new IllegalStateException(String.format(
+                "Unintentionally, more records were updated than expected. : %s", entity));
         }
     }
 
@@ -35,8 +35,8 @@ public final class MybatisAccountRepository implements AccountRepository, Accoun
     public void save(Account entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
-            throw new RuntimeException(
-                String.format("There was a problem saving the object : %s", entity));
+            throw new IllegalStateException(String.format(
+                "Unintentionally, more records were saved than expected. : %s", entity));
         }
     }
 

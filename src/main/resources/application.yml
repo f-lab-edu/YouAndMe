@@ -12,10 +12,6 @@ spring:
           enable: true
   session:
     store-type: redis
-  redis:
-      host: localhost
-      password:
-      port: 6379
 
 app:
   mail:

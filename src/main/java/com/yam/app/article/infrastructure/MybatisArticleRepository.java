@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 public final class MybatisArticleRepository implements ArticleReader, ArticleRepository {
 
     private static final String SAVE_FQCN = "com.yam.app.article.domain.ArticleRepository.save";
+
     private final SqlSessionTemplate template;
 
     public MybatisArticleRepository(SqlSessionTemplate template) {
@@ -19,8 +20,8 @@ public final class MybatisArticleRepository implements ArticleReader, ArticleRep
     public void save(Article entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
-            throw new RuntimeException(
-                String.format("There was a problem saving the object : %s", entity));
+            throw new IllegalStateException(String.format(
+                "Unintentionally, more records were saved than expected. : %s", entity));
         }
     }
 

@@ -12,6 +12,7 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     private static final String SAVE_FQCN = "com.yam.app.comment.domain.CommentRepository.save";
     private static final String UPDATE_FQCN = "com.yam.app.comment.domain.CommentRepository.update";
     private static final String DELETE_FQCN = "com.yam.app.comment.domain.CommentRepository.delete";
+
     private final SqlSessionTemplate template;
 
     public MybatisCommentRepository(SqlSessionTemplate template) {
@@ -22,9 +23,8 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     public Long save(Comment entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
-            throw new IllegalStateException(
-                String.format("Unintentionally, more records were saved than expected. : %s",
-                    entity));
+            throw new IllegalStateException(String.format(
+                "Unintentionally, more records were saved than expected. : %s", entity));
         }
 
         return entity.getId();
@@ -34,9 +34,8 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     public void update(Comment entity) {
         int result = template.update(UPDATE_FQCN, entity);
         if (result != 1) {
-            throw new IllegalStateException(
-                String.format("Unintentionally, more records were updated than expected. : %s",
-                    entity));
+            throw new IllegalStateException(String.format(
+                "Unintentionally, more records were updated than expected. : %s", entity));
         }
     }
 
@@ -44,9 +43,8 @@ public final class MybatisCommentRepository implements CommentReader, CommentRep
     public void delete(Comment entity) {
         int result = template.update(DELETE_FQCN, entity);
         if (result != 1) {
-            throw new IllegalStateException(
-                String.format("Unintentionally, more records were soft-deleted than expected. : %s",
-                    entity));
+            throw new IllegalStateException(String.format(
+                "Unintentionally, more records were soft-deleted than expected. : %s", entity));
         }
     }
 

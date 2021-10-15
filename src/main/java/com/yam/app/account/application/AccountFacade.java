@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountFacade {
 
     private final RegisterAccountProcessor registerProcessor;
-    private final AccountTranslator translator;
     private final ApplicationEventPublisher publisher;
     private final ConfirmRegisterAccountProcessor confirmRegisterProcessor;
     private final LoginAccountProcessor loginProcessor;
@@ -31,12 +30,11 @@ public class AccountFacade {
     private final UpdateAccountProcessor updateProcessor;
 
     public AccountFacade(RegisterAccountProcessor registerProcessor,
-        AccountTranslator translator, ApplicationEventPublisher publisher,
+        ApplicationEventPublisher publisher,
         ConfirmRegisterAccountProcessor confirmRegisterProcessor,
         LoginAccountProcessor loginProcessor, AccountReader accountReader,
         UpdateAccountProcessor updateProcessor) {
         this.registerProcessor = registerProcessor;
-        this.translator = translator;
         this.publisher = publisher;
         this.confirmRegisterProcessor = confirmRegisterProcessor;
         this.loginProcessor = loginProcessor;
@@ -64,9 +62,11 @@ public class AccountFacade {
     }
 
     @Transactional(readOnly = true)
-    public AccountResponse findInfo(String email) {
-        return translator.toResponse(accountReader.findByEmail(email)
-            .orElseThrow(() -> new AccountNotFoundException(email)));
+    public AccountResponse findInfo(Authentication authentication) {
+        var memberAccount = accountReader.findByEmailAndMemberId(
+            authentication.getCredentials(), authentication.getMemberId());
+        return new AccountResponse(memberAccount.getId(), memberAccount.getEmail(),
+            memberAccount.getNickname(), memberAccount.getImage());
     }
 
     @Transactional

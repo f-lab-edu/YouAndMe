@@ -26,8 +26,8 @@ public final class AccountQueryApi {
     @GetMapping("/api/accounts/me")
     public ResponseEntity<ApiResult<?>> findInfo(
         @AuthenticationPrincipal Authentication authentication) {
-        return ResponseEntity
-            .ok(ApiResult.success(accountFacade.findInfo(authentication.getCredentials())));
+        return ResponseEntity.ok(
+            ApiResult.success(accountFacade.findInfo(authentication)));
     }
 
 }

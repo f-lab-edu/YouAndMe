@@ -18,6 +18,11 @@ public final class FakeAccountRepository implements AccountRepository, AccountRe
     }
 
     @Override
+    public MemberAccount findByEmailAndMemberId(String email, Long memberId) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean existsByEmail(String email) {
         return data.values().stream()
             .anyMatch(account -> account.getEmail().equals(email));

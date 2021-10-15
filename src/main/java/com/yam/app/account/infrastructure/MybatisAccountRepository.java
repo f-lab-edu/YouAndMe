@@ -3,6 +3,7 @@ package com.yam.app.account.infrastructure;
 import com.yam.app.account.domain.Account;
 import com.yam.app.account.domain.AccountReader;
 import com.yam.app.account.domain.AccountRepository;
+import com.yam.app.account.domain.MemberAccount;
 import java.util.Optional;
 import org.mybatis.spring.SqlSessionTemplate;
 
@@ -43,5 +44,11 @@ public final class MybatisAccountRepository implements AccountRepository, Accoun
     @Override
     public Optional<Account> findByEmail(String email) {
         return template.getMapper(AccountReader.class).findByEmail(email);
+    }
+
+    @Override
+    public MemberAccount findByEmailAndMemberId(String email,
+        Long memberId) {
+        return template.getMapper(AccountReader.class).findByEmailAndMemberId(email, memberId);
     }
 }

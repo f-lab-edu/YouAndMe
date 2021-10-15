@@ -95,9 +95,8 @@ final class AccountIntegrationTests extends AbstractIntegrationTests {
                         .andExpect(jsonPath("$.message").doesNotExist())
                         .andExpect(jsonPath("$.data.id").isNumber())
                         .andExpect(jsonPath("$.data.email").isString())
-                        .andExpect(jsonPath("$.data.emailVerified").value(true))
-                        .andExpect(jsonPath("$.data.withdraw").value(false))
-                        .andExpect(jsonPath("$.data.role").value("DEFAULT"));
+                        .andExpect(jsonPath("$.data.nickname").isString())
+                        .andExpect(jsonPath("$.data.image").isString());
                 });
     }
 

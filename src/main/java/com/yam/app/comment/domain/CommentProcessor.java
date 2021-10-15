@@ -1,5 +1,6 @@
 package com.yam.app.comment.domain;
 
+import com.yam.app.article.domain.ArticleNotFoundException;
 import com.yam.app.article.domain.ArticleReader;
 import com.yam.app.common.UnauthorizedRequestException;
 

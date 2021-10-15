@@ -1,4 +1,4 @@
-package com.yam.app.comment.domain;
+package com.yam.app.article.domain;
 
 import com.yam.app.common.EntityNotFoundException;
 

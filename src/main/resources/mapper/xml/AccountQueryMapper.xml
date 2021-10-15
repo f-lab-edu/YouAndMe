@@ -14,4 +14,21 @@
     SELECT * FROM ACCOUNT WHERE email = #{email}
   </select>
 
+  <select id="findByEmailAndMemberId" resultMap="memberAccount">
+    SELECT a.id AS account_id,
+           a.email AS account_email,
+           m.nickname AS member_nickname,
+           m.image AS member_image
+    FROM account a
+    INNER JOIN member m ON m.id = #{memberId}
+    WHERE a.email = #{email};
+  </select>
+
+  <resultMap id="memberAccount" type="com.yam.app.account.domain.MemberAccount">
+    <id property="id" column="account_id" />
+    <result property="email" column="account_email" />
+    <result property="nickname" column="member_nickname" />
+    <result property="image" column="member_image" />
+  </resultMap>
+
 </mapper>

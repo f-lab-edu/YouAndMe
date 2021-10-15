@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.yam.app.article.domain.Article;
+import com.yam.app.article.domain.ArticleNotFoundException;
 import com.yam.app.article.domain.FakeArticleRepository;
 import com.yam.app.common.UnauthorizedRequestException;
 import java.util.Arrays;

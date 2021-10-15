@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AccountModuleConfiguration {
 
     @Bean
-    @Profile("prod")
+    @Profile(value = {"local", "prod"})
     public MailDispatcher mailDispatcher(JavaMailSender javaMailSender) {
         return new SmtpMailDispatcher(javaMailSender);
     }

@@ -38,3 +38,5 @@ out/
 
 /logs
 /logs/*.log
+
+/src/main/resources/application-prod.yml

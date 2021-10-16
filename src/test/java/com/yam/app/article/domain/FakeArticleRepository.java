@@ -1,5 +1,6 @@
 package com.yam.app.article.domain;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,5 +35,10 @@ public final class FakeArticleRepository implements ArticleRepository, ArticleRe
     @Override
     public boolean existsById(Long articleId) {
         return data.containsKey(articleId);
+    }
+
+    @Override
+    public List<Long> findAll(int offset, int limit) {
+        throw new UnsupportedOperationException();
     }
 }

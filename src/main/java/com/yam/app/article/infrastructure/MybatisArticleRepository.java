@@ -3,6 +3,7 @@ package com.yam.app.article.infrastructure;
 import com.yam.app.article.domain.Article;
 import com.yam.app.article.domain.ArticleReader;
 import com.yam.app.article.domain.ArticleRepository;
+import java.util.List;
 import java.util.Optional;
 import org.mybatis.spring.SqlSessionTemplate;
 
@@ -38,6 +39,11 @@ public final class MybatisArticleRepository implements ArticleReader, ArticleRep
     @Override
     public boolean existsById(Long articleId) {
         return template.getMapper(ArticleReader.class).existsById(articleId);
+    }
+
+    @Override
+    public List<Long> findAll(int offset, int limit) {
+        return template.getMapper(ArticleReader.class).findAll(offset, limit);
     }
 
 }

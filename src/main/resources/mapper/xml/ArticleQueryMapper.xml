@@ -3,6 +3,20 @@
 
 <mapper namespace="com.yam.app.article.domain.ArticleReader">
 
+  <select id="findAll" resultMap="articleId">
+    SELECT
+    DISTINCT(a.id) AS article_id, a.created_at
+    FROM article a
+    INNER JOIN article_tag atg ON atg.article_id = a.id
+    INNER JOIN tag t ON t.id = atg.tag_id
+    ORDER BY a.created_at DESC
+    LIMIT #{offset}, #{limit}
+  </select>
+
+  <resultMap id="articleId" type="Long">
+    <id javaType="Long" column="article_id"/>
+  </resultMap>
+
   <select id="existsById" parameterType="Long" resultType="boolean">
     SELECT COUNT(*)
     FROM ARTICLE

@@ -12,7 +12,8 @@ public class WebConfiguration implements WebMvcConfigurer {
     private static final String[] EXCLUDE_PATHS = {
         "/api/accounts/login",
         "/api/accounts/authorize",
-        "/api/accounts"
+        "/api/accounts",
+        "/api/articles/all"
     };
 
     @Override

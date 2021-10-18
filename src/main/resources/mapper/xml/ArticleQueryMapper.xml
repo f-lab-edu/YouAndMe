@@ -7,14 +7,41 @@
     SELECT
     DISTINCT(a.id) AS article_id, a.created_at
     FROM article a
-    INNER JOIN article_tag atg ON atg.article_id = a.id
-    INNER JOIN tag t ON t.id = atg.tag_id
-    ORDER BY a.created_at DESC
-    LIMIT #{offset}, #{limit}
+    LEFT OUTER JOIN article_tag atg ON atg.article_id = a.id
+    LEFT OUTER JOIN tag t ON t.id = atg.tag_id
   </select>
 
   <resultMap id="articleId" type="Long">
     <id javaType="Long" column="article_id"/>
+  </resultMap>
+
+  <select id="findAllById" resultMap="articleDto" >
+    SELECT a.id AS article_id,
+           a.title AS article_title,
+           a.status AS article_status,
+           a.member_id AS article_author_id,
+           a.created_at AS article_created_at,
+           a.modified_at AS article_modified_at,
+           m.nickname AS member_nickname,
+           m.image AS member_image
+    FROM article a
+    INNER JOIN member m ON m.id = a.member_id
+    WHERE a.id IN
+    <foreach index="index" collection="idx" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+    LIMIT #{offset}, #{limit}
+  </select>
+
+  <resultMap id="articleDto" type="com.yam.app.article.domain.ArticleDto">
+    <id property="id" column = "article_id"/>
+    <result property="title" column="article_title"/>
+    <result property="status" column="article_status"/>
+    <result property="authorId" column = "article_author_id"/>
+    <result property="createdAt" column="article_created_at"/>
+    <result property="modifiedAt" column="article_modified_at"/>
+    <result property="nickname" column="member_nickname"/>
+    <result property="image" column="member_image"/>
   </resultMap>
 
   <select id="existsById" parameterType="Long" resultType="boolean">

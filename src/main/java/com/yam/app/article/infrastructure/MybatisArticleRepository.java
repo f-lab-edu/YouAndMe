@@ -1,6 +1,7 @@
 package com.yam.app.article.infrastructure;
 
 import com.yam.app.article.domain.Article;
+import com.yam.app.article.domain.ArticleDto;
 import com.yam.app.article.domain.ArticleReader;
 import com.yam.app.article.domain.ArticleRepository;
 import java.util.List;
@@ -42,8 +43,13 @@ public final class MybatisArticleRepository implements ArticleReader, ArticleRep
     }
 
     @Override
-    public List<Long> findAll(int offset, int limit) {
-        return template.getMapper(ArticleReader.class).findAll(offset, limit);
+    public List<Long> findAll() {
+        return template.getMapper(ArticleReader.class).findAll();
+    }
+
+    @Override
+    public List<ArticleDto> findAllById(int offset, int limit, List<Long> idx) {
+        return template.getMapper(ArticleReader.class).findAllById(offset, limit, idx);
     }
 
 }

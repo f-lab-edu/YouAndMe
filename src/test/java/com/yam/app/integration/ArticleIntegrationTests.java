@@ -1,8 +1,12 @@
 package com.yam.app.integration;
 
 import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
+import static com.yam.app.article.presentation.ArticleApiUri.FIND_ALL;
 import static com.yam.app.article.presentation.ArticleApiUri.WRITE_ARTICLE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.yam.app.account.presentation.LoginAccountCommand;
@@ -10,6 +14,7 @@ import com.yam.app.article.presentation.WriteArticleCommand;
 import java.util.List;
 import org.javaunit.autoparams.AutoSource;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.http.MediaType;
 
@@ -51,5 +56,18 @@ final class ArticleIntegrationTests extends AbstractIntegrationTests {
                     actions
                         .andExpect(status().isCreated());
                 });
+    }
+
+    @Test
+    @DisplayName("기본적으로 아무 페이징 조건을 주지 않을 경우, "
+        + "20건을 생성 날짜 내림차순으로 정렬하여 보여준다.")
+    void default_main_page_find_all_preview_article_response() throws Exception {
+        // Act
+        mockMvc.perform(get(FIND_ALL)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").isArray());
     }
 }

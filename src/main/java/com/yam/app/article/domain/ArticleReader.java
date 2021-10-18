@@ -12,5 +12,8 @@ public interface ArticleReader {
 
     boolean existsById(Long articleId);
 
-    List<Long> findAll(@Param("offset") int offset, @Param("limit") int limit);
+    List<Long> findAll();
+
+    List<ArticleDto> findAllById(@Param("offset") int offset,
+        @Param("limit") int limit, @Param("idx") List<Long> idx);
 }

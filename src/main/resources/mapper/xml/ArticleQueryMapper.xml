@@ -5,7 +5,7 @@
 
   <select id="findAll" resultMap="articleId">
     SELECT
-    DISTINCT(a.id) AS article_id, a.created_at
+    DISTINCT a.id AS article_id, a.created_at
     FROM article a
     LEFT OUTER JOIN article_tag atg ON atg.article_id = a.id
     LEFT OUTER JOIN tag t ON t.id = atg.tag_id

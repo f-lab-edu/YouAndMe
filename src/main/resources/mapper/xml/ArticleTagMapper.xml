@@ -4,7 +4,7 @@
 <mapper namespace="com.yam.app.article.domain.ArticleTagRepository">
 
   <insert id="save" parameterType="com.yam.app.article.domain.ArticleTag">
-    INSERT INTO ARTICLE_TAG(article_id, tag_id)
+    INSERT INTO article_tag (article_id, tag_id)
     VALUES (#{articleId}, #{tag.id})
   </insert>
 

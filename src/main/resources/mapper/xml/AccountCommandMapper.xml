@@ -3,7 +3,7 @@
 
 <mapper namespace="com.yam.app.account.domain.AccountRepository">
   <update id="update" parameterType="com.yam.app.account.domain.Account">
-    UPDATE ACCOUNT
+    UPDATE account
     SET email = #{email},
         email_check_token = #{emailCheckToken},
         email_check_token_generated_at = #{emailCheckTokenGeneratedAt},
@@ -20,7 +20,7 @@
 
   <insert id="save" parameterType="com.yam.app.account.domain.Account">
     INSERT
-    INTO ACCOUNT(email, email_check_token, email_check_token_generated_at, email_verified,
+    INTO account(email, email_check_token, email_check_token_generated_at, email_verified,
                  password, withdraw, role, status)
     VALUES (#{email}, #{emailCheckToken}, #{emailCheckTokenGeneratedAt}, #{emailVerified},
             #{password}, #{withdraw}, #{role}, #{status})

@@ -4,7 +4,7 @@
 <mapper namespace="com.yam.app.article.domain.ArticleRepository">
 
   <insert id="save" parameterType="com.yam.app.article.domain.Article">
-    INSERT INTO ARTICLE(title, content, image, status, created_at, modified_at, member_id)
+    INSERT INTO article (title, content, image, status, created_at, modified_at, member_id)
     VALUES (#{title}, #{content}, #{image}, #{status}, #{createdAt}, #{modifiedAt}, #{authorId})
   </insert>
 

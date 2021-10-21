@@ -1,11 +1,12 @@
-package com.yam.app.article.presentation;
+package com.yam.app.comment.presentation;
 
-import static com.yam.app.article.presentation.ArticleApiUri.FIND_BY_ID;
+import static com.yam.app.comment.presentation.CommentApiUri.FIND_BY_ARTICLE_ID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.yam.app.article.application.ArticleFacade;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yam.app.comment.application.CommentFacade;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +16,25 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-@DisplayName("Article Query HTTP API")
-@WebMvcTest(ArticleQueryApi.class)
+@DisplayName("Comment Query HTTP API")
+@WebMvcTest(CommentQueryApi.class)
 @ActiveProfiles("test")
-class ArticleQueryApiTest {
+class CommentQueryApiTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
     @MockBean
-    private ArticleFacade articleFacade;
+    private CommentFacade commentFacade;
 
     @Test
-    @DisplayName("인증되지 않은 사용자가 게시글 조회 요청을 보냈다면 401에러를 반환한다.")
+    @DisplayName("인증되지 않은 사용자가 댓글 조회 요청을 보냈다면 401에러를 반환한다.")
     void unauthenticated_user_request() throws Exception {
         //Act
-        final var actions = mockMvc.perform(get(FIND_BY_ID + 1)
+        final var actions = mockMvc.perform(get(FIND_BY_ARTICLE_ID + 1)
             .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-        );
+            .accept(MediaType.APPLICATION_JSON));
 
         //Assert
         actions
@@ -42,4 +44,5 @@ class ArticleQueryApiTest {
             .andExpect(jsonPath("$.message").value("Unauthorized request"));
 
     }
+
 }

@@ -1,8 +1,17 @@
 package com.yam.app.comment.application;
 
+import com.yam.app.article.domain.ArticleNotFoundException;
+import com.yam.app.article.domain.ArticleReader;
+import com.yam.app.comment.domain.Comment;
 import com.yam.app.comment.domain.CommentProcessor;
+import com.yam.app.comment.domain.CommentReader;
+import com.yam.app.comment.presentation.CommentResponse;
 import com.yam.app.comment.presentation.CreateCommentCommand;
 import com.yam.app.comment.presentation.UpdateCommentCommand;
+import com.yam.app.member.domain.MemberReader;
+import com.yam.app.member.presentation.MemberResponse;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +19,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentFacade {
 
     private final CommentProcessor commentProcessor;
+    private final ArticleReader articleReader;
+    private final CommentReader commentReader;
+    private final MemberReader memberReader;
 
-    public CommentFacade(CommentProcessor commentProcessor) {
+    public CommentFacade(CommentProcessor commentProcessor,
+        ArticleReader articleReader, CommentReader commentReader,
+        MemberReader memberReader) {
         this.commentProcessor = commentProcessor;
+        this.articleReader = articleReader;
+        this.commentReader = commentReader;
+        this.memberReader = memberReader;
     }
 
     @Transactional
@@ -28,5 +45,36 @@ public class CommentFacade {
     @Transactional
     public void delete(Long commentId, Long memberId) {
         commentProcessor.delete(commentId, memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentResponse> findByArticleId(Long articleId) {
+        if (!articleReader.existsById(articleId)) {
+            throw new ArticleNotFoundException(articleId);
+        }
+
+        return commentReader.findByArticleId(articleId)
+            .stream()
+            .filter(Comment::isAlive)
+            .map(comment -> {
+                var builder = CommentResponse.builder();
+                builder.id(comment.getId());
+                builder.articleId(comment.getArticleId());
+                builder.content(comment.getContent());
+                builder.createAt(comment.getCreatedAt());
+                builder.modifiedAt(comment.getModifiedAt());
+
+                var member = memberReader.findById(comment.getMemberId())
+                    .orElseThrow(IllegalStateException::new);
+
+                builder.member(MemberResponse.builder()
+                    .id(member.getId())
+                    .image(member.getImage())
+                    .nickname(member.getNickname())
+                    .build());
+
+                return builder.build();
+            })
+            .collect(Collectors.toList());
     }
 }

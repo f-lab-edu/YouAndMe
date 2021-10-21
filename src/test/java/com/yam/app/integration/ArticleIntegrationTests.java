@@ -2,10 +2,10 @@ package com.yam.app.integration;
 
 import static com.yam.app.account.presentation.AccountApiUri.LOGIN;
 import static com.yam.app.article.presentation.ArticleApiUri.FIND_ALL;
+import static com.yam.app.article.presentation.ArticleApiUri.FIND_BY_ID;
 import static com.yam.app.article.presentation.ArticleApiUri.WRITE_ARTICLE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,10 +64,60 @@ final class ArticleIntegrationTests extends AbstractIntegrationTests {
     void default_main_page_find_all_preview_article_response() throws Exception {
         // Act
         mockMvc.perform(get(FIND_ALL)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-        )
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").isArray());
+    }
+
+    @ParameterizedTest
+    @AutoSource
+    @DisplayName("로그인에 적절한 파라미터를 입력하여, 성공하고 "
+        + "인증된 사용자가 존재하는 게시글, 존재하지 않는 게시글을 각각 조회하는 시나리오 테스트.")
+    void login_success_and_get_article_by_id() throws Exception {
+        //Arrange
+        var loginCommand = new LoginAccountCommand();
+        loginCommand.setEmail("loginCheck@gmail.com");
+        loginCommand.setPassword("password!");
+
+        var articleId = 1L;
+        var invalidArticleId = 9999L;
+
+        // Act & Assert
+        mockMvc.perform(post(LOGIN)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginCommand))
+            )
+            .andExpect(status().isOk())
+            .andDo(
+                result -> {
+                    final var actions = mockMvc.perform(get(FIND_BY_ID + articleId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                    );
+
+                    actions
+                        .andExpect(status().isOk())
+                        .andExpect(jsonPath("$.id").isNumber())
+                        .andExpect(jsonPath("$.authorId").isNumber())
+                        .andExpect(jsonPath("$.title").isString())
+                        .andExpect(jsonPath("$.content").isString())
+                        .andExpect(jsonPath("$.image").isString())
+                        .andExpect(jsonPath("$.tags").isArray());
+                })
+            .andDo(
+                result -> {
+                    final var actions = mockMvc.perform(get(FIND_BY_ID + invalidArticleId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                    );
+
+                    actions
+                        .andExpect(status().isNotFound())
+                        .andExpect(jsonPath("$.success").value(false))
+                        .andExpect(jsonPath("$.data").doesNotExist());
+                });
     }
 }

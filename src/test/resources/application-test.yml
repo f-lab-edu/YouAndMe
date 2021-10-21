@@ -10,8 +10,6 @@ spring:
         timeout: 5000
         starttls:
           enable: true
-  session:
-    store-type: redis
 
   redis:
     host: localhost

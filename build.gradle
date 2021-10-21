@@ -2,7 +2,7 @@ import com.github.spotbugs.snom.SpotBugsTask
 
 plugins {
     id 'jacoco'
-    id 'org.springframework.boot' version '2.5.4'
+    id 'org.springframework.boot' version '2.5.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.asciidoctor.convert' version '1.5.8'
     id 'org.ec4j.editorconfig' version '0.0.3'
@@ -55,7 +55,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'de.codecentric:spring-boot-admin-starter-server:2.4.3'
+    implementation 'de.codecentric:spring-boot-admin-starter-client:2.4.3'
 
     implementation 'it.ozimov:embedded-redis:0.7.2'
     testImplementation 'it.ozimov:embedded-redis:0.7.2'

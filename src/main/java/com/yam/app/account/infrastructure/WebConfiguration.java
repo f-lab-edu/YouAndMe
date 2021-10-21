@@ -13,7 +13,8 @@ public class WebConfiguration implements WebMvcConfigurer {
         "/api/accounts/login",
         "/api/accounts/authorize",
         "/api/accounts",
-        "/api/articles/all"
+        "/api/articles/all",
+        "/actuator/**"
     };
 
     @Override

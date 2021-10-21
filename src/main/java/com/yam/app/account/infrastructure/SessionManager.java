@@ -1,5 +1,6 @@
 package com.yam.app.account.infrastructure;
 
+import com.yam.app.common.Authentication;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
 
@@ -13,12 +14,12 @@ public final class SessionManager {
         this.httpSession = httpSession;
     }
 
-    public void setPrincipal(AccountPrincipal principal) {
+    public void setPrincipal(Authentication principal) {
         this.httpSession.setAttribute(LOGIN_ACCOUNT, principal);
     }
 
-    public Optional<AccountPrincipal> fetchPrincipal() {
-        return Optional.ofNullable((AccountPrincipal) httpSession.getAttribute(LOGIN_ACCOUNT));
+    public Optional<Authentication> fetchPrincipal() {
+        return Optional.ofNullable((Authentication) httpSession.getAttribute(LOGIN_ACCOUNT));
     }
 
     public void removePrincipal() {

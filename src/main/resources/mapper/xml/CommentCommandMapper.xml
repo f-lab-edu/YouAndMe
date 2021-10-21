@@ -5,7 +5,7 @@
 <mapper namespace="com.yam.app.comment.domain.CommentRepository">
 
     <insert id="save" parameterType="com.yam.app.comment.domain.Comment">
-        INSERT INTO COMMENT(content, created_at, modified_at, status, article_id, member_id)
+        INSERT INTO comment (content, created_at, modified_at, status, article_id, member_id)
         VALUES (#{content}, #{createdAt}, #{modifiedAt}, #{status}, #{articleId}, #{memberId})
 
         <selectKey keyProperty="id" resultType="long" order="AFTER">
@@ -14,14 +14,14 @@
     </insert>
 
     <update id="update" parameterType="com.yam.app.comment.domain.Comment">
-        UPDATE COMMENT
+        UPDATE comment
         SET content     = #{content},
             modified_at = #{modifiedAt}
         WHERE id = #{id}
     </update>
 
     <update id="delete" parameterType="com.yam.app.comment.domain.Comment">
-        UPDATE COMMENT
+        UPDATE comment
         SET status = #{status}
         WHERE id = #{id}
     </update>

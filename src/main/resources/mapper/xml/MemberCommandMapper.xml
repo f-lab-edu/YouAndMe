@@ -5,12 +5,12 @@
 
   <insert id="save" parameterType="com.yam.app.member.domain.Member">
     INSERT
-    INTO MEMBER(nickname, image, status)
+    INTO member (nickname, image, status)
     VALUES (#{nickname}, #{image}, #{status})
   </insert>
 
   <update id="update" parameterType="com.yam.app.member.domain.Member">
-    UPDATE MEMBER
+    UPDATE member
     SET nickname = #{nickname},
         image = #{image},
         status = #{status}

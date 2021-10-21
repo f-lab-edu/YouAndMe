@@ -6,19 +6,19 @@
 
   <select id="findById" parameterType="Long" resultType="com.yam.app.comment.domain.Comment">
     SELECT *
-    FROM COMMENT
+    FROM comment
     WHERE id = #{id}
   </select>
 
   <select id="findByArticleId" parameterType="Long" resultType="com.yam.app.comment.domain.Comment">
     SELECT *
-    FROM COMMENT
+    FROM comment
     WHERE article_id = #{articleId}
   </select>
 
   <select id="existsById" parameterType="Long" resultType="boolean">
     SELECT COUNT(*)
-    FROM COMMENT
+    FROM comment
     WHERE id = #{id}
   </select>
 

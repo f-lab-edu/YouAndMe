@@ -5,13 +5,13 @@
 
   <select id="existsByEmail" parameterType="String" resultType="boolean">
     SELECT COUNT(email)
-    FROM ACCOUNT
+    FROM account
     WHERE email = #{email}
   </select>
 
   <select id="findByEmail" parameterType="String"
     resultType="com.yam.app.account.domain.Account">
-    SELECT * FROM ACCOUNT WHERE email = #{email}
+    SELECT * FROM account WHERE email = #{email}
   </select>
 
   <select id="findByEmailAndMemberId" resultMap="memberAccount">

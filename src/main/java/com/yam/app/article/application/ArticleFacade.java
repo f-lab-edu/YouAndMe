@@ -1,8 +1,11 @@
 package com.yam.app.article.application;
 
+import com.yam.app.article.domain.ArticleNotFoundException;
 import com.yam.app.article.domain.ArticleReader;
 import com.yam.app.article.domain.WriteArticleProcessor;
 import com.yam.app.article.presentation.ArticlePreviewResponse;
+import com.yam.app.article.presentation.ArticleResponse;
+import com.yam.app.article.presentation.TagResponse;
 import com.yam.app.article.presentation.WriteArticleCommand;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,5 +40,27 @@ public class ArticleFacade {
                 dto.getNickname(), dto.getImage(), dto.getCreatedAt(), dto.getModifiedAt(),
                 dto.getStatus())
             ).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleResponse findById(Long articleId) {
+        var article = articleReader.findById(articleId).orElseThrow(
+            () -> new ArticleNotFoundException(articleId));
+
+        return ArticleResponse.builder()
+            .id(article.getId())
+            .authorId(article.getAuthorId())
+            .title(article.getTitle())
+            .content(article.getContent())
+            .image(article.getImage())
+            .createdAt(article.getCreatedAt())
+            .modifiedAt(article.getModifiedAt())
+            .tags(
+                article.getTags().stream()
+                    .map(a -> TagResponse.of(a.getTag().getId(), a.getTag().getName()))
+                    .collect(Collectors.toList())
+            )
+            .build();
+
     }
 }

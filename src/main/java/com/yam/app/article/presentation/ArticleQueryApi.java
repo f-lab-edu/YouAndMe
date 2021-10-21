@@ -5,6 +5,7 @@ import com.yam.app.common.ApiResult;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +29,10 @@ public final class ArticleQueryApi {
         @RequestParam(value = "limit", defaultValue = "20") int limit) {
         return ResponseEntity.ok(
             ApiResult.success(articleFacade.findAll(offset, limit)));
+    }
+
+    @GetMapping("/api/articles/{articleId}")
+    public ResponseEntity<ArticleResponse> showArticle(@PathVariable Long articleId) {
+        return ResponseEntity.ok(articleFacade.findById(articleId));
     }
 }

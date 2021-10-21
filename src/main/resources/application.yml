@@ -4,10 +4,6 @@ server:
 spring:
   session:
     store-type: redis
-  boot:
-    admin:
-      client:
-        url: http://localhost:8080
 
 management:
   endpoints:

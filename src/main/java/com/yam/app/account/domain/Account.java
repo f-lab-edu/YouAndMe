@@ -1,6 +1,7 @@
 package com.yam.app.account.domain;
 
 import com.yam.app.common.EntityStatus;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString(exclude = "password")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public final class Account {
+public final class Account implements Serializable {
 
     private Long id;
     private Long memberId;

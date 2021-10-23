@@ -13,12 +13,14 @@ management:
   endpoint:
     health:
       show-details: always
+    logfile:
+      external-file: logs/app.log
   health:
     mail:
       enabled: false
 
 logging:
   file:
-    path: /logs/app.log
+    path: logs/app.log
   pattern:
     file: '%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${hostName} --- [%15.15t] %-40.40c{1.} : %m%n%ex'

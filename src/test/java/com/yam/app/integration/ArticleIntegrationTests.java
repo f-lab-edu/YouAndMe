@@ -74,15 +74,14 @@ final class ArticleIntegrationTests extends AbstractIntegrationTests {
     @ParameterizedTest
     @AutoSource
     @DisplayName("로그인에 적절한 파라미터를 입력하여, 성공하고 "
-        + "인증된 사용자가 존재하는 게시글, 존재하지 않는 게시글을 각각 조회하는 시나리오 테스트.")
-    void login_success_and_get_article_by_id() throws Exception {
+        + "인증된 사용자가 존재하는 게시글을 조회하는 시나리오 테스트.")
+    void login_success_and_get_article_by_id_scenarios() throws Exception {
         //Arrange
         var loginCommand = new LoginAccountCommand();
         loginCommand.setEmail("loginCheck@gmail.com");
         loginCommand.setPassword("password!");
 
         var articleId = 1L;
-        var invalidArticleId = 9999L;
 
         // Act & Assert
         mockMvc.perform(post(LOGIN)
@@ -106,7 +105,28 @@ final class ArticleIntegrationTests extends AbstractIntegrationTests {
                         .andExpect(jsonPath("$.content").isString())
                         .andExpect(jsonPath("$.image").isString())
                         .andExpect(jsonPath("$.tags").isArray());
-                })
+                });
+    }
+
+    @ParameterizedTest
+    @AutoSource
+    @DisplayName("로그인에 적절한 파라미터를 입력하여, 성공하고 "
+        + "인증된 사용자가 존재하지 않는 게시글을 조회하는 시나리오 테스트.")
+    void login_success_and_get_non_existent_article_by_id_scenarios() throws Exception {
+        //Arrange
+        var loginCommand = new LoginAccountCommand();
+        loginCommand.setEmail("loginCheck@gmail.com");
+        loginCommand.setPassword("password!");
+
+        var invalidArticleId = 9999L;
+
+        // Act & Assert
+        mockMvc.perform(post(LOGIN)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginCommand))
+            )
+            .andExpect(status().isOk())
             .andDo(
                 result -> {
                     final var actions = mockMvc.perform(get(FIND_BY_ID + invalidArticleId)

@@ -14,6 +14,8 @@ public class WebConfiguration implements WebMvcConfigurer {
         "/api/accounts/authorize",
         "/api/accounts",
         "/api/articles/all",
+        "/api/articles/{articleId:[0-9]+}",
+        "/api/comments/{articleId:[0-9]+}",
         "/actuator/**"
     };
 

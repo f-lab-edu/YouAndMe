@@ -130,7 +130,7 @@ final class CommentIntegrationTests extends AbstractIntegrationTests {
 
     @Test
     @DisplayName("로그인에 적절한 파라미터를 입력하여 성공하고"
-        + " 인증된 사용자가 유효한 게시글, 유효하지 않는 게시글의 댓글을 각각 조회하는 시나리오 테스트")
+        + " 인증된 사용자가 유효한 게시글의 댓글을 조회하는 시나리오 테스트")
     void login_success_and_get_comment_by_article_id_scenarios() throws Exception {
         //Arrange
         var loginCommand = new LoginAccountCommand();
@@ -138,7 +138,6 @@ final class CommentIntegrationTests extends AbstractIntegrationTests {
         loginCommand.setPassword("password!");
 
         var articleId = 1L;
-        var invalidArticleId = 9999L;
 
         //Act & Assert
         mockMvc.perform(post(LOGIN)
@@ -158,7 +157,27 @@ final class CommentIntegrationTests extends AbstractIntegrationTests {
                         .andDo(print())
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.data").isArray());
-                })
+                });
+    }
+
+    @Test
+    @DisplayName("로그인에 적절한 파라미터를 입력하여 성공하고"
+        + " 인증된 사용자가 유효하지 않는 게시글의 댓글을 조회하는 시나리오 테스트")
+    void login_success_and_get_comment_by_non_existent_article_id_scenarios() throws Exception {
+        //Arrange
+        var loginCommand = new LoginAccountCommand();
+        loginCommand.setEmail("comment@gmail.com");
+        loginCommand.setPassword("password!");
+
+        var invalidArticleId = 9999L;
+
+        //Act & Assert
+        mockMvc.perform(post(LOGIN)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginCommand))
+            )
+            .andExpect(status().isOk())
             .andDo(
                 result -> {
                     final var actions = mockMvc.perform(get(FIND_BY_ARTICLE_ID + invalidArticleId)

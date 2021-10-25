@@ -14,6 +14,6 @@ public final class CommentResponse {
     private final LocalDateTime createAt;
     private final LocalDateTime modifiedAt;
     private final Long articleId;
-    private final MemberResponse member;
+    private final MemberResponse author;
 
 }

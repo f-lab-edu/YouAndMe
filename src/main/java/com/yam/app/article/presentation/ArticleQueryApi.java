@@ -32,7 +32,7 @@ public final class ArticleQueryApi {
     }
 
     @GetMapping("/api/articles/{articleId}")
-    public ResponseEntity<ArticleResponse> showArticle(@PathVariable Long articleId) {
+    public ResponseEntity<ArticleResponse> findArticle(@PathVariable Long articleId) {
         return ResponseEntity.ok(articleFacade.findById(articleId));
     }
 }

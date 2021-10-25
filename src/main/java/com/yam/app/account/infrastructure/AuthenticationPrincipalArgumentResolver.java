@@ -24,6 +24,10 @@ public final class AuthenticationPrincipalArgumentResolver
         HttpSession session = ((HttpServletRequest) webRequest.getNativeRequest())
             .getSession(false);
 
+        if (session == null) {
+            throw new UnauthorizedRequestException("Unauthorized request");
+        }
+
         var sessionManager = new SessionManager(session);
         return sessionManager.fetchPrincipal()
             .orElseThrow(() -> new UnauthorizedRequestException("Failed fetch principal"));

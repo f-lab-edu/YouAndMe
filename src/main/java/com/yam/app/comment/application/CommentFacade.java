@@ -56,25 +56,26 @@ public class CommentFacade {
         return commentReader.findByArticleId(articleId)
             .stream()
             .filter(Comment::isAlive)
-            .map(comment -> {
-                var builder = CommentResponse.builder();
-                builder.id(comment.getId());
-                builder.articleId(comment.getArticleId());
-                builder.content(comment.getContent());
-                builder.createAt(comment.getCreatedAt());
-                builder.modifiedAt(comment.getModifiedAt());
+            .map(this::toCommentResponse)
+            .collect(Collectors.toList());
+    }
 
-                var member = memberReader.findById(comment.getMemberId())
-                    .orElseThrow(IllegalStateException::new);
+    private CommentResponse toCommentResponse(Comment comment) {
+        var member = memberReader.findById(comment.getMemberId())
+            .orElseThrow(IllegalStateException::new);
 
-                builder.member(MemberResponse.builder()
+        return CommentResponse.builder()
+            .id(comment.getId())
+            .articleId(comment.getArticleId())
+            .content(comment.getContent())
+            .createAt(comment.getCreatedAt())
+            .modifiedAt(comment.getModifiedAt())
+            .author(
+                MemberResponse.builder()
                     .id(member.getId())
                     .image(member.getImage())
                     .nickname(member.getNickname())
-                    .build());
-
-                return builder.build();
-            })
-            .collect(Collectors.toList());
+                    .build())
+            .build();
     }
 }

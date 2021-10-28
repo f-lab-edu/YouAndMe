@@ -6,6 +6,7 @@ import com.yam.app.member.domain.MemberReader;
 import com.yam.app.member.domain.MemberRepository;
 import com.yam.app.member.domain.RegisterAccountConfirmEvent;
 import com.yam.app.member.domain.UpdateAccountEvent;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -28,10 +29,14 @@ public class MemberEventListener {
     @EventListener
     public void handle(RegisterAccountConfirmEvent event) {
         var nickname = event.getEmail().split("@")[0];
-        memberRepository.save(new Member(nickname, "temp.png"));
-        var member = memberReader.findByNickname(nickname)
-            .orElseThrow(IllegalArgumentException::new);
-        publisher.publishEvent(new GenerateMemberEvent(member.getId(), event.getEmail()));
+        Long savedEntityId;
+        if (memberReader.existsByNickname(nickname)) {
+            savedEntityId = memberRepository.save(
+                new Member(UUID.randomUUID().toString(), "temp.png"));
+        } else {
+            savedEntityId = memberRepository.save(new Member(nickname, "temp.png"));
+        }
+        publisher.publishEvent(new GenerateMemberEvent(savedEntityId, event.getEmail()));
     }
 
     @EventListener

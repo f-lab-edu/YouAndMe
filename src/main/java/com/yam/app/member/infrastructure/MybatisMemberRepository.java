@@ -18,8 +18,8 @@ public final class MybatisMemberRepository implements MemberRepository, MemberRe
     }
 
     @Override
-    public Optional<Member> findByNickname(String nickname) {
-        return template.getMapper(MemberReader.class).findByNickname(nickname);
+    public boolean existsByNickname(String nickname) {
+        return template.getMapper(MemberReader.class).existsByNickname(nickname);
     }
 
     @Override
@@ -28,12 +28,13 @@ public final class MybatisMemberRepository implements MemberRepository, MemberRe
     }
 
     @Override
-    public void save(Member entity) {
+    public Long save(Member entity) {
         int result = template.insert(SAVE_FQCN, entity);
         if (result != 1) {
             throw new IllegalStateException(String.format(
                 "Unintentionally, more records were saved than expected. : %s", entity));
         }
+        return entity.getId();
     }
 
     @Override

@@ -67,6 +67,25 @@ final class AccountIntegrationTests extends AbstractIntegrationTests {
     }
 
     @Test
+    @DisplayName("이메일 검증 후 회워 정보 기입에서, 닉네임이 동일한 경우"
+        + "랜덤한 값을 이어붙여서 저장하도록하는 시나리오 테스트")
+    void duplicate_email_and_token_verify_request_in_correctly() throws Exception {
+        // Act
+        final var actions = mockMvc.perform(get(EMAIL_CONFIRM)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("token", "emailchecktoken")
+            .param("email", "jiwonDev@naver.com")
+        );
+
+        // Assert
+        actions
+            .andDo(print())
+            .andExpect(status().isSeeOther())
+            .andExpect(redirectedUrl(EMAIL_CONFIRM_SUCCESS_REDIRECT_URI));
+    }
+
+    @Test
     @DisplayName("로그인에 적절한 파라미터를 입력하여, 성공하고 "
         + "이후 자신의 정보를 조회하는 시나리오 테스트.")
     void login_success_and_authentication_member_find_info_success_scenarios() throws Exception {

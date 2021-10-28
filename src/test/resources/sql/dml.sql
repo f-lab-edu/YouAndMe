@@ -9,6 +9,11 @@ values ('jiwonDev@gmail.com', 'emailchecktoken', now(), false, now(), now(), 'pa
         false, 'DEFAULT', 'ALIVE');
 
 insert into account(email, email_check_token, email_check_token_generated_at, email_verified,
+                    joined_at, last_modified_at, password, withdraw, role, status)
+values ('jiwonDev@naver.com', 'emailchecktoken', now(), false, now(), now(), 'password!',
+        false, 'DEFAULT', 'ALIVE');
+
+insert into account(email, email_check_token, email_check_token_generated_at, email_verified,
                     joined_at, last_modified_at, password, withdraw, role, member_id, status)
 values ('rebwon@gmail.com', 'emailchecktoken1', now(), true, now(), now(),
         '$2a$10$g1V1fmucOwRZX.bWCb9k5uFc/EylGvoYw6N8m90RxIcvyYVhFBl1C',

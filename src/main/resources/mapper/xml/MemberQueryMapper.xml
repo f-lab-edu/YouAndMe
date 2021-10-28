@@ -13,4 +13,8 @@
     SELECT * FROM member WHERE id = #{memberId}
   </select>
 
+  <select id="existsByNickname" parameterType="String" resultType="boolean">
+    SELECT COUNT(id) FROM member WHERE nickname = #{nickname}
+  </select>
+
 </mapper>

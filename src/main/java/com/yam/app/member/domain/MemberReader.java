@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface MemberReader {
 
-    Optional<Member> findByNickname(String nickname);
+    boolean existsByNickname(String nickname);
 
     Optional<Member> findById(Long memberId);
 }

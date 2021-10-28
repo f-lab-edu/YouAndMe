@@ -7,6 +7,9 @@
     INSERT
     INTO member (nickname, image, status)
     VALUES (#{nickname}, #{image}, #{status})
+    <selectKey keyProperty="id" resultType="long" order="AFTER">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
   </insert>
 
   <update id="update" parameterType="com.yam.app.member.domain.Member">

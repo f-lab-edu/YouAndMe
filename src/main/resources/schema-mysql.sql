@@ -3,7 +3,7 @@ create table member
     id       bigint not null auto_increment,
     nickname varchar(255) not null,
     image    varchar(255) not null,
-    status   varchar(255) not null,
+    status   varchar(8) not null,
     primary key (id)
 ) engine=InnoDB;
 
@@ -12,18 +12,17 @@ create table account
     id                             bigint not null auto_increment,
     email                          varchar(255) not null,
     email_check_token              varchar(255),
-    email_check_token_generated_at timestamp,
+    email_check_token_generated_at datetime(6),
     email_verified                 boolean      not null,
-    joined_at                      timestamp,
-    last_modified_at               timestamp,
-    role                           varchar(255) not null,
+    joined_at                      datetime(6),
+    last_modified_at               datetime(6),
+    role                           varchar(10) not null,
     password                       varchar(255) not null,
     withdraw                       boolean      not null,
-    withdrawal_at                  timestamp,
+    withdrawal_at                  datetime(6),
     member_id                      bigint,
-    status                         varchar(255) not null,
-    primary key (id),
-    foreign key (member_id) references member (id)
+    status                         varchar(8) not null,
+    primary key (id)
 ) engine=InnoDB;
 
 create table tag
@@ -37,14 +36,13 @@ create table article
 (
     id          bigint not null auto_increment,
     content     varchar(255) not null,
-    created_at  timestamp,
+    created_at  datetime(6),
     image       varchar(255) not null,
-    modified_at timestamp,
-    status      varchar(255) not null,
+    modified_at datetime(6),
+    status      varchar(8) not null,
     title       varchar(255) not null,
     member_id   bigint,
-    primary key (id),
-    foreign key (member_id) references member (id)
+    primary key (id)
 ) engine=InnoDB;
 
 create table article_likes
@@ -52,9 +50,7 @@ create table article_likes
     id         bigint not null auto_increment,
     article_id bigint,
     member_id  bigint,
-    primary key (id),
-    foreign key (member_id) references member (id),
-    foreign key (article_id) references article (id)
+    primary key (id)
 ) engine=InnoDB;
 
 create table article_tag
@@ -62,23 +58,19 @@ create table article_tag
     id         bigint not null auto_increment,
     article_id bigint not null,
     tag_id     bigint not null,
-    primary key (id),
-    foreign key (article_id) references article (id),
-    foreign key (tag_id) references tag (id)
+    primary key (id)
 ) engine=InnoDB;
 
 create table comment
 (
     id          bigint not null auto_increment,
     content     varchar(255) not null,
-    created_at  timestamp,
-    modified_at timestamp,
-    status      varchar(255),
+    created_at  datetime(6),
+    modified_at datetime(6),
+    status      varchar(8),
     article_id  bigint,
     member_id   bigint,
-    primary key (id),
-    foreign key (member_id) references member (id),
-    foreign key (article_id) references article (id)
+    primary key (id)
 ) engine=InnoDB;
 
 create table comment_likes
@@ -86,14 +78,13 @@ create table comment_likes
     id         bigint not null auto_increment,
     comment_id bigint,
     member_id  bigint,
-    primary key (id),
-    foreign key (member_id) references member (id),
-    foreign key (comment_id) references comment (id)
+    primary key (id)
 ) engine=InnoDB;
 
+create index title_idx on article (title);
 alter table account
     add constraint UK_q0uja26qgu1atulenwup9rxyr unique (email);
 alter table tag
     add constraint UK_1wdpsed5kna2y38hnbgrnhi5b unique (name);
-alter table article
-    add constraint UK_571gx7oqo5xpmgocegaidlcu9 unique (title);
+alter table member
+    add constraint UK_gc3jmn7c2abyo3wf6syln5t2i unique (nickname);

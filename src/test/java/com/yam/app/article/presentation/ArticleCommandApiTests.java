@@ -5,42 +5,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yam.app.article.application.ArticleFacade;
+import com.yam.app.extension.WebApiTestExtension;
 import java.util.List;
 import org.javaunit.autoparams.AutoSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("Article Command HTTP API")
-@WebMvcTest(ArticleCommandApi.class)
-@ActiveProfiles("test")
-final class ArticleCommandApiTests {
-
-    @Autowired
-    private MockMvc mockMvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private ArticleFacade articleFacade;
-
-    private void assertThatInvalidArgumentError(ResultActions actions) throws Exception {
-        actions
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.success").value(false))
-            .andExpect(jsonPath("$.data").doesNotExist())
-            .andExpect(jsonPath("$.message").value("Invalid argument"));
-    }
+final class ArticleCommandApiTests extends WebApiTestExtension {
 
     @Nested
     @DisplayName("게시글 작성 HTTP API")

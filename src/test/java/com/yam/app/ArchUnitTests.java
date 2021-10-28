@@ -1,5 +1,7 @@
 package com.yam.app;
 
+import static com.tngtech.archunit.base.DescribedPredicate.alwaysTrue;
+import static com.tngtech.archunit.core.domain.properties.HasName.AndFullName.Predicates.fullNameMatching;
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
@@ -12,7 +14,9 @@ final class ArchUnitTests {
 
     @ArchTest
     ArchRule cycleCheck = slices().matching("com.yam.app.(*)..")
-        .should().beFreeOfCycles();
+        .should().beFreeOfCycles()
+        .ignoreDependency(
+            fullNameMatching("com.yam.app.extension.WebApiTestExtension"), alwaysTrue());
 
     @ArchTest
     ArchRule layerCheck = layeredArchitecture()
@@ -28,5 +32,7 @@ final class ArchUnitTests {
         .whereLayer("Domain").mayOnlyBeAccessedByLayers("Application", "Infrastructure", "Adapter")
         .whereLayer("Infrastructure").mayOnlyBeAccessedByLayers("Presentation", "Integration")
         .whereLayer("Adapter").mayNotBeAccessedByAnyLayer()
-        .whereLayer("Integration").mayNotBeAccessedByAnyLayer();
+        .whereLayer("Integration").mayNotBeAccessedByAnyLayer()
+        .ignoreDependency(
+            fullNameMatching("com.yam.app.extension.WebApiTestExtension"), alwaysTrue());
 }

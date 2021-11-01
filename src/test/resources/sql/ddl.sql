@@ -81,10 +81,22 @@ create table comment_likes
     primary key (id)
 ) engine=InnoDB;
 
-create index title_idx on article (title);
+create index idx_account_member on account (member_id);
+create index idx_article_title on article (title);
+create index idx_article_author on article (member_id);
+create index idx_comment_author on comment (member_id);
+create index idx_comment_article on comment (article_id);
+
+create index idx_articleTag_article on article_tag (article_id);
+create index idx_articleTag_tag on article_tag (tag_id);
+create index idx_commentLikes_comment on comment_likes (comment_id);
+create index idx_commentLikes_member on comment_likes (member_id);
+create index idx_articleLikes_comment on article_likes (article_id);
+create index idx_articleLikes_member on article_likes (member_id);
+
 alter table account
-    add constraint UK_q0uja26qgu1atulenwup9rxyr unique (email);
+    add constraint uk_account_email unique (email);
 alter table tag
-    add constraint UK_1wdpsed5kna2y38hnbgrnhi5b unique (name);
+    add constraint uk_tag_name unique (name);
 alter table member
-    add constraint UK_gc3jmn7c2abyo3wf6syln5t2i unique (nickname);
+    add constraint uk_member_nickname unique (nickname);

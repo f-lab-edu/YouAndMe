@@ -14,7 +14,7 @@ spring:
   redis:
     host: localhost
     password:
-    port: 6379
+    port: 16379
 
 app:
   mail:

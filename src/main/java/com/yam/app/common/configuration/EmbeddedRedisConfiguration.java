@@ -21,7 +21,10 @@ public class EmbeddedRedisConfiguration {
 
     @PostConstruct
     public void redisServer() throws IOException {
-        redisServer = new RedisServer(redisPort);
+        redisServer = RedisServer.builder()
+            .port(redisPort)
+            .setting("maxheap 1gb")
+            .build();
         redisServer.start();
     }
 

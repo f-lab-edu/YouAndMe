@@ -4,7 +4,7 @@
 <mapper namespace="com.yam.app.account.domain.AccountReader">
 
   <select id="existsByEmail" parameterType="String" resultType="boolean">
-    SELECT COUNT(email)
+    SELECT COUNT(*)
     FROM account
     WHERE email = #{email}
   </select>

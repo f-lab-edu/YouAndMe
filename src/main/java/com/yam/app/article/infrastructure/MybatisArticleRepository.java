@@ -43,13 +43,8 @@ public final class MybatisArticleRepository implements ArticleReader, ArticleRep
     }
 
     @Override
-    public List<Long> findAll() {
-        return template.getMapper(ArticleReader.class).findAll();
-    }
-
-    @Override
-    public List<ArticleDto> findAllById(int offset, int limit, List<Long> idx) {
-        return template.getMapper(ArticleReader.class).findAllById(offset, limit, idx);
+    public List<ArticleDto> findAll(Long articleId, int pageSize) {
+        return template.getMapper(ArticleReader.class).findAll(articleId, pageSize);
     }
 
 }

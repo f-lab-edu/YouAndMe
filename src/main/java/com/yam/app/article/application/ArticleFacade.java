@@ -32,9 +32,8 @@ public class ArticleFacade {
     }
 
     @Transactional(readOnly = true)
-    public List<ArticlePreviewResponse> findAll(int offset, int limit) {
-        var idx = articleReader.findAll();
-        return articleReader.findAllById(offset, limit, idx)
+    public List<ArticlePreviewResponse> findAll(Long articleId, int pageSize) {
+        return articleReader.findAll(articleId, pageSize)
             .stream()
             .map(dto -> new ArticlePreviewResponse(dto.getId(), dto.getAuthorId(), dto.getTitle(),
                 dto.getNickname(), dto.getImage(), dto.getCreatedAt(), dto.getModifiedAt(),

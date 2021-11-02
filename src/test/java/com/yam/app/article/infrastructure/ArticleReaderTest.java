@@ -21,9 +21,6 @@ public final class ArticleReaderTest {
 
     @Test
     void articlePaginationQueryTests() {
-        List<Long> idx = articleReader.findAll();
-        List<ArticleDto> dtos = articleReader.findAllById(1, 10, idx);
 
-        assertThat(dtos.size()).isEqualTo(10);
     }
 }

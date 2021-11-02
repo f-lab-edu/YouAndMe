@@ -3,34 +3,25 @@
 
 <mapper namespace="com.yam.app.article.domain.ArticleReader">
 
-  <select id="findAll" resultMap="articleId">
-    SELECT
-    DISTINCT a.id AS article_id, a.created_at
+  <select id="findAll" resultMap="articleDto">
+    SELECT a.id AS article_id,
+        a.title AS article_title,
+        a.status AS article_status,
+        a.member_id AS article_author_id,
+        a.created_at AS article_created_at,
+        a.modified_at AS article_modified_at,
+        m.nickname AS member_nickname,
+        m.image AS member_image
     FROM article a
+    INNER JOIN member m on a.member_id = m.id
     LEFT OUTER JOIN article_tag atg ON atg.article_id = a.id
     LEFT OUTER JOIN tag t ON t.id = atg.tag_id
-  </select>
-
-  <resultMap id="articleId" type="Long">
-    <id javaType="Long" column="article_id"/>
-  </resultMap>
-
-  <select id="findAllById" resultMap="articleDto" >
-    SELECT a.id AS article_id,
-           a.title AS article_title,
-           a.status AS article_status,
-           a.member_id AS article_author_id,
-           a.created_at AS article_created_at,
-           a.modified_at AS article_modified_at,
-           m.nickname AS member_nickname,
-           m.image AS member_image
-    FROM article a
-    INNER JOIN member m ON m.id = a.member_id
-    WHERE a.id IN
-    <foreach index="index" collection="idx" item="id" open="(" separator="," close=")">
-      #{id}
-    </foreach>
-    LIMIT #{offset}, #{limit}
+    WHERE a.status = 'ALIVE'
+    <if test="articleId != 0">
+      AND a.id lt #{articleId}
+    </if>
+    ORDER BY a.id desc
+    LIMIT #{pageSize}
   </select>
 
   <resultMap id="articleDto" type="com.yam.app.article.domain.ArticleDto">

@@ -14,7 +14,7 @@
   </select>
 
   <select id="existsByNickname" parameterType="String" resultType="boolean">
-    SELECT COUNT(id) FROM member WHERE nickname = #{nickname}
+    SELECT COUNT(*) FROM member WHERE nickname = #{nickname}
   </select>
 
 </mapper>

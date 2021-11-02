@@ -25,10 +25,10 @@ public final class ArticleQueryApi {
 
     @GetMapping("/api/articles/all")
     public ResponseEntity<?> findAll(
-        @RequestParam(value = "offset", defaultValue = "0") int offset,
-        @RequestParam(value = "limit", defaultValue = "20") int limit) {
+        @RequestParam(value = "articleId", defaultValue = "0") Long articleId,
+        @RequestParam(value = "pageSize", defaultValue = "20") int pageSize) {
         return ResponseEntity.ok(
-            ApiResult.success(articleFacade.findAll(offset, limit)));
+            ApiResult.success(articleFacade.findAll(articleId, pageSize)));
     }
 
     @GetMapping("/api/articles/{articleId}")

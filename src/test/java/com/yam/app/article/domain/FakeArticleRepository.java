@@ -38,12 +38,7 @@ public final class FakeArticleRepository implements ArticleRepository, ArticleRe
     }
 
     @Override
-    public List<Long> findAll() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<ArticleDto> findAllById(int offset, int limit, List<Long> idx) {
+    public List<ArticleDto> findAll(Long articleId, int pageSize) {
         throw new UnsupportedOperationException();
     }
 }

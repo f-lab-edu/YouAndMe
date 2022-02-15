@@ -2,7 +2,7 @@ import com.github.spotbugs.snom.SpotBugsTask
 
 plugins {
     id 'jacoco'
-    id 'org.springframework.boot' version '2.5.5'
+    id 'org.springframework.boot' version '2.5.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'org.asciidoctor.convert' version '1.5.8'
     id 'org.ec4j.editorconfig' version '0.0.3'

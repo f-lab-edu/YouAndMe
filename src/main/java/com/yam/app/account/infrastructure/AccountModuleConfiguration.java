@@ -19,7 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
     TokenVerifier.class,
     ConfirmRegisterAccountProcessor.class,
     SessionBasedLoginAccountProcessor.class,
-    UpdateAccountProcessor.class
+    UpdateAccountProcessor.class,
+    SessionManager.class
 })
 @Configuration
 public class AccountModuleConfiguration {
